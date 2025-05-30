@@ -3,8 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group name="PE PRJ301">
-            <file>file:/D:/Desktop/SWP391.E.BL5.G5-main/src/java/controller/verifyCode.java</file>
-            <file>file:/D:/Desktop/SWP391.E.BL5.G5-main/src/java/controller/ChangePasswordController.java</file>
+            <file>file:/D:/Desktop/SWP391.E.BL5.G5-main/src/java/model/Room.java</file>
+            <file>file:/D:/Desktop/SWP391.E.BL5.G5-main/src/java/controller/Owner/AddRoomController.java</file>
+            <file>file:/D:/Desktop/SWP391.E.BL5.G5-main/web/Owner/addRoom.jsp</file>
         </group>
         <group>
             <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/controller/ChangePasswordController.java</file>
