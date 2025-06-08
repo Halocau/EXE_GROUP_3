@@ -63,7 +63,6 @@ public class SendEmailServlet extends HttpServlet {
                 break;
 
             case "host-register":
-                emailAccount
                 String emailAccount = request.getParameter("emailAccount");
                 subject = getHostRegisterSubject();
                 content = getHostRegisterContent(emailAccount);
@@ -103,7 +102,7 @@ public class SendEmailServlet extends HttpServlet {
             message.setContent(content, "text/html; charset=utf-8");
 
             Transport.send(message);
-            response.getWriter().println("Email đã được gửi thành công!");
+            response.sendRedirect("sendemail?success=true");
 
         } catch (MessagingException e) {
             e.printStackTrace();
