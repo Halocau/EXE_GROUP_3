@@ -65,6 +65,10 @@
                                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                         Room List
                                     </a>
+                                    <a class="nav-link" href="sendemail">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                        Send Email
+                                    </a>
 
                                 </div>
                             </div>
