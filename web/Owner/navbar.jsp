@@ -61,6 +61,7 @@
                     <li><a href="displayslider?service=displayslider">Slider</a></li>
                     <li><a href="ExcelFee.jsp">Add fee by excel</a></li>
                     <li><a href="addroom?service=addRoom">Add Room</a></li>
+                    <li><a href="addroom?service=addRoom">Rental Overview</a></li>
 
                 </ul>
             </li>

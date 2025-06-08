@@ -8,10 +8,16 @@
             <file>file:/D:/Desktop/SWP391.E.BL5.G5-main/web/Owner/addRoom.jsp</file>
         </group>
         <group>
+            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/dao/DBContext.java</file>
+            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/dao/DAO.java</file>
             <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/controller/ChangePasswordController.java</file>
+            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/nbproject/build-impl.xml</file>
         </group>
         <group>
-            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/controller/ChangePasswordController.java</file>
+            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/web/Owner/navbar.jsp</file>
+            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/controller/Owner/RentalOverviewController.java</file>
+            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/controller/Owner/AddRenterController.java</file>
+            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/dao/RoomDAO.java</file>
         </group>
     </open-files>
 </project-private>
