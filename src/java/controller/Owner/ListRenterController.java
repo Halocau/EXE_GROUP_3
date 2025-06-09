@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.RenterList;
+import model.Statistics;
 
 /**
  *
@@ -29,9 +30,15 @@ public class ListRenterController extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         RenterDAO renterDAO = new RenterDAO();
-        List<RenterList> renters = renterDAO.getListRenters();
         
+        // Lấy danh sách người thuê
+        List<RenterList> renters = renterDAO.getListRenters();
         request.setAttribute("listRenters", renters);
+        
+        // Lấy thông tin thống kê
+        Statistics stats = renterDAO.getStatistics();
+        request.setAttribute("statistics", stats);
+        
         request.getRequestDispatcher("Owner/listRenter.jsp").forward(request, response);
     } 
 

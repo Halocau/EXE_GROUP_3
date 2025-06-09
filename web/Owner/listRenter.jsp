@@ -6,9 +6,13 @@
 
 <%@page import="dao.RoomDAO,java.util.List"%>
 <%@page import="model.Rooms, model.RenterList" %>
+<%@page import="dao.RenterDAO" %>
+<%@page import="model.Statistics" %>
 
 <%
     List<RenterList> listRenter = (List<RenterList>) request.getAttribute("listRenters");
+    RenterDAO renterDAO = new RenterDAO();
+    Statistics stats = renterDAO.getStatistics();
 %>
 <!doctype html>
 <html lang="en">
@@ -244,31 +248,47 @@
                 display: none;
             }
 
+            .chart-container {
+                position: relative;
+                margin: auto;
+                height: 300px;
+                width: 100%;
+            }
+            .stat-box {
+                transition: transform 0.3s ease;
+            }
+            .stat-box:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+
         </style>
     </head>
     <body>
-
-        <div class="site-mobile-menu site-navbar-target">
-            <div class="site-mobile-menu-header">
-                <div class="site-mobile-menu-close">
-                    <span class="icofont-close js-menu-toggle"></span>
+        <div class="container">
+            <!-- Phần hiển thị danh sách người thuê -->
+            <div class="site-mobile-menu site-navbar-target">
+                <div class="site-mobile-menu-header">
+                    <div class="site-mobile-menu-close">
+                        <span class="icofont-close js-menu-toggle"></span>
+                    </div>
                 </div>
+                <div class="site-mobile-menu-body"></div>
             </div>
-            <div class="site-mobile-menu-body"></div>
-        </div>
 
-        <nav class="site-nav">
-            <div class="container">
-                <div class="menu-bg-wrap">
-                    <div class="site-navigation">
-                        <a href="#" class="logo m-0 float-start">Room</a>
+            <nav class="site-nav">
+                <div class="container">
+                    <div class="menu-bg-wrap">
+                        <div class="site-navigation">
+                            <a href="#" class="logo m-0 float-start">Room</a>
 
-                        <jsp:include page = "navbar.jsp"></jsp:include>
+                            <jsp:include page = "navbar.jsp"></jsp:include>
 
-                            <a href="#" class="burger light me-auto float-end mt-1 site-menu-toggle js-menu-toggle d-inline-block d-lg-none" data-toggle="collapse" data-target="#main-navbar">
-                                <span></span>
-                            </a>
+                                <a href="#" class="burger light me-auto float-end mt-1 site-menu-toggle js-menu-toggle d-inline-block d-lg-none" data-toggle="collapse" data-target="#main-navbar">
+                                    <span></span>
+                                </a>
 
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -336,6 +356,71 @@
                 </div>
             </div>
         </div>
+
+        <!-- Statistics Section -->
+        <div class="container mt-5">
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="mb-0">Monthly Report</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="chart-container">
+                                        <canvas id="revenueChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="chart-container">
+                                        <canvas id="occupancyChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-md-12">
+                                    <div class="chart-container" style="height: 300px;">
+                                        <canvas id="monthlyRevenueChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-md-3">
+                                    <div class="stat-box text-center p-3 bg-light rounded">
+                                        <h5 class="text-primary">Monthly Revenue</h5>
+                                        <h3 class="mb-0"><%= String.format("%,.0f", stats.getTotalRevenue()) %> VND</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stat-box text-center p-3 bg-light rounded">
+                                        <h5 class="text-success">Current Occupants</h5>
+                                        <h3 class="mb-0"><%= stats.getTotalOccupants() %> people</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stat-box text-center p-3 bg-light rounded">
+                                        <h5 class="text-warning">Occupied Rooms</h5>
+                                        <h3 class="mb-0"><%= stats.getOccupiedRooms() %> rooms</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stat-box text-center p-3 bg-light rounded">
+                                        <h5 class="text-danger">Available Rooms</h5>
+                                        <h3 class="mb-0"><%= stats.getEmptyRooms() %> rooms</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Statistics Section -->
+
+        <!-- Add Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        
         <script>
             function filterRoomsByNumber() {
                 var input, filter, table, tr, td, i, txtValue;
@@ -356,6 +441,134 @@
                 }
             }
 
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            new Chart(revenueCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Revenue'],
+                    datasets: [{
+                        label: 'Monthly Revenue (VND)',
+                        data: [<%= stats.getTotalRevenue() %>],
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Monthly Revenue Chart'
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString('vi-VN') + ' VND';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Room Occupancy Chart
+            const occupancyCtx = document.getElementById('occupancyChart').getContext('2d');
+            new Chart(occupancyCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Occupied Rooms', 'Available Rooms'],
+                    datasets: [{
+                        data: [<%= stats.getOccupiedRooms() %>, <%= stats.getEmptyRooms() %>],
+                        backgroundColor: [
+                            'rgba(255, 206, 86, 0.5)',
+                            'rgba(255, 99, 132, 0.5)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Room Occupancy Ratio'
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+
+            // Monthly Revenue Line Chart
+            const monthlyRevenueCtx = document.getElementById('monthlyRevenueChart').getContext('2d');
+            new Chart(monthlyRevenueCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Monthly Revenue (VND)',
+                        data: [15, 18, 22, 25, 28, 30, 32, 35, 33, 31, 29, 27].map(v => v * 1000000),
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Monthly Revenue Trend 2024',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let value = context.raw;
+                                    return new Intl.NumberFormat('vi-VN', {
+                                        style: 'currency',
+                                        currency: 'VND'
+                                    }).format(value);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return (value / 1000000).toFixed(1) + 'M VND';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         </script>
         <script src="js/bootstrap.bundle.min.js"></script>
         <script src="js/tiny-slider.js"></script>
