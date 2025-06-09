@@ -69,7 +69,7 @@ public class AddRoomController extends HttpServlet {
             if (vipIdParam != null && !vipIdParam.trim().isEmpty()) {
                 vipId = Integer.parseInt(vipIdParam);
             }
-            int roomStatus = (vipId == null) ? 1 : 0;
+            int roomStatus = (vipId == null) ? 1 : 2;
             // image
             Part part = request.getPart("roomImg");
             String imageUrl = null;

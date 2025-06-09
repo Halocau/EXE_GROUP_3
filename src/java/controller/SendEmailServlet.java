@@ -62,8 +62,7 @@ public class SendEmailServlet extends HttpServlet {
                 content = getRequestSuccessContent(roomCode);
                 break;
 
-            case "host-register":
-                emailAccount
+            case "host-register":   
                 String emailAccount = request.getParameter("emailAccount");
                 subject = getHostRegisterSubject();
                 content = getHostRegisterContent(emailAccount);
