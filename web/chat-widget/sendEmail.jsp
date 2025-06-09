@@ -186,23 +186,14 @@
 
                                     document.querySelectorAll('.extra-input').forEach(el => {
                                         el.style.display = 'none';
-                                        el.querySelectorAll('input, select, textarea').forEach(i => i.required = false);
                                     });
 
                                     const selectedDiv = document.getElementById(value);
                                     if (selectedDiv) {
                                         selectedDiv.style.display = 'block';
-                                        selectedDiv.querySelectorAll('input, select, textarea').forEach(i => {
-                                            if (i.name !== 'feedbackMessage') {
-                                                i.required = true;
-                                            }
-                                        });
                                     }
                                 }
-
-                                window.addEventListener('DOMContentLoaded', handleSelectChange);
                             </script>
-
                         </main>
 
                         <footer class="py-4 bg-light mt-auto">
@@ -227,22 +218,6 @@
                 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
                     crossorigin="anonymous"></script>
                 <script src="AdminCSS/js/datatables-simple-demo.js"></script>
-                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                <script>
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const success = urlParams.get('success');
-
-                    if (success === 'true') {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Gửi email thành công!',
-                            text: 'Email của bạn đã được gửi tới người nhận.',
-                            confirmButtonText: 'Đã hiểu',
-                            timer: 5000,
-                            timerProgressBar: true
-                        });
-                    }
-                </script>
 
             </body>
 
