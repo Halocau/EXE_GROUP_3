@@ -49,6 +49,31 @@ public class RoomDAO extends DBContext {
         }
         return rooms;
     }
+    
+    public List<Rooms> getRoomsByIdRoomSatatus(int idRoomStatus) {
+        List<Rooms> rooms = new ArrayList<>();
+        String query = "SELECT * FROM room where roomStatus = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
+            ps.setInt(1, idRoomStatus);
+            while (rs.next()) {
+                int roomID = rs.getInt("roomID");
+                int roomFloor = rs.getInt("roomFloor");
+                int roomNumber = rs.getInt("roomNumber");
+                int roomSize = rs.getInt("roomSize");
+                BigDecimal roomFee = rs.getBigDecimal("roomFee");
+                String roomImg = rs.getString("roomImg");
+                int roomStatus = rs.getInt("roomStatus");
+                int roomOccupant = rs.getInt("roomOccupant");
+                String rooomDepartment = rs.getString("roomDepartment");
+
+                Rooms room = new Rooms(roomID, roomFloor, roomNumber, roomSize, roomImg, roomFee, roomStatus, roomOccupant, rooomDepartment);
+                rooms.add(room);
+            }
+        } catch (SQLException e) {
+        }
+        return rooms;
+    }
 
     public List<Rooms> getRoomsAvailable() {
         List<Rooms> rooms = new ArrayList<>();
