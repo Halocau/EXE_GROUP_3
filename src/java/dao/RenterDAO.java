@@ -251,7 +251,7 @@ public class RenterDAO extends MyDAO {
 
     // Retrieve user by ID
     public User getUserByID(int userID) {
-        String sql = "SELECT * FROM [dbo].[user] WHERE userID = ?";
+        String sql = "SELECT * FROM user WHERE userID = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, userID);

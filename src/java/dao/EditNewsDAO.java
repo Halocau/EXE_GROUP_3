@@ -1,10 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
-
-//import com.sun.jdi.connect.spi.*;
 
 import java.sql.PreparedStatement;
 import model.News;
@@ -16,14 +10,15 @@ import java.sql.ResultSet;
  */
 public class EditNewsDAO extends DBContext {
 
+    // Cập nhật tin tức
     public int updateNews(News news) {
         int n = 0;
-        String query = "String query = \"UPDATE [dbo].[news]\\n\"\n"
-                + "                 + \"SET [newTitle] = ?,\\n\"\n"
-                + "                 + \"    [description] = ?,\\n\"\n"
-                + "                 + \"    [img] = ?,\\n\"\n"
-                + "                 + \"    [creatAt] = ?\\n\"\n"
-                + "                 + \"WHERE [newID] = ?\";\n";
+        String query = "UPDATE news "
+                + "SET newTitle = ?, "
+                + "    description = ?, "
+                + "    img = ?, "
+                + "    creatAt = ? "
+                + "WHERE newID = ?";
 
         try {
             java.sql.Connection conn = connection;
@@ -36,13 +31,15 @@ public class EditNewsDAO extends DBContext {
 
             n = ps.executeUpdate();
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return n;
     }
 
+    // Lấy tin tức theo ID
     public News getNewsById(int id) {
         News news = null;
-        String query = "SELECT * FROM [dbo].[news] WHERE newID = ?";
+        String query = "SELECT * FROM news WHERE newID = ?";
 
         try {
             java.sql.Connection conn = connection;
@@ -65,9 +62,10 @@ public class EditNewsDAO extends DBContext {
         return news;
     }
 
+    // Xóa tin tức
     public int DeleteNews(News news) {
         int n = 0;
-        String query = "DELETE FROM [dbo].[news] WHERE [newID] = ?";
+        String query = "DELETE FROM news WHERE newID = ?";
         try {
             java.sql.Connection conn = connection;
             PreparedStatement ps = conn.prepareStatement(query);
@@ -79,7 +77,6 @@ public class EditNewsDAO extends DBContext {
         return n;
     }
 
-    
     public static void main(String[] args) {
         EditNewsDAO dao = new EditNewsDAO();
         News news = dao.getNewsById(32);

@@ -19,28 +19,24 @@ import model.News;
 public class AddnewsDAO extends DBContext{
 
     public int insertNews(News news) {
-        int n = 0;
-        String query = "INSERT INTO [dbo].[news]\n"
-                + "           ([newTitle]\n"
-                + "           ,[description]\n"
-                + "           ,[img]\n"
-                + "           ,[creatAt])\n"
-                + "     VALUES\n"
-                + "           (?,?,?,?)";
-         try {
-            java.sql.Connection conn = connection;
-            PreparedStatement ps = conn.prepareStatement(query);
-             ps.setString(1, news.getNewTitle());
-             ps.setString(2, news.getDescription());
-             ps.setString(3, news.getImg());
-             ps.setString(4, news.getCreateAt());
-        
-         n = ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return n;
+    int n = 0;
+    String query = "INSERT INTO news (newTitle, description, img, creatAt) "
+                 + "VALUES (?, ?, ?, ?)";  // Đã bỏ [dbo.] vì MySQL không cần
+    try {
+        java.sql.Connection conn = connection;
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setString(1, news.getNewTitle());
+        ps.setString(2, news.getDescription());
+        ps.setString(3, news.getImg());
+        ps.setString(4, news.getCreateAt());
+    
+        n = ps.executeUpdate();
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+    return n;
+}
+
     
     
     public static void main(String[] args) {

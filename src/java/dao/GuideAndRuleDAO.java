@@ -13,17 +13,18 @@ import java.util.logging.Logger;
 
 public class GuideAndRuleDAO extends DBContext {
 
+    // Lấy danh sách các guideline
     public List<Guideline> getGuide() {
         List<Guideline> list = new ArrayList<>();
-        String sql = "SELECT * FROM guideline";
-        // Declaring variables for connection, statement, and result set
+        String sql = "SELECT * FROM guideline"; // Không cần [dbo].
+        // Khai báo các biến cho kết nối, statement và result set
         try (Connection conn = connection;
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
-            // Iterate through the result set and populate the list
+            // Lặp qua result set và thêm vào danh sách
             while (rs.next()) {
-                // Create a new Guideline object and add it to the list
+                // Tạo đối tượng Guideline và thêm vào danh sách
                 Guideline guideline = new Guideline(
                         rs.getInt(1),
                         rs.getString(2),
@@ -32,23 +33,25 @@ public class GuideAndRuleDAO extends DBContext {
                 list.add(guideline);
             }
         } catch (SQLException ex) {
-            // Log any SQL exceptions
+            // Log các ngoại lệ SQL
             Logger.getLogger(GuideAndRuleDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        // Return the list of guidelines
+        // Trả về danh sách các guideline
         return list;
     }
+
+    // Lấy danh sách các rule
     public List<Rule> getRule() {
         List<Rule> list = new ArrayList<>();
-        String sql = "SELECT * FROM [rule]";
-        // Declaring variables for connection, statement, and result set
+        String sql = "SELECT * FROM rule"; // Sửa lại không cần [dbo].
+        // Khai báo các biến cho kết nối, statement và result set
         try (Connection conn = connection;
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
-            // Iterate through the result set and populate the list
+            // Lặp qua result set và thêm vào danh sách
             while (rs.next()) {
-                // Create a new Guideline object and add it to the list
+                // Tạo đối tượng Rule và thêm vào danh sách
                 Rule rule = new Rule(
                         rs.getInt(1),
                         rs.getString(2),
@@ -59,23 +62,22 @@ public class GuideAndRuleDAO extends DBContext {
                 list.add(rule);
             }
         } catch (SQLException ex) {
-            // Log any SQL exceptions
+            // Log các ngoại lệ SQL
             Logger.getLogger(GuideAndRuleDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        // Return the list of guidelines
+        // Trả về danh sách các rule
         return list;
     }
-     public static void main(String[] args) {
+
+    public static void main(String[] args) {
         GuideAndRuleDAO dao = new GuideAndRuleDAO();
 
-        // Uncomment the appropriate method call based on your needs
+        // Gọi phương thức cần thiết tùy theo yêu cầu
         // List<User> list = dao.getUserList();
         List<Rule> list = dao.getRule();
-         for (Rule rule : list) {
-             System.out.println("User ID: " + rule.getRuleName());
-             System.out.println("User ID: " + rule.getImg());
-         }
+        for (Rule rule : list) {
+            System.out.println("Rule Name: " + rule.getRuleName());
+            System.out.println("Image: " + rule.getImg());
+        }
     }
-
-    
 }

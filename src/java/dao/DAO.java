@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
 import java.sql.Connection;
@@ -12,22 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Account;
 
-/**
- *
- * @author pc
- */
 public class DAO extends DBContext {
 
     Connection conn = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
 
+    // Lấy danh sách tất cả tài khoản
     public List<Account> getAccounts() {
         List<Account> accounts = new ArrayList<>();
 
         try {
             // Truy vấn dữ liệu từ bảng Accounts
-            String query = "SELECT *  FROM [HL_Motel].[dbo].[account]";
+            String query = "SELECT * FROM account"; // Sửa lại không cần [dbo].
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
 
@@ -51,14 +44,10 @@ public class DAO extends DBContext {
         return accounts;
     }
 
+    // Thêm tài khoản mới
     public int insertAcc(String mail, String password, int role) {
         int n = 0;
-        String query = "INSERT INTO [dbo].[account]\n"
-                + "           ([userMail]\n"
-                + "           ,[userPassword]\n"
-                + "           ,[userRole])\n"
-                + "     VALUES\n"
-                + "           (?,?,?)";
+        String query = "INSERT INTO account (userMail, userPassword, userRole) VALUES (?, ?, ?)"; // Sửa lại không cần [dbo].
         try {
             ps = connection.prepareStatement(query);
             ps.setString(1, mail);
@@ -79,26 +68,22 @@ public class DAO extends DBContext {
         return n;
     }
 
-    public void editAccount(String mail, String password, String Role) {
-        String query = "UPDATE [dbo].[account]\n"
-                + "   \n"
-                + "   SET [userPassword] = ?\n"
-                + "      ,[userRole] = ?\n"
-                + " WHERE [userMail] = ?";
+    // Chỉnh sửa thông tin tài khoản
+    public void editAccount(String mail, String password, String role) {
+        String query = "UPDATE account SET userPassword = ?, userRole = ? WHERE userMail = ?"; // Sửa lại không cần [dbo].
         try {
-
             ps = connection.prepareStatement(query);
             ps.setString(1, password);
-            ps.setString(2, Role);
+            ps.setString(2, role);
             ps.setString(3, mail);
             ps.executeUpdate();
         } catch (Exception e) {
         }
     }
 
-    //check mail
+    // Kiểm tra xem email có tồn tại không
     public boolean isEmailExist(String email) {
-        String query = "SELECT COUNT(*) AS count FROM [HL_Motel].[dbo].[account] WHERE userMail = ?";
+        String query = "SELECT COUNT(*) AS count FROM account WHERE userMail = ?"; // Sửa lại không cần [dbo].
         boolean emailExists = false;
         try {
             ps = connection.prepareStatement(query);
@@ -127,10 +112,10 @@ public class DAO extends DBContext {
         return emailExists;
     }
 
+    // Lấy quyền của người dùng theo email
     public int getUserRole(String email) {
         try {
-            String query = "SELECT [userRole]\n"
-                    + "  FROM [dbo].[account] WHERE [userMail] = ?";
+            String query = "SELECT userRole FROM account WHERE userMail = ?"; // Sửa lại không cần [dbo].
             ps = connection.prepareStatement(query);
             ps.setString(1, email);
             rs = ps.executeQuery();
@@ -143,11 +128,10 @@ public class DAO extends DBContext {
         return -1;
     }
 
+    // Cập nhật quyền người dùng theo email
     public boolean updateUserRole(String email, int newRole) {
         try {
-            String query = "UPDATE [dbo].[account]\n"
-                    + " SET [userRole] = ? \n"
-                    + " WHERE [userMail] = ?";
+            String query = "UPDATE account SET userRole = ? WHERE userMail = ?"; // Sửa lại không cần [dbo].
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, newRole);
             statement.setString(2, email);
@@ -159,11 +143,7 @@ public class DAO extends DBContext {
         return false;
     }
     
-  
-
     public static void main(String args[]) {
-       
-        
-                
+        // Demo hoặc kiểm tra các phương thức ở đây.
     }
 }

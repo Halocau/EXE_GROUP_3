@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
 import jakarta.servlet.http.HttpServlet;
@@ -20,10 +16,11 @@ import java.util.logging.Logger;
  */
 public class GuideLineDAO extends DBContext {
 
+    // Lấy tất cả các guideline
     public ArrayList<Guideline> findAll() {
         ArrayList<Guideline> guideLines = new ArrayList<>();
         try {
-            String sql = "select * from guideline";
+            String sql = "SELECT * FROM guideline"; // Sửa lại không cần [dbo].
             PreparedStatement ps;
             ResultSet rs;
             ps = connection.prepareStatement(sql);
@@ -39,9 +36,10 @@ public class GuideLineDAO extends DBContext {
         return guideLines;
     }
 
+    // Lấy guideline theo ID
     public Guideline findById(int id) {
         try {
-            String sql = "select * from guideline where guideID = ?";
+            String sql = "SELECT * FROM guideline WHERE guideID = ?"; // Sửa lại không cần [dbo].
             PreparedStatement ps;
             ResultSet rs;
             ps = connection.prepareStatement(sql);
@@ -56,9 +54,10 @@ public class GuideLineDAO extends DBContext {
         return null;
     }
 
+    // Thêm mới guideline
     public int insert(Guideline model) {
         try {
-            String sql = "insert into guideline(guideName, img) values (?,?)";
+            String sql = "INSERT INTO guideline(guideName, img) VALUES (?, ?)"; // Sửa lại không cần [dbo].
             PreparedStatement ps;
             ps = connection.prepareStatement(sql);
             ps.setString(1, model.getGuideName());
@@ -71,9 +70,10 @@ public class GuideLineDAO extends DBContext {
         return -1;
     }
 
+    // Cập nhật guideline
     public int update(Guideline model) {
         try {
-            String sql = "update guideline set guideName = ?, img = ? where guideID = ?";
+            String sql = "UPDATE guideline SET guideName = ?, img = ? WHERE guideID = ?"; // Sửa lại không cần [dbo].
             PreparedStatement ps;
             ps = connection.prepareStatement(sql);
             ps.setString(1, model.getGuideName());
@@ -87,9 +87,10 @@ public class GuideLineDAO extends DBContext {
         return -1;
     }
 
-public int remove(int id) {
+    // Xóa guideline
+    public int remove(int id) {
         try {
-            String sql = "delete from guideline where guideID = ?";
+            String sql = "DELETE FROM guideline WHERE guideID = ?"; // Sửa lại không cần [dbo].
             PreparedStatement ps;
             ps = connection.prepareStatement(sql);
             ps.setInt(1, id);
@@ -101,6 +102,7 @@ public int remove(int id) {
         return -1;
     }
 
+    // Chuyển đổi từ ResultSet thành đối tượng Guideline
     private Guideline toGuideLine(ResultSet rs) throws SQLException {
         Guideline guideLine = new Guideline();
         guideLine.setGuideID(rs.getInt("guideID"));
@@ -108,10 +110,10 @@ public int remove(int id) {
         guideLine.setImg(rs.getString("img"));
         return guideLine;
     }
-    
+
     public static void main(String[] args) {
-       GuideLineDAO dao = new GuideLineDAO();
-       int add = dao.insert(new Guideline("Safety", "./Image/guideline/guideline4.jpg"));
+        GuideLineDAO dao = new GuideLineDAO();
+        int add = dao.insert(new Guideline("Safety", "./Image/guideline/guideline4.jpg"));
         System.out.println(add);
     }
 }

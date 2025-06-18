@@ -23,7 +23,7 @@ public class RenterHomeController extends HttpServlet {
         HttpSession session = request.getSession();
         String email = (String) session.getAttribute("email");
         String password = (String) session.getAttribute("password");
-        
+
         // Retrieve the account object from the session
         Account account = (Account) session.getAttribute("user");
         request.setAttribute("email", email);

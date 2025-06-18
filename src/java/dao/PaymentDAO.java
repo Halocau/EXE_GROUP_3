@@ -1,13 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
-import jakarta.servlet.http.HttpServlet;
 import java.util.ArrayList;
 import java.util.List;
-import model.Guideline;
+import model.Payment;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,31 +10,27 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Payment;
 
-/**
- *
- * @author DAT
- */
 public class PaymentDAO extends DBContext {
 
+    // Xóa tiền của người thuê
     public void deleteMoney(int renterID) {
         int n = 0;
-        String sql = "DELETE FROM payments\n"
-                + " WHERE userid = ?;";
+        String sql = "DELETE FROM payments WHERE userId = ?";
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setInt(1, renterID);
             n = pre.executeUpdate();
         } catch (SQLException ex) {
-
+            ex.printStackTrace();
         }
     }
 
+    // Lấy tất cả thanh toán
     public ArrayList<Payment> findAll() {
         ArrayList<Payment> payments = new ArrayList<>();
         try {
-            String sql = "select * from payments";
+            String sql = "SELECT * FROM payments"; // Sửa lại không cần [dbo].
             PreparedStatement ps;
             ResultSet rs;
             ps = connection.prepareStatement(sql);
@@ -54,10 +45,11 @@ public class PaymentDAO extends DBContext {
         return payments;
     }
 
+    // Lấy thanh toán theo userId
     public ArrayList<Payment> findByUserId(int userId) {
         ArrayList<Payment> payments = new ArrayList<>();
         try {
-            String sql = "select * from payments where userId = ?";
+            String sql = "SELECT * FROM payments WHERE userId = ?"; // Sửa lại không cần [dbo].
             PreparedStatement ps;
             ResultSet rs;
             ps = connection.prepareStatement(sql);
@@ -73,16 +65,17 @@ public class PaymentDAO extends DBContext {
         return payments;
     }
 
+    // Thêm thanh toán mới
     public int insert(Payment model) {
         try {
-            String sql = "insert into payments([money], userId, status, createdAt, updatedAt) values (?,?,?,?,?)";
+            String sql = "INSERT INTO payments(money, userId, status, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?)"; // Sửa lại không cần [dbo].
             PreparedStatement ps;
             ps = connection.prepareStatement(sql);
             ps.setDouble(1, model.getMoney());
             ps.setInt(2, model.getUserId());
             ps.setInt(3, model.getStatus());
-            java.util.Date utilTodayDate = Calendar.getInstance().getTime();
 
+            java.util.Date utilTodayDate = Calendar.getInstance().getTime();
             java.sql.Date sqlTodayDate = new java.sql.Date(utilTodayDate.getTime());
 
             ps.setDate(4, sqlTodayDate);
@@ -95,6 +88,7 @@ public class PaymentDAO extends DBContext {
         return -1;
     }
 
+    // Chuyển đổi từ ResultSet thành đối tượng Payment
     private Payment toPayment(ResultSet rs) throws SQLException {
         Payment payment = new Payment();
         payment.setId(rs.getInt("id"));
@@ -106,38 +100,39 @@ public class PaymentDAO extends DBContext {
         return payment;
     }
 
+    // Cập nhật số tiền của người thuê
     public int addMoney(double money, int renterID) {
         int n = 0;
-        String sql = "UPDATE [dbo].[renter]\n"
-                + "   SET [balance] += ?\n"
-                + " WHERE renterID = ?";
+        String sql = "UPDATE renter SET balance = balance + ? WHERE renterID = ?"; // Sửa lại không cần [dbo].
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setDouble(1, money);
             pre.setInt(2, renterID);
             n = pre.executeUpdate();
         } catch (SQLException ex) {
-
+            ex.printStackTrace();
         }
         return n;
     }
 
+    // Cập nhật trạng thái thanh toán
     public int updatePaymentStatus(int id) {
         int n = 0;
-        String sql = "UPDATE [dbo].[payments] set [status] = 1 where id = ?";
+        String sql = "UPDATE payments SET status = 1 WHERE id = ?"; // Sửa lại không cần [dbo].
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setInt(1, id);
             n = pre.executeUpdate();
         } catch (SQLException ex) {
-
+            ex.printStackTrace();
         }
         return n;
     }
 
+    // Hiển thị số tiền của người thuê
     public int displayMoney(int renterID) {
         int balance = 0;
-        String sql = "  select balance from renter where renterID = ?";
+        String sql = "SELECT balance FROM renter WHERE renterID = ?"; // Sửa lại không cần [dbo].
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setInt(1, renterID);
@@ -145,31 +140,31 @@ public class PaymentDAO extends DBContext {
             if (rs.next()) {
                 balance = rs.getInt("balance");
             }
-
         } catch (SQLException ex) {
-
+            ex.printStackTrace();
         }
         return balance;
     }
 
-    public static void main(String[] args) {
-        PaymentDAO dao = new PaymentDAO();
-        int displayMoney = dao.displayMoney(602);
-        System.out.println(displayMoney);
-
-    }
-
+    // Cập nhật số tiền của người thuê
     public int updateRenterMoney(int renterID, double balance) {
         int n = 0;
-        String sql = "UPDATE [dbo].[renter] set [balance] = ? where renterID = ?";
+        String sql = "UPDATE renter SET balance = ? WHERE renterID = ?"; // Sửa lại không cần [dbo].
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setDouble(1, balance);
             pre.setInt(2, renterID);
             n = pre.executeUpdate();
         } catch (SQLException ex) {
-
+            ex.printStackTrace();
         }
         return n;
+    }
+
+    public static void main(String[] args) {
+        PaymentDAO dao = new PaymentDAO();
+        // Test việc hiển thị số tiền của người thuê
+        int displayMoney = dao.displayMoney(602);
+        System.out.println(displayMoney);
     }
 }

@@ -29,7 +29,7 @@ public class AccountDAO extends MyDAO {
     //List Account by userId
     public Account getAccount(int id) {
         Account account = new Account();
-        String statement = "select * from [Account]";
+        String statement = "select * from account";
         try {
             ps = con.prepareStatement(statement);
             ps.setInt(1, id);
@@ -83,7 +83,9 @@ public class AccountDAO extends MyDAO {
     }
 
     public int getUserRole(String mail, String password) {
-        String sql = "SELECT userRole FROM [Account] \n"
+//        String sql = "SELECT userRole FROM account \n"
+//                + "WHERE userMail = ? AND userPassword = ?";
+        String sql = "SELECT userRole FROM account \n"
                 + "WHERE userMail = ? AND userPassword = ?";
         try {
             ps = con.prepareStatement(sql);
@@ -105,7 +107,8 @@ public class AccountDAO extends MyDAO {
         try {
             PreparedStatement ps;
             ResultSet rs;
-            String sql = "SELECT * FROM [HL_Motel].[dbo].[Account] where userMail = ? and userPassword = ?";
+            String sql = "SELECT * FROM account WHERE userMail = ? AND userPassword = ?";
+
             ps = connection.prepareStatement(sql);
             ps.setString(1, email);
             ps.setString(2, password);
@@ -114,7 +117,7 @@ public class AccountDAO extends MyDAO {
                 Account a = new Account();
                 a.setUserID(rs.getInt(1));
                 a.setUserMail(rs.getString(2));
-                a.setUserPassword(rs.getString(4));
+                a.setUserPassword(rs.getString(3));
                 a.setUserRole(rs.getInt(4));
                 return a;
             }
@@ -129,7 +132,7 @@ public class AccountDAO extends MyDAO {
         try {
             PreparedStatement ps;
             ResultSet rs;
-            String sql = "SELECT * FROM [HL_Motel].[dbo].[Account] WHERE userMail = ?";
+            String sql = "SELECT * FROM account WHERE userMail = ?";
             ps = connection.prepareStatement(sql);
             ps.setString(1, email);
             rs = ps.executeQuery();
@@ -152,7 +155,7 @@ public class AccountDAO extends MyDAO {
         try {
             PreparedStatement ps;
             ResultSet rs;
-            String sql = "update [Account] set userPassword = ? where userMail = ?";
+            String sql = "UPDATE account SET userPassword = ? WHERE userMail = ?";
             ps = connection.prepareStatement(sql);
             ps.setString(2, email);
             ps.setString(1, password);
@@ -168,7 +171,7 @@ public class AccountDAO extends MyDAO {
         try {
             PreparedStatement ps;
             ResultSet rs;
-            String sql = "SELECT [userID] FROM [HL_Motel].[dbo].[Account] where Account.userMail = ?";
+            String sql = "SELECT userID FROM account WHERE userMail = ?";
             ps = connection.prepareStatement(sql);
             ps.setString(1, email);
             rs = ps.executeQuery();
@@ -186,7 +189,7 @@ public class AccountDAO extends MyDAO {
         }
         return null;
     }
-    
+
     public int getUserIdByEmail(String email) {
         int userID = 0;
         try {
@@ -197,7 +200,7 @@ public class AccountDAO extends MyDAO {
             ps.setString(1, email);
             rs = ps.executeQuery();
             if (rs.next()) {
-              userID = rs.getInt("userID");
+                userID = rs.getInt("userID");
             }
 
         } catch (SQLException ex) {
@@ -207,7 +210,7 @@ public class AccountDAO extends MyDAO {
     }
 
     public void changep(Account a) {
-        String sql = "UPDATE [dbo].[account] set userPassword = ? where userMail = ?";
+        String sql = "UPDATE account SET userPassword = ? WHERE userMail = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, a.getUserPassword());
@@ -219,7 +222,7 @@ public class AccountDAO extends MyDAO {
     }
 
     public Account check(String usermail, String password) {
-        String sql = "select * from Account where userMail = ? and userPassword = ?";
+        String sql = "SELECT * FROM account WHERE userMail = ? AND userPassword = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, usermail);
@@ -241,7 +244,7 @@ public class AccountDAO extends MyDAO {
     }
 
     public Account checkID(int userid) {
-        String sql = "SELECT * FROM Account WHERE userid = ?";
+        String sql = "SELECT * FROM account WHERE userID = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, userid); // Set parameter using setInt for integer value
@@ -254,9 +257,9 @@ public class AccountDAO extends MyDAO {
         }
         return null;
     }
-   
+
     public void updatePassword(Account a) {
-        String sql = "UPDATE Account SET [userPassword] = ? WHERE userID = ?";
+        String sql = "UPDATE account SET userPassword = ? WHERE userID = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, a.getUserPassword());
@@ -268,9 +271,10 @@ public class AccountDAO extends MyDAO {
             e.printStackTrace();
         }
     }
-        public static void main(String[] args) {
+
+    public static void main(String[] args) {
         AccountDAO dao = new AccountDAO();
         int userID = dao.getUserIdByEmail("maingoctu@gmail.com");
-            System.out.println(userID);
+        System.out.println(userID);
     }
 }
