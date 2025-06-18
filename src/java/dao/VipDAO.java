@@ -22,7 +22,7 @@ public class VipDAO extends DBContext {
 
     public List<Vip> getAllVips() {
         List<Vip> list = new ArrayList<>();
-        String sql = "SELECT * FROM dbo.vip";
+        String sql = "SELECT * FROM vip";
         try {
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();

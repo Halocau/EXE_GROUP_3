@@ -18,7 +18,7 @@ import model.Slider;
 public class SliderDAO extends DBContext {
 
     public boolean updateSliderStatus(int sliderId, boolean sliderStatus) {
-        String sql = "UPDATE Slider SET SliderStatus = ? WHERE SliderId = ?";
+        String sql = "UPDATE slider SET SliderStatus = ? WHERE sliderid = ?";
         try {
             java.sql.Connection conn = connection;
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -34,7 +34,7 @@ public class SliderDAO extends DBContext {
 
     public List<Slider> getAllSlider() {
         List<Slider> sliders = new ArrayList<>();
-        String sql = "select * from Slider where SliderStatus = 1";
+        String sql = "SELECT * FROM slider WHERE SliderStatus = 1";
 
         try {
             java.sql.Connection conn = connection;
@@ -59,15 +59,15 @@ public class SliderDAO extends DBContext {
 
     public List<Slider> getSliderList(int pageIndex, int pageSize) {
         List<Slider> sliders = new ArrayList<>();
-        String sql = "SELECT [SliderId],\n"
-                + "      [SliderName],\n"
-                + "      [SliderImg],\n"
-                + "      [SliderDate],\n"
-                + "      [SliderStatus]\n"
-                + "  FROM [HL_Motel].[dbo].[Slider]\n"
-                + "ORDER BY [SliderId]\n"
-                + "OFFSET ? ROWS\n"
-                + "FETCH NEXT ? ROWS ONLY";
+        String sql = "SELECT SliderId, " +
+             "       SliderName, " +
+             "       SliderImg, " +
+             "       SliderDate, " +
+             "       SliderStatus " +
+             "FROM slider " +  // table name in lowercase
+             "ORDER BY SliderId " +
+             "OFFSET ? ROWS " +
+             "FETCH NEXT ? ROWS ONLY";
 
         try {
             java.sql.Connection conn = connection;
@@ -95,13 +95,9 @@ public class SliderDAO extends DBContext {
 
     public int insertSlider(Slider slider) {
         int n = 0;
-        String query = "INSERT INTO [dbo].[Slider]\n"
-                + "           ([SliderName]\n"
-                + "           ,[SliderStatus]\n"
-                + "           ,[SliderImg]\n"
-                + "           ,[SliderDate])\n"
-                + "     VALUES\n"
-                + "           (?,?,?,?)";
+        String query = "INSERT INTO slider " +
+               "(SliderName, SliderStatus, SliderImg, SliderDate) " +
+               "VALUES (?, ?, ?, ?)";
         try {
             java.sql.Connection conn = connection;
             PreparedStatement ps = conn.prepareStatement(query);
@@ -119,15 +115,12 @@ public class SliderDAO extends DBContext {
 
     public List<Slider> searchByText(int pageIndex, int pageSize, String search) {
         List<Slider> sliders = new ArrayList<>();
-        String sql = "SELECT [SliderId],\n"
-                + "      [SliderName],\n"
-                + "      [SliderImg],\n"
-                + "      [SliderDate],\n"
-                + "      [SliderStatus]\n"
-                + "  FROM [HL_Motel].[dbo].[Slider]\n where SliderName like ? "
-                + "ORDER BY [SliderId]\n"
-                + "OFFSET ? ROWS\n"
-                + "FETCH NEXT ? ROWS ONLY";
+        String sql = "SELECT SliderId, SliderName, SliderImg, SliderDate, SliderStatus " +
+             "FROM slider " +
+             "WHERE SliderName LIKE ? " +
+             "ORDER BY SliderId " +
+             "OFFSET ? ROWS " +
+             "FETCH NEXT ? ROWS ONLY";
 
         try {
             java.sql.Connection conn = connection;
@@ -157,11 +150,11 @@ public class SliderDAO extends DBContext {
 
     public int updateSlider(Slider slider) {
         int n = 0;
-        String query = "UPDATE [dbo].[Slider] \n"
-                + "SET [SliderName] = ?, \n"
-                + "    [SliderImg] = ?, \n"
-                + "    [SliderDate] = ? \n"
-                + "WHERE [SliderID] = ?";
+        String query = "UPDATE slider \n"
+             + "SET SliderName = ?, \n"
+             + "    SliderImg = ?, \n"
+             + "    SliderDate = ? \n"
+             + "WHERE SliderID = ?";
 
         try {
             java.sql.Connection conn = connection;
@@ -180,7 +173,7 @@ public class SliderDAO extends DBContext {
 
     public Slider getSliderById(int sliderId) {
         Slider slider = null;
-        String query = "SELECT * FROM [dbo].[Slider] WHERE SliderId = ?";
+        String query = "SELECT * FROM slider WHERE SliderId = ?";
 
         try {
             java.sql.Connection conn = connection;
@@ -206,12 +199,8 @@ public class SliderDAO extends DBContext {
 
     public List<Slider> getSliderDetails(int sliderId) {
         List<Slider> sliders = new ArrayList<>();
-        String sql = "SELECT [SliderId]\n"
-                + "      ,[SliderName]\n"
-                + "      ,[SliderImg]\n"
-                + "      ,[SliderDate]\n"
-                + "      ,[SliderStatus]\n"
-                + "  FROM [HL_Motel].[dbo].[Slider] where SliderId = ?";
+        String sql = "SELECT SliderId, SliderName, SliderImg, SliderDate, SliderStatus " +
+             "FROM slider WHERE SliderId = ?";
 
         try {
             java.sql.Connection conn = connection;
@@ -238,7 +227,7 @@ public class SliderDAO extends DBContext {
 
     public int Deleteslider(Slider slider) {
         int n = 0;
-        String query = "DELETE FROM [dbo].[Slider] WHERE [SliderId] = ?";
+        String query = "DELETE FROM slider WHERE SliderId = ?";
         try {
             java.sql.Connection conn = connection;
             PreparedStatement ps = conn.prepareStatement(query);

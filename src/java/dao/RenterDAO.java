@@ -34,21 +34,21 @@ public class RenterDAO extends MyDAO {
 
     public List<User> getRenterDetailByAccountAndPassword(String accountInput, String passwordInput) {
         List<User> list = new ArrayList<>();
-        String sql = "SELECT DISTINCT "
-                + "    u.userID, u.userName, u.userGender, u.userBirth, u.userAddress, u.userPhone, u.userAvatar, "
-                + "    r.renterID, r.roomID, r.renterStatus, r.renterHaveRoom, r.balance, "
-                + "    a.userMail, a.userPassword, "
-                + "    rm.roomFloor, rm.roomNumber, rm.roomFee  "
-                + "FROM "
-                + "    \"user\" u "
-                + "JOIN "
-                + "    renter r ON u.userID = r.userID "
-                + "JOIN "
-                + "    account a ON u.userID = a.userID "
-                + "LEFT JOIN "
-                + "    room rm ON r.roomID = rm.roomID "
-                + "WHERE "
-                + "    a.userMail = ? AND a.userPassword = ?";
+        String sql = "SELECT DISTINCT " +
+             "    u.userID, u.userName, u.userGender, u.userBirth, u.userAddress, u.userPhone, u.userAvatar, " +
+             "    r.renterID, r.roomID, r.renterStatus, r.renterHaveRoom, r.balance, " +
+             "    a.userMail, a.userPassword, " +
+             "    rm.roomFloor, rm.roomNumber, rm.roomFee " +
+             "FROM " +
+             "    `user` u " +
+             "JOIN " +
+             "    renter r ON u.userID = r.userID " +
+             "JOIN " +
+             "    account a ON u.userID = a.userID " +
+             "LEFT JOIN " +
+             "    room rm ON r.roomID = rm.roomID " +
+             "WHERE " +
+             "    a.userMail = ? AND a.userPassword = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, accountInput);
@@ -90,21 +90,21 @@ public class RenterDAO extends MyDAO {
     
     public List<Renter> getRenterDetail(String accountInput, String passwordInput) {
         List<Renter> list = new ArrayList<>();
-        String sql = "SELECT DISTINCT "
-                + "    u.userID, u.userName, u.userGender, u.userBirth, u.userAddress, u.userPhone, u.userAvatar, "
-                + "    r.renterID, r.roomID, r.renterStatus, r.renterHaveRoom, r.balance, "
-                + "    a.userMail, a.userPassword, "
-                + "    rm.roomFloor, rm.roomNumber, rm.roomFee  "
-                + "FROM "
-                + "    \"user\" u "
-                + "JOIN "
-                + "    renter r ON u.userID = r.userID "
-                + "JOIN "
-                + "    account a ON u.userID = a.userID "
-                + "LEFT JOIN "
-                + "    room rm ON r.roomID = rm.roomID "
-                + "WHERE "
-                + "    a.userMail = ? AND a.userPassword = ?";
+        String sql = "SELECT DISTINCT " +
+             "    u.userID, u.userName, u.userGender, u.userBirth, u.userAddress, u.userPhone, u.userAvatar, " +
+             "    r.renterID, r.roomID, r.renterStatus, r.renterHaveRoom, r.balance, " +
+             "    a.userMail, a.userPassword, " +
+             "    rm.roomFloor, rm.roomNumber, rm.roomFee " +
+             "FROM " +
+             "    `user` u " +
+             "JOIN " +
+             "    renter r ON u.userID = r.userID " +
+             "JOIN " +
+             "    account a ON u.userID = a.userID " +
+             "LEFT JOIN " +
+             "    room rm ON r.roomID = rm.roomID " +
+             "WHERE " +
+             "    a.userMail = ? AND a.userPassword = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, accountInput);
@@ -161,9 +161,9 @@ public class RenterDAO extends MyDAO {
 
     public List<News> getAllNews() {
         List<News> list = new ArrayList<>();
-        String query = "select u.userName, n.newsTitle, n.newsDes\n"
-                + "from  [dbo].[News] as n, [dbo].[User] as u\n"
-                + "where n.ownerID = u.userID";
+        String query = "SELECT u.userName, n.newsTitle, n.newsDes " +
+               "FROM News AS n, `user` AS u " +
+               "WHERE n.ownerID = u.userID";
         try {
             conn = connection;
             ps = conn.prepareStatement(query);
@@ -213,9 +213,9 @@ public class RenterDAO extends MyDAO {
 
     // Update user information
     public boolean updateUser(int id, String gender, String address, String phone, String birth, String name) {
-        String sql = "UPDATE [dbo].[user] "
-                + "SET userName = ?, userGender = ?, userBirth = ?, userAddress = ?, userPhone = ? "
-                + "WHERE userID = ?";
+        String sql = "UPDATE `user` " +
+             "SET userName = ?, userGender = ?, userBirth = ?, userAddress = ?, userPhone = ? " +
+             "WHERE userID = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, name);
@@ -235,9 +235,9 @@ public class RenterDAO extends MyDAO {
 
     public int updateAvatar(User renterProfile) {
         int n = 0;
-        String sql = "UPDATE [dbo].[user]\n"
-                + "   SET [userAvatar] = ?\n"
-                + " WHERE userID = ?";
+        String sql = "UPDATE `user` " +
+             "SET userAvatar = ? " +
+             "WHERE userID = ?";
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setString(1, renterProfile.getUserAvatar());
@@ -251,7 +251,7 @@ public class RenterDAO extends MyDAO {
 
     // Retrieve user by ID
     public User getUserByID(int userID) {
-        String sql = "SELECT * FROM user WHERE userID = ?";
+        String sql = "SELECT * FROM `user` WHERE userID = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, userID);
@@ -277,9 +277,9 @@ public class RenterDAO extends MyDAO {
 
     // Update user using User object
     public void updateUser(User u) {
-        String sql = "UPDATE [dbo].[user] "
-                + "SET userName = ?, userGender = ?, userBirth = ?, userAddress = ?, userPhone = ?, userAvatar = ? "
-                + "WHERE userID = ?";
+        String sql = "UPDATE `user` " +
+             "SET userName = ?, userGender = ?, userBirth = ?, userAddress = ?, userPhone = ?, userAvatar = ? " +
+             "WHERE userID = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, u.getUserName());
@@ -298,15 +298,12 @@ public class RenterDAO extends MyDAO {
 
     public UserDetail RenterBasicDetail(String accountInput, String passwordInput) {
         UserDetail userDetail = null;
-        String sql = "SELECT \n"
-                + "a.userID, u.userName, u.userGender, u.userBirth, u.userAddress, u.userPhone, u.userAvatar, \n"
-                + "a.userMail, a.userPassword, a.userRole\n"
-                + "FROM \n"
-                + "[user] u \n"
-                + "JOIN \n"
-                + "account a ON u.userID = a.userID \n"
-                + "WHERE \n"
-                + "a.userMail = ?  AND a.userPassword = ?";
+        String sql = "SELECT " +
+             "a.userID, u.userName, u.userGender, u.userBirth, u.userAddress, u.userPhone, u.userAvatar, " +
+             "a.userMail, a.userPassword, a.userRole " +
+             "FROM `user` u " +
+             "JOIN account a ON u.userID = a.userID " +
+             "WHERE a.userMail = ? AND a.userPassword = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, accountInput);
@@ -339,14 +336,14 @@ public class RenterDAO extends MyDAO {
     //ThienAnh RenterDAO
     public List<RenterList> getRenters() {
         List<RenterList> renters = new ArrayList<>();
-        String sql = "SELECT userName\n"
-                + "      ,userGender\n"
-                + "      ,r.roomID\n"
-                + "      ,r.renterStatus\n"
-                + "      ,r.renterHaveRoom\n"
-                + "	  ,r.balance\n"
-                + "  FROM [HL_Motel].[dbo].[user]\n"
-                + "  join renter r on [user].userID = r.userID";
+        String sql = "SELECT u.userName, " +
+             "       u.userGender, " +
+             "       r.roomID, " +
+             "       r.renterStatus, " +
+             "       r.renterHaveRoom, " +
+             "       r.balance " +
+             "FROM `user` u " +
+             "JOIN renter r ON u.userID = r.userID";
 
         try (Connection conn = connection; PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
@@ -370,10 +367,10 @@ public class RenterDAO extends MyDAO {
 
     public List<RenterList> getListRenters() {
         List<RenterList> renters = new ArrayList<>();
-        String sql = "SELECT r.roomID, u.userName, r.roomNumber, r.roomFloor, rt.balance, u.userID\n"
-                + "FROM renter rt \n"
-                + "join room r on rt.roomID = r.roomID\n"
-                + "join [user] u on rt.userID = u.userID";
+        String sql = "SELECT r.roomID, u.userName, r.roomNumber, r.roomFloor, rt.balance, u.userID " +
+             "FROM renter rt " +
+             "JOIN room r ON rt.roomID = r.roomID " +
+             "JOIN `user` u ON rt.userID = u.userID";
 
         try (Connection conn = connection; PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
@@ -444,11 +441,11 @@ public class RenterDAO extends MyDAO {
 
     public List<String> getRenterName(int roomID) {
         List<String> listRenterName = new ArrayList<>();
-        String sql = "select u.userName\n"
-                + "from [user] u\n"
-                + "left join renter rt on u.userID = rt.userID\n"
-                + "left join room r on rt.roomID = r.roomID\n"
-                + "where r.roomID = ?";
+        String sql = "SELECT u.userName " +
+             "FROM `user` u " +
+             "LEFT JOIN renter rt ON u.userID = rt.userID " +
+             "LEFT JOIN room r ON rt.roomID = r.roomID " +
+             "WHERE r.roomID = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, roomID);
@@ -466,14 +463,9 @@ public class RenterDAO extends MyDAO {
 
     public int addRenter(int userID, int roomID) {
         int n = 0;
-        String sql = "INSERT INTO [dbo].[renter]\n"
-                + "           ([userID]\n"
-                + "           ,[roomID]\n"
-                + "           ,[renterStatus]\n"
-                + "           ,[renterHaveRoom]\n"
-                + "           ,[balance])\n"
-                + "     VALUES\n"
-                + "           (?,?,?,?,?)";
+        String sql = "INSERT INTO renter " +
+             "(userID, roomID, renterStatus, renterHaveRoom, balance) " +
+             "VALUES (?, ?, ?, ?, ?)";
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setInt(1, userID);
@@ -490,15 +482,12 @@ public class RenterDAO extends MyDAO {
     
     public List<RentDetail> rentDetail(int renterID) {
         List<RentDetail> rentDetails = new ArrayList<>();
-        String sql = "SELECT "
-                + "    r.roomID, r.roomFloor, r.roomNumber, r.roomSize, r.roomFee, r.roomImg, "
-                + "    re.userID, re.renterStatus, re.renterHaveRoom, re.balance "
-                + "FROM "
-                + "    room r "
-                + "LEFT JOIN "
-                + "    renter re ON r.roomID = re.roomID "
-                + "WHERE "
-                + "    re.userID = ?";
+        String sql = "SELECT " +
+             "    r.roomID, r.roomFloor, r.roomNumber, r.roomSize, r.roomFee, r.roomImg, " +
+             "    re.userID, re.renterStatus, re.renterHaveRoom, re.balance " +
+             "FROM room r " +
+             "LEFT JOIN renter re ON r.roomID = re.roomID " +
+             "WHERE re.userID = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, renterID);
@@ -528,10 +517,10 @@ public class RenterDAO extends MyDAO {
     }
     public List<RenterList> getAllRentersExcel() {
     List<RenterList> renters = new ArrayList<>();
-    String sql = "SELECT u.userName, r.roomNumber, r.roomFloor, r.roomDepartment\n" +
-                 "FROM renter rt\n" +
-                 "JOIN room r ON rt.roomID = r.roomID\n" +
-                 "JOIN [user] u ON rt.userID = u.userID";
+    String sql = "SELECT u.userName, r.roomNumber, r.roomFloor, r.roomDepartment " +
+             "FROM renter rt " +
+             "JOIN room r ON rt.roomID = r.roomID " +
+             "JOIN `user` u ON rt.userID = u.userID";
 
     try (Connection conn = connection; 
          PreparedStatement ps = conn.prepareStatement(sql); 
@@ -581,22 +570,26 @@ public class RenterDAO extends MyDAO {
             }
             
             // Tính tổng doanh thu
-            String revenueSql = "SELECT SUM(r.roomFee) as totalRevenue FROM room r " +
-                              "JOIN renter rt ON r.roomID = rt.roomID " +
-                              "WHERE rt.renterStatus = 1";
+            String revenueSql = "SELECT SUM(r.roomFee) AS totalRevenue " +
+                    "FROM room r " +
+                    "JOIN renter rt ON r.roomID = rt.roomID " +
+                    "WHERE rt.renterStatus = 1";
             
             // Tính tổng số người ở
-            String occupantsSql = "SELECT COUNT(*) as totalOccupants FROM renter " +
-                                "WHERE renterStatus = 1";
+            String occupantsSql = "SELECT COUNT(*) AS totalOccupants " +
+                      "FROM renter " +
+                      "WHERE renterStatus = 1";
             
             // Tính số phòng đang được cho thuê
-            String occupiedRoomsSql = "SELECT COUNT(DISTINCT roomID) as occupiedRooms FROM renter " +
-                                    "WHERE renterStatus = 1";
+            String occupiedRoomsSql = "SELECT COUNT(DISTINCT roomID) AS occupiedRooms " +
+                          "FROM renter " +
+                          "WHERE renterStatus = 1";
             
             // Tính số phòng trống
-            String emptyRoomsSql = "SELECT COUNT(*) as emptyRooms FROM room r " +
-                                 "LEFT JOIN renter rt ON r.roomID = rt.roomID " +
-                                 "WHERE rt.roomID IS NULL OR rt.renterStatus = 0";
+            String emptyRoomsSql = "SELECT COUNT(*) AS emptyRooms " +
+                       "FROM room r " +
+                       "LEFT JOIN renter rt ON r.roomID = rt.roomID AND rt.renterStatus = 1 " +
+                       "WHERE rt.roomID IS NULL";
             
             // Lấy tổng doanh thu
             ps = conn.prepareStatement(revenueSql);

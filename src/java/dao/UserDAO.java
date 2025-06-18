@@ -34,7 +34,7 @@ public class UserDAO extends MyDAO {
     //List User Data
     public List<User> getUserList() {
         List<User> list = new ArrayList<>();
-        String sql = "SELECT * FROM [User]";
+        String sql = "SELECT * FROM user";
         try {
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -50,9 +50,9 @@ public class UserDAO extends MyDAO {
 
     public List<User> getUserAvailable() {
         List<User> list = new ArrayList<>();
-        String sql = "  select * from [user] u \n"
-                + "  join account a on u.userID = a.userID \n"
-                + "  where a.userRole = 1 and u.userID not in (select userID from renter)";
+        String sql = "SELECT * FROM user u " +
+             "JOIN account a ON u.userID = a.userID " +
+             "WHERE a.userRole = 1 AND u.userID NOT IN (SELECT userID FROM renter)";
         try {
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -154,10 +154,10 @@ public class UserDAO extends MyDAO {
 //    }
     public List<User> getOwner() {
         List<User> list = new ArrayList<>();
-        String sql = "  SELECT [User].userID, [User].userName, [User].userGender, [User].userBirth, [User].userAddress, [User].userPhone, [User].userAvatar\n"
-                + "     FROM [User]\n"
-                + "     INNER JOIN Account ON [User].userID = Account.userID\n"
-                + "     WHERE Account.userRole = 3";
+        String sql = "SELECT user.userID, user.userName, user.userGender, user.userBirth, user.userAddress, user.userPhone, user.userAvatar " +
+             "FROM user " +
+             "INNER JOIN account ON user.userID = account.userID " +
+             "WHERE account.userRole = 3";
 
         try {
             ps = con.prepareStatement(sql);
@@ -174,11 +174,10 @@ public class UserDAO extends MyDAO {
 
     public int isRenter(int userID) {
         int recordNumber = 0;
-        String sql = "select count(*) as [recordNumber]\n"
-                + "from [user] u \n"
-                + "join renter r\n"
-                + "on u.userID = r.userID\n"
-                + "where u.userID = ?";
+        String sql = "SELECT COUNT(*) AS recordNumber " +
+             "FROM user u " +
+             "JOIN renter r ON u.userID = r.userID " +
+             "WHERE u.userID = ?";
 
         try {
             ps = con.prepareStatement(sql);
@@ -194,7 +193,7 @@ public class UserDAO extends MyDAO {
     }
 
     public int getUserRoleByEmailAndPassword(String email, String password) {
-        String sql = "select userRole from account where userMail = ? and userPassword = ?";
+        String sql = "SELECT userRole FROM account WHERE userMail = ? AND userPassword = ?";
 
         try {
             ps = con.prepareStatement(sql);

@@ -27,15 +27,15 @@ public class PenaltyDao extends DBContext {
 
     public List<PenaltyList> getPenList() {
         List<PenaltyList> lpen = new ArrayList<>();
-        String sql = "SELECT [penID]\n" +
-                            "      ,v.[roomNumber]\n" +
-                            "      ,[description]\n" +
-                            "      ,[penDate]\n" +
-                            "      ,r.[ruleName]\n" +
-                            "      ,[penStatus]\n" +
-                            "  FROM [HL_Motel].[dbo].[penaltys]\n" +
-                            "  join [rule] r on r.ruleID = penaltys.ruleID\n" +
-                            "  join [room] v on v.roomID = penaltys.roomID";
+        String sql = "SELECT penID, " +
+             "       v.roomNumber, " +
+             "       description, " +
+             "       penDate, " +
+             "       r.ruleName, " +
+             "       penStatus " +
+             "FROM penaltys " +
+             "JOIN rule r ON r.ruleID = penaltys.ruleID " +
+             "JOIN room v ON v.roomID = penaltys.roomID";
         System.out.println(sql);
         try {
             java.sql.Connection conn = connection;
@@ -61,10 +61,10 @@ public class PenaltyDao extends DBContext {
     }
 
     public PenaltyList selectUpdateByPenID(String id) {
-        String sql = "select penID,roomID,description,penDate,penaltys.ruleID,[rule].ruleName,penStatus\n"
-                + "from penaltys join [rule] \n"
-                + "on penaltys.ruleID = [rule].ruleID\n"
-                + "where penID = ?";
+        String sql = "SELECT penID, roomID, description, penDate, penaltys.ruleID, rule.ruleName, penStatus " +
+             "FROM penaltys " +
+             "JOIN rule ON penaltys.ruleID = rule.ruleID " +
+             "WHERE penID = ?";
         try {
             java.sql.Connection conn = connection;
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -91,7 +91,8 @@ public class PenaltyDao extends DBContext {
     }
 
     public void addPenalty1(String roomID, String description, String penDate, String ruleID) {
-        String sql = "  INSERT INTO HL_Motel.dbo.penaltys (roomID, [description], [penDate], ruleID, [penStatus], [evidenceImg]) VALUES (?, ?, ?, ?, 0, 'img')";
+        String sql = "INSERT INTO penaltys (roomID, description, penDate, ruleID, penStatus, evidenceImg) " +
+             "VALUES (?, ?, ?, ?, 0, 'img')";
         System.out.println(sql);
         try (Connection conn = connection; PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, roomID);
@@ -106,7 +107,7 @@ public class PenaltyDao extends DBContext {
     }
 
     public void updatePenalty(String penStatus, String penId) {
-        String sql = "UPDATE HL_Motel.dbo.penaltys SET  penStatus =? WHERE penID =?";
+        String sql = "UPDATE penaltys SET penStatus = ? WHERE penID = ?";
         try (Connection conn = connection; PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, penStatus);
@@ -119,7 +120,7 @@ public class PenaltyDao extends DBContext {
     }
 
     public void deletePenalty(String penId) {
-        String sql = "DELETE FROM HL_Motel.dbo.penaltys WHERE penID = ?";
+        String sql = "DELETE FROM penaltys WHERE penID = ?";
         try (Connection conn = connection; PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, penId);
             ps.executeUpdate();
@@ -130,7 +131,7 @@ public class PenaltyDao extends DBContext {
 
     public Penalty findById(int id) {
         try {
-            String sql = "select * from penaltys where penID = ?";
+           String sql = "SELECT * FROM penaltys WHERE penID = ?";
             PreparedStatement ps;
             ResultSet rs;
             ps = connection.prepareStatement(sql);
@@ -147,7 +148,7 @@ public class PenaltyDao extends DBContext {
 
     public int insert(Penalty model) {
         try {
-            String sql = "insert into penaltys(roomID, description, penDate, ruleID, penStatus, evidenceImg) values (?,?,?,?,?,?)";
+            String sql = "INSERT INTO penaltys (roomID, description, penDate, ruleID, penStatus, evidenceImg) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement ps;
             ps = connection.prepareStatement(sql);
             ps.setInt(1, model.getRoomID().getRoomID());
@@ -166,7 +167,7 @@ public class PenaltyDao extends DBContext {
 
     public int update(Penalty model) {
         try {
-            String sql = "update penaltys set roomID = ?, description = ?, penDate = ?, ruleID = ?, penStatus = ?, evidenceImg = ? where penID = ?";
+            String sql = "UPDATE penaltys SET roomID = ?, description = ?, penDate = ?, ruleID = ?, penStatus = ?, evidenceImg = ? WHERE penID = ?";
             PreparedStatement ps;
             ps = connection.prepareStatement(sql);
             ps.setInt(1, model.getRoomID().getRoomID());
@@ -186,7 +187,7 @@ public class PenaltyDao extends DBContext {
 
     public int remove(int id) {
         try {
-            String sql = "delete from penaltys where penID = ?";
+            String sql = "DELETE FROM penaltys WHERE penID = ?";
             PreparedStatement ps;
             ps = connection.prepareStatement(sql);
             ps.setInt(1, id);
@@ -200,7 +201,7 @@ public class PenaltyDao extends DBContext {
 
     public int updateStatus(Penalty model) {
         try {
-            String sql = "update penalty set penStatus = ? where penID = ?";
+            String sql = "UPDATE penaltys SET penStatus = ? WHERE penID = ?";
             PreparedStatement ps;
             ps = connection.prepareStatement(sql);
             ps.setInt(1, model.getPenStatus());
@@ -237,7 +238,7 @@ public class PenaltyDao extends DBContext {
     public ArrayList<Penalty> findByRuleId(int ruleId) {
         ArrayList<Penalty> penaltys = new ArrayList<>();
         try {
-            String sql = "select * from penalty where ruleID = ?";
+            String sql = "SELECT * FROM penaltys WHERE ruleID = ?";
             PreparedStatement ps;
             ResultSet rs;
             ps = connection.prepareStatement(sql);
@@ -256,7 +257,7 @@ public class PenaltyDao extends DBContext {
     public ArrayList<Penalty> findAll() {
         ArrayList<Penalty> penaltys = new ArrayList<>();
         try {
-            String sql = "select * from penaltys";
+            String sql = "SELECT * FROM penaltys";
             PreparedStatement ps;
             ResultSet rs;
             ps = connection.prepareStatement(sql);
