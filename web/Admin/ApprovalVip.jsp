@@ -5,27 +5,15 @@
 <html lang="en">
 
     <head>
-        <link rel="icon" href="favicon.png">
         <meta charset="utf-8" />
+        <link rel="icon" href="favicon.png">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Tables - SB Admin</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-        <link rel="stylesheet"
-              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
         <link href="AdminCSS/css/styles.css" rel="stylesheet" />
-        <link rel="stylesheet"
-              href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
-              integrity="sha512-..." crossorigin="anonymous">
-        <link rel="stylesheet"
-              href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
-              integrity="sha512-..." crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.bundle.min.js"
-        integrity="sha512-..." crossorigin="anonymous"></script>
-
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     </head>
 
@@ -45,7 +33,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                    <ul class="dropdown-menu dropdown- menu-end" aria-labelledby="navbarDropdown">
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
 
                         <li>
                             <hr class="dropdown-divider" />
@@ -97,10 +85,10 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Security List</h1>
+                        <h1 class="mt-4">Tables</h1>
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item"><a href="">Manage</a></li>
-                            <li class="breadcrumb-item active">List</li>
+                            <li class="breadcrumb-item active">Account</li>
                         </ol>
 
                         <div class="card mb-4">
@@ -112,66 +100,67 @@
 
 
                                 <br>
-                                <table id="datatablesSimple">
+                                <table id="datatablesSimple" class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-
-                                            <th>Name</th>
-
-                                            <th>Shift</th>
-
-
-                                            <th>Department work</th>
-                                            <th></th>
-
+                                            <th>Room ID</th>
+                                            <th>Floor</th>
+                                            <th>Room Number</th>
+                                            <th>Size (m²)</th>
+                                            <th>Price</th>
+                                            <th>Image</th>
+                                            <th>Status</th>
+                                            <th>Occupants</th>
+                                            <th>Department</th>
+                                            <th>Active</th> <!-- Cột mới -->
                                         </tr>
                                     </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>ID</th>
-
-                                            <th>Name</th>
-
-                                            <th>Shift</th>
-
-
-                                            <th>Department work</th>
-                                            <th></th>
-                                        </tr>
-                                    </tfoot>
                                     <tbody>
-                                        <c:forEach var="o" items="${list}">
+                                        <c:forEach var="room" items="${rooms}">
                                             <tr>
+                                                <td>${room.roomID}</td>
+                                                <td>${room.roomFloor}</td>
+                                                <td>${room.roomNumber}</td>
+                                                <td>${room.roomSize}</td>
+                                                <td>${room.roomFee}</td>
+                                                <td>
+                                                    <img src="${pageContext.request.contextPath}/Image/Room/${room.roomImg}"
+                                                         alt="Room Image" width="100">
+                                                </td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${room.roomStatus == 0}">Chưa thuê</c:when>
+                                                        <c:when test="${room.roomStatus == 1}">Đã thuê</c:when>
+                                                        <c:when test="${room.roomStatus == 2}">Chờ duyệt</c:when>
+                                                        <c:when test="${room.roomStatus == 3}">Lên VIP</c:when>
+                                                        <c:otherwise>Vacant</c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td>${room.roomOccupant}</td>
+                                                <td>${room.roomDepartment}</td>
 
-                                                <td>${o.seID}</td>
+                                                <td>
+                                                    <form method="post" action="${pageContext.request.contextPath}/approvalVip" style="display:inline;">
+                                                        <input type="hidden" name="roomID" value="${room.roomID}" />
+                                                        <input type="hidden" name="roomStatus" value="3" />
+                                                        <button type="submit" class="btn btn-sm btn-success">
+                                                            Approve
+                                                        </button>
+                                                    </form>
 
-                                                <td>${o.userName}</td>
+                                                    <form method="post" action="${pageContext.request.contextPath}/approvalVip" style="display:inline; margin-left:5px;">
+                                                        <input type="hidden" name="roomID" value="${room.roomID}" />
+                                                        <input type="hidden" name="roomStatus" value="1" />
+                                                        <button type="submit" class="btn btn-sm btn-danger">
+                                                            Reject
+                                                        </button>
+                                                    </form>
+                                                </td>
 
-                                                        <!--                                            <td>${o.xShift}</td>-->
-                                                <c:choose>
-                                                    <c:when test="${o.xShift == 1}">
-                                                        <td>Day</td>
-                                                    </c:when>
-                                                    <c:when test="${o.xShift == 2}">
-                                                        <td>Night</td>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <td>None</td>
-                                                    </c:otherwise>
-                                                </c:choose>
-
-                                                <td>${o.department}</td>
-                                                <th><a href="selctseup?seID=${o.seID}">Change Shift</a></th>
-
-                                                        <!--                                            <th><a href="seupdate?id=${o.seID}">Change Shift</a></th>-->
                                             </tr>
                                         </c:forEach>
-
                                     </tbody>
                                 </table>
-                                <!--                                js ban-->
-
                             </div>
                         </div>
                     </div>
