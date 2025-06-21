@@ -17,7 +17,7 @@ public class RequestDAO extends DBContext {
 
     public List<ReqType> getAllReqType() {
         List<ReqType> requestTypes = new ArrayList<>();
-        String sql = "SELECT * FROM requestType "; // Adjust based on your table structure
+        String sql = "SELECT * FROM requesttype"; // Adjust based on your table structure
         try (
             PreparedStatement st = connection.prepareStatement(sql);
             ResultSet rs = st.executeQuery()
@@ -35,11 +35,13 @@ public class RequestDAO extends DBContext {
 
     public List<RequestList> getReqListByID(int userID) {
         List<RequestList> requests = new ArrayList<>();
-        String sql = "SELECT DISTINCT  u.userID, u.userName, r.requestID, r.title, r.description, rt.typeName, r.createAt, r.resStatus "
-                + "FROM request r "
-                + "JOIN [user] u ON r.userID = u.userID "
-                + "JOIN requestType rt ON r.requestType = rt.reqTypeID "
-                + "WHERE u.userID = ? ORDER BY requestID DESC";
+        String sql = "SELECT DISTINCT u.userID, u.userName, r.requestID, r.title, r.description, " +
+             "rt.typeName, r.createAt, r.resStatus " +
+             "FROM request r " +
+             "JOIN `user` u ON r.userID = u.userID " +
+             "JOIN requestType rt ON r.requestType = rt.reqTypeID " +
+             "WHERE u.userID = ? " +
+             "ORDER BY r.requestID DESC";
         try (
             PreparedStatement st = connection.prepareStatement(sql)
         ) {
@@ -66,7 +68,9 @@ public class RequestDAO extends DBContext {
         return requests;
     }
           public void updateAbandonedRequests() {
-        String sql = "UPDATE request SET resStatus = 'Abandoned' WHERE resStatus = 'Pending' AND CreateAt < ?";
+        String sql = "UPDATE request " +
+             "SET resStatus = 'Abandoned' " +
+             "WHERE resStatus = 'Pending' AND createAt < ?";
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String date7DaysAgo = sdf.format(new Date(System.currentTimeMillis() - 7L * 24 * 60 * 60 * 1000)); // 7 days ago
@@ -82,10 +86,12 @@ public class RequestDAO extends DBContext {
     
     public List<RequestList> getAllRequest() {
     List<RequestList> requests = new ArrayList<>();
-    String sql = "SELECT u.userID, u.userName, r.requestID, r.title, r.description, rt.typeName, r.createAt, r.resStatus "
-               + "FROM request r "
-               + "JOIN [user] u ON r.userID = u.userID "
-               + "JOIN requestType rt ON r.requestType = rt.reqTypeID ORDER BY requestID DESC";
+    String sql = "SELECT u.userID, u.userName, r.requestID, r.title, r.description, " +
+             "rt.typeName, r.createAt, r.resStatus " +
+             "FROM request r " +
+             "JOIN `user` u ON r.userID = u.userID " +
+             "JOIN requestType rt ON r.requestType = rt.reqTypeID " +
+             "ORDER BY r.requestID DESC";
     
     try (PreparedStatement st = connection.prepareStatement(sql);
          ResultSet rs = st.executeQuery()) {
@@ -112,7 +118,8 @@ public class RequestDAO extends DBContext {
 
 
     public boolean insertRequest(int userID, int requestType, String title, String description, String createAt, String resStatus) {
-        String sql = "INSERT INTO request (userID, requestType, title, description, createAt, resStatus) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO request (userID, requestType, title, description, createAt, resStatus) " +
+             "VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userID);
             ps.setInt(2, requestType);
@@ -130,7 +137,9 @@ public class RequestDAO extends DBContext {
     }
 
     public boolean updateRequest(int requestID, int renterID, int requestType, String title, String description, String createAt, String resStatus) {
-        String sql = "UPDATE request SET userID = ?, requestType = ?, title = ?, description = ?, createAt = ?, resStatus = ? WHERE requestID = ?";
+        String sql = "UPDATE request " +
+             "SET userID = ?, requestType = ?, title = ?, description = ?, createAt = ?, resStatus = ? " +
+             "WHERE requestID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, renterID);
             ps.setInt(2, requestType);
@@ -182,20 +191,20 @@ public class RequestDAO extends DBContext {
 
       public List<RequestList> getReqListByID(int userID, int offset, int pageSize) {
     List<RequestList> requests = new ArrayList<>();
-    String sql = "SELECT u.userName, r.title, r.description, rt.typeName, r.createAt, r.resStatus "
-            + "FROM request r "
-            + "JOIN [user] u ON r.userID = u.userID "
-            + "JOIN requestType rt ON r.requestType = rt.reqTypeID "
-            + "WHERE r.userID =? "
-            + "ORDER BY r.createAt DESC "
-            + "OFFSET? ROWS "
-            + "FETCH NEXT? ROWS ONLY";
+    String sql = "SELECT u.userName, r.title, r.description, rt.typeName, r.createAt, r.resStatus " +
+             "FROM request r " +
+             "JOIN `user` u ON r.userID = u.userID " +
+             "JOIN requesttype rt ON r.requestType = rt.reqTypeID " +
+             "WHERE r.userID = ? " +
+             "ORDER BY r.createAt DESC " +
+             "LIMIT ? OFFSET ?";
     try (
         PreparedStatement st = connection.prepareStatement(sql)
     ) {
         st.setInt(1, userID);
-        st.setInt(2, offset);
-        st.setInt(3, pageSize);
+        //May Have to check this
+        st.setInt(2, pageSize);  // LIMIT
+        st.setInt(3, offset);    // OFFSET
         try (ResultSet rs = st.executeQuery()) {
             while (rs.next()) {
                 String userName = rs.getString("userName");
@@ -217,11 +226,11 @@ public class RequestDAO extends DBContext {
       
     public RequestList getRequestByReqID(int requestID) {
         RequestList request = null;
-        String sql = "SELECT u.userName, r.title, r.description, rt.typeName, r.createAt, r.resStatus "
-                + "FROM request r "
-                + "JOIN [user] u ON r.userID = u.userID "
-                + "JOIN requestType rt ON r.requestType = rt.reqTypeID "
-                + "WHERE r.requestID = ?";
+        String sql = "SELECT u.userName, r.title, r.description, rt.typeName, r.createAt, r.resStatus " +
+             "FROM request r " +
+             "JOIN `user` u ON r.userID = u.userID " +
+             "JOIN requestType rt ON r.requestType = rt.reqTypeID " +
+             "WHERE r.requestID = ?";
         try (
             PreparedStatement st = connection.prepareStatement(sql)
         ) {
@@ -281,11 +290,11 @@ public class RequestDAO extends DBContext {
     
     public RequestList getRequestByID(int requestID) {
         RequestList request = null;
-        String sql = "SELECT u.userName, r.title, r.description, rt.typeName, r.createAt, r.resStatus "
-                + "FROM request r "
-                + "JOIN [user] u ON r.userID = u.userID "
-                + "JOIN requestType rt ON r.requestType = rt.reqTypeID "
-                + "WHERE r.requestID = ?";
+        String sql = "SELECT u.userName, r.title, r.description, rt.typeName, r.createAt, r.resStatus " +
+             "FROM request r " +
+             "JOIN `user` u ON r.userID = u.userID " +
+             "JOIN requestType rt ON r.requestType = rt.reqTypeID " +
+             "WHERE r.requestID = ?";
         try (
             PreparedStatement st = connection.prepareStatement(sql)
         ) {

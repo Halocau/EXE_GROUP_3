@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
 import java.sql.Connection;
@@ -9,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import model.User;
 import model.UserDetail;
@@ -24,12 +19,13 @@ public class DAOUser extends DBContext {
     PreparedStatement ps = null;
     ResultSet rs = null;
 
+    // Lấy tất cả người dùng
     public List<User> getUsers() {
         List<User> user = new ArrayList<>();
 
         try {
             // Truy vấn dữ liệu từ bảng Accounts
-            String query = "SELECT * FROM [HL_Motel].[dbo].[user]";
+            String query = "SELECT * FROM user"; // Sửa lại không cần [dbo].
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
 
@@ -55,15 +51,15 @@ public class DAOUser extends DBContext {
         return user;
     }
 
+    // Lấy chi tiết người dùng theo userID
     public UserDetail getUsersByUserID(int userID) {
         UserDetail userDetail = null;
         try {
             // Truy vấn dữ liệu từ bảng Accounts
-            String query = "  select u.userName, u.userGender, u.userBirth, u.userAddress, u.userPhone, a.userMail, u.userAvatar\n"
-                    + "  from [user] u \n"
-                    + "  join account a\n"
-                    + "  on u.userID = a.userID\n"
-                    + "  where u.userID = ?";
+            String query = "SELECT u.userName, u.userGender, u.userBirth, u.userAddress, u.userPhone, a.userMail, u.userAvatar "
+                    + "FROM user u "
+                    + "JOIN account a ON u.userID = a.userID "
+                    + "WHERE u.userID = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, userID);
             ResultSet rs = statement.executeQuery();
@@ -87,18 +83,11 @@ public class DAOUser extends DBContext {
         return userDetail;
     }
 
-    public void insertUser( String name, String gender, String Dob, String address, String Phone, String avatar) {
-        String query = "INSERT INTO [dbo].[user]\n"
-                + "           ([userName]\n"
-                + "           ,[userGender]\n"
-                + "           ,[userBirth]\n"
-                + "           ,[userAddress]\n"
-                + "           ,[userPhone]\n"
-                + "           ,[userAvatar]\n"
-                + "     VALUES\n"
-                + "           (?,?,?,?,?,?)";
+    // Thêm người dùng mới
+    public void insertUser(String name, String gender, String Dob, String address, String Phone, String avatar) {
+        String query = "INSERT INTO user (userName, userGender, userBirth, userAddress, userPhone, userAvatar) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
         try {
-
             ps = connection.prepareStatement(query);
             ps.setString(1, name);
             ps.setString(2, gender);
@@ -113,24 +102,24 @@ public class DAOUser extends DBContext {
                     if (generatedKeys.next()) {
                         int userId = generatedKeys.getInt(1);
                         System.out.println("Inserted user with ID: " + userId);
-                        // Thực hiện các hành động khác với userId (nếu cần)
                     }
                 }
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
+    // Cập nhật thông tin người dùng
     public void updateUser(int userId, String userName, String gender, String dob, String address, String phone, String avatar) {
-        String query = "UPDATE [dbo].[user] "
-                + "SET [userName] = ?, "
-                + "    [userGender] = ?, "
-                + "    [userBirth] = ?, "
-                + "    [userAddress] = ?, "
-                + "    [userPhone] = ? "
-                + "    [userAvatar] = ? "
-                + "WHERE [userID] = ?";
+        String query = "UPDATE user "
+                + "SET userName = ?, "
+                + "    userGender = ?, "
+                + "    userBirth = ?, "
+                + "    userAddress = ?, "
+                + "    userPhone = ?, "
+                + "    userAvatar = ? "
+                + "WHERE userID = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, userName);
@@ -147,10 +136,9 @@ public class DAOUser extends DBContext {
         }
     }
 
+    // Cập nhật ảnh đại diện của người dùng
     public int updateAvatarUser(int userID, String avatar) {
-        String query = "UPDATE [dbo].[user]\n"
-                + "   SET [userAvatar] = ?\n"
-                + " WHERE userID = ?";
+        String query = "UPDATE user SET userAvatar = ? WHERE userID = ?";
         
         int n = 0;
         try (PreparedStatement ps = connection.prepareStatement(query)) {

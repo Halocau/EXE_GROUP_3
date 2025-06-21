@@ -51,6 +51,7 @@ public class LoginController extends HttpServlet {
                 switch (role) {
                     case 0:
                         response.sendRedirect(request.getContextPath() + "/error.jsp");
+                        break; // ✅ thêm dòng này để dừng lại sau khi redirect
                     case 1:
                         response.sendRedirect(request.getContextPath() + "/renterhome");
                         break;
@@ -64,10 +65,11 @@ public class LoginController extends HttpServlet {
                         response.sendRedirect(request.getContextPath() + "/manage");
                         break;
                     default:
-                        request.setAttribute("message", "Login failed"); // or handle other roles as needed
+                        request.setAttribute("message", "Login failed");
                         request.getRequestDispatcher("login.jsp").forward(request, response);
                         break;
                 }
+
             }
         } catch (ServletException | IOException e) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, e);

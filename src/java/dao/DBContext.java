@@ -16,25 +16,23 @@ import java.util.logging.Logger;
  * @author kienb
  */
 public class DBContext {
-    
+
     protected Connection connection;//kết nối giữa ứng dụng Java và cơ sở dữ liệu
     protected PreparedStatement statement;//thực thi các câu lệnh SQL trước khi thực sự thực thi
     protected ResultSet resultSet;// giống như 1 cái bảng , như sql manager
-    public DBContext()
-    {
-        try{
-            String user="sa";
-            String pass="123";
-            String url="jdbc:sqlserver://localhost:1433;databaseName=HL_Motel";
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            connection = DriverManager.getConnection(url, user, pass);
-        }
-        catch(Exception ex)
-        {
+
+    public DBContext() {
+        try {
+            String username = "sa";
+            String password = "123";
+            String url = "jdbc:mysql://localhost:3306/holastaynow";
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(url, username, password);
+        } catch (Exception ex) {
             Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }    
-    
+    }
+
     public static void main(String[] args) {
         DBContext db = new DBContext();
         System.out.println(db.connection);

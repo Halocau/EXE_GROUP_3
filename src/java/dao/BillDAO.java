@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
 import java.math.BigDecimal;
@@ -23,27 +19,27 @@ import java.util.Locale;
  */
 public class BillDAO extends MyDAO {
 
+    // Lấy danh sách hóa đơn theo roomID
     public List<Bill> getBillByRoomID(int id) {
         List<Bill> list = new ArrayList<>();
         String sql
-                = "SELECT \n"
-                + "    [billID],\n"
-                + "    [roomID],\n"
-                + "    [service],\n"
-                + "    [electric],\n"
-                + "    [water],\n"
-                + "    [roomFee],\n"
-                + "    [other],\n"
-                + "    [penMoney],\n"
-                + "    [createAt],\n"
-                + "    [deadline],\n"
-                + "    [payAt],\n"
-                + "    ([service] + [electric] + [water] + [roomFee] + [other] + [penMoney]) AS total\n"
-                + "FROM \n"
-                + "    [HL_Motel].[dbo].[bill]\n"
-                + "WHERE [roomID] = ?\n"
-                + "ORDER BY \n"
-                + "    [createAt] DESC;";
+                = "SELECT "
+                + "    billID,"
+                + "    roomID,"
+                + "    service,"
+                + "    electric,"
+                + "    water,"
+                + "    roomFee,"
+                + "    other,"
+                + "    penMoney,"
+                + "    createAt,"
+                + "    deadline,"
+                + "    payAt,"
+                + "    (service + electric + water + roomFee + other + penMoney) AS total "
+                + "FROM "
+                + "    bill "
+                + "WHERE roomID = ? "
+                + "ORDER BY createAt DESC;";
 
         try {
             ps = con.prepareStatement(sql);
@@ -58,31 +54,30 @@ public class BillDAO extends MyDAO {
         } catch (SQLException e) {
             // Handle exception as needed
             System.out.println("Fail: " + e.getMessage());
-
         }
         return list;
     }
 
+    // Lấy thông tin hóa đơn theo billID
     public Bill getBillBybillID(int id) {
         String sql
-                = "SELECT \n"
-                + "    [billID],\n"
-                + "    [roomID],\n"
-                + "    [service],\n"
-                + "    [electric],\n"
-                + "    [water],\n"
-                + "    [roomFee],\n"
-                + "    [other],\n"
-                + "    [penMoney],\n"
-                + "    [createAt],\n"
-                + "    [deadline],\n"
-                + "    [payAt],\n"
-                + "    ([service] + [electric] + [water] + [roomFee] + [other] + [penMoney]) AS total\n"
-                + "FROM \n"
-                + "    [bill]\n"
-                + "WHERE [billID] = ?\n"
-                + "ORDER BY \n"
-                + "    [createAt] DESC;";
+                = "SELECT "
+                + "    billID,"
+                + "    roomID,"
+                + "    service,"
+                + "    electric,"
+                + "    water,"
+                + "    roomFee,"
+                + "    other,"
+                + "    penMoney,"
+                + "    createAt,"
+                + "    deadline,"
+                + "    payAt,"
+                + "    (service + electric + water + roomFee + other + penMoney) AS total "
+                + "FROM "
+                + "    bill "
+                + "WHERE billID = ? "
+                + "ORDER BY createAt DESC;";
 
         try {
             ps = con.prepareStatement(sql);
@@ -95,18 +90,17 @@ public class BillDAO extends MyDAO {
                 return bill;
             }
         } catch (SQLException e) {
-            // Handle exception as needed
             System.out.println("Fail: " + e.getMessage());
-
         }
         return null;
     }
 
+    // Thêm hóa đơn mới
     public boolean addFeeById(int roomID, double service, double electric, double water, BigDecimal roomFee, double other, double penMoney, String createAt,
             String deadline, String payAt) {
-        String sql = "INSERT INTO [HL_Motel].[dbo].[bill] ([roomID], [service], [electric], [water], [roomFee], [other],"
-                + " [penMoney], [createAt], [deadline], [payAt])\n"
-                + "VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?)";
+        String sql = "INSERT INTO bill "
+                + "(roomID, service, electric, water, roomFee, other, penMoney, createAt, deadline, payAt) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
         try {
             ps = con.prepareStatement(sql);
@@ -137,10 +131,13 @@ public class BillDAO extends MyDAO {
 
     }
 
+    // Cập nhật hóa đơn theo billID
     public boolean updateFeeById(int billID, double service, double electric, double water, BigDecimal roomFee, double other, double penMoney,
             String deadline, String payAt) {
-        String sql = "UPDATE [HL_Motel].[dbo].[bill] SET [service] = ?, [electric] = ?, [water] = ?, [roomFee] = ?, "
-                + "[other] = ?, [penMoney] = ?, [deadline] = ?, [payAt] = ? WHERE [billID] = ?";
+        String sql = "UPDATE bill "
+                + "SET service = ?, electric = ?, water = ?, roomFee = ?, "
+                + "other = ?, penMoney = ?, deadline = ?, payAt = ? "
+                + "WHERE billID = ?;";
 
         try {
             ps = con.prepareStatement(sql);
@@ -170,56 +167,23 @@ public class BillDAO extends MyDAO {
         }
     }
 
-    public boolean updateRequestByID(int requestID, int requestType, String title, String description, String creatAt, String resStatus) {
-        String sql = "UPDATE [HL_Motel].[dbo].[request]\n"
-                + "SET [requestType] = ?, [title] = ?, [description] = ?, [createAt] = ?, [resStatus] = ?, [reply] = ?\n"
-                + "WHERE [requestID] = ?;";
-
-        try {
-            ps = con.prepareStatement(sql);
-            ps.setInt(1, requestType);
-            ps.setString(2, title);
-            ps.setString(3, description);
-            ps.setString(4, creatAt);
-            ps.setString(5, resStatus);
-            ps.setString(6, "");
-            ps.setInt(7, requestID);
-            int rowsAffected = ps.executeUpdate();
-
-            if (rowsAffected > 0) {
-                System.out.println("Request update successfully.");
-                return true;
-            } else {
-                System.out.println("Failed to update request.");
-                return false;
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Fail: " + e.getMessage());
-            return false;
-        }
-
-    }
-
+    // Lấy thông tin giá điện, nước từ bảng usagePrice
     public UsagePrice getEWPrice() {
-        String sql = "Select Electric_Price, Water_Block_Price from usagePrice";
+        String sql = "SELECT Electric_Price, Water_Block_Price FROM usagePrice";
         try {
             ps = con.prepareStatement(sql);
-
             rs = ps.executeQuery();
             while (rs.next()) {
                 UsagePrice up = new UsagePrice(rs.getDouble(1), rs.getDouble(2));
                 return up;
-
             }
         } catch (SQLException e) {
-            // Handle exception as needed
             System.out.println("Fail: " + e.getMessage());
-
         }
         return null;
     }
 
+    // Lấy thông tin roomID từ roomNumber
     public int getRoomIDByRoomNumber(int roomNumber) {
         String sql = "SELECT roomID FROM Room WHERE roomNumber = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -231,23 +195,10 @@ public class BillDAO extends MyDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1; // Return an invalid roomID if not found
+        return -1;
     }
 
-    public int getRoomStatusByRoomNumber(int roomNumber) {
-        String sql = "SELECT roomStatus FROM Room WHERE roomNumber = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, roomNumber);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("roomID");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return -1; // Return an invalid roomID if not found
-    }
-
+    // Thêm hóa đơn từ Excel
     public boolean insertBillFromExcel(int roomNumber, double service, double electric, double water, BigDecimal roomFee, double other, double penMoney) {
         int roomID = getRoomIDByRoomNumber(roomNumber);
         if (roomID == -1) {
@@ -255,12 +206,9 @@ public class BillDAO extends MyDAO {
             return false;
         }
 
-        String sql = "INSERT INTO [HL_Motel].[dbo].[bill] \n"
-                + "    ([roomID], [service], [electric], [water],\n"
-                + "	[roomFee], [other], [penMoney], [createAt],\n"
-                + "	[deadline], [payAt]) \n"
-                + "VALUES \n"
-                + "    (?, ?, ?, ?, ?, ?, ?, GETDATE(), DATEADD(month, 1, GETDATE()), NULL);";
+        String sql = "INSERT INTO bill "
+                + "(roomID, service, electric, water, roomFee, other, penMoney, createAt, deadline, payAt) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 1 MONTH), NULL);";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, roomID);
@@ -286,32 +234,7 @@ public class BillDAO extends MyDAO {
         }
     }
 
-//    public static void main(String[] args) {
-//        BillDAO dao = new BillDAO();
-////        int billID = 41; // Example room ID
-////        double service = 200.0;
-////        double electric = 150.0;
-////        double water = 100.0;
-////        BigDecimal roomFee = new BigDecimal("9900.00");
-////        double other = 50.0;
-////        double penMoney = 25.0;
-////        String deadline = "2024-12-31";
-////        String createAt = "2024-07-08";
-////        String payAt = null;
-////
-////        //Call updateFeeById method and check the result
-////        boolean result = dao.updateFeeById(billID, service, electric, water, roomFee, other, penMoney, deadline, payAt);
-//////     boolean result = dao.addFeeById(billID, service, electric, water, roomFee, other, penMoney, createAt, deadline, payAt);
-////        if (result) {
-////            System.out.println("Fee update successful.");
-////        } else {
-////            System.out.println("Fee update failed.");
-////        }
-//
-//        Bill get = dao.getBillDetailByRoomID(2);
-//        System.out.println(get.getDeadline());
-//    }
-
+    // Lấy thông tin chi tiết hóa đơn theo roomID
     public Bill getBillDetailByRoomID(int roomId) {
         double total = 0;
         double service = 0;
@@ -321,29 +244,27 @@ public class BillDAO extends MyDAO {
         double penMoney = 0;
         Bill bill = null;
         String sql
-                = "SELECT \n"
-                + "    [billID],\n"
-                + "    [roomID],\n"
-                + "    [service],\n"
-                + "    [electric],\n"
-                + "    [water],\n"
-                + "    [other],\n"
-                + "    [penMoney],\n"
-                + "    [createAt],\n"
-                + "    [deadline],\n"
-                + "    [payAt],\n"
-                + "    ((([electric] + [water] + [other] + [penMoney] + [service]) * 1000)) AS total\n"
-                + "FROM \n"
-                + "    [HL_Motel].[dbo].[bill]\n"
-                + "WHERE [roomID] = ?\n"
-                + "ORDER BY \n"
-                + "    [createAt] DESC;";
+                = "SELECT "
+                + "    billID,"
+                + "    roomID,"
+                + "    service,"
+                + "    electric,"
+                + "    water,"
+                + "    other,"
+                + "    penMoney,"
+                + "    createAt,"
+                + "    deadline,"
+                + "    payAt,"
+                + "    ((electric + water + other + penMoney + service) * 1000) AS total "
+                + "FROM "
+                + "    bill "
+                + "WHERE roomID = ? "
+                + "ORDER BY createAt DESC;";
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, roomId);
             ResultSet rs = ps.executeQuery();
-            rs = ps.executeQuery();
             while (rs.next()) {
                 int billID = rs.getInt("billID");
                 int roomID = rs.getInt("roomID");
@@ -362,39 +283,33 @@ public class BillDAO extends MyDAO {
 
             return bill;
         } catch (SQLException e) {
-            // Handle exception as needed
             System.out.println("Fail: " + e.getMessage());
-
         }
         return null;
     }
 
+    // Cập nhật hóa đơn sau khi thanh toán
     public int updateBillAfterPayment(int roomID) {
         int n = 0;
-        String sql = "UPDATE [dbo].[bill]\n"
-                + "   SET [service] = 0\n"
-                + "      ,[electric] = 0\n"
-                + "      ,[water] = 0\n"
-                + "      ,[other] = 0\n"
-                + "      ,[penMoney] = 0\n"
-                + "      ,[payAt] = GETDATE()\n"
-                + " WHERE roomID = ?";
+        String sql = "UPDATE bill "
+                + "SET service = 0, electric = 0, water = 0, other = 0, penMoney = 0, payAt = NOW() "
+                + "WHERE roomID = ?;";
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setInt(1, roomID);
             n = pre.executeUpdate();
         } catch (SQLException ex) {
-
+            ex.printStackTrace();
         }
         return n;
     }
 
+    // Xóa hóa đơn
     public int deleteBill(int billID) {
         int result = 0;
-        String query = "DELETE FROM [dbo].[bill] WHERE [billID] = ?";
+        String query = "DELETE FROM bill WHERE billID = ?;";
         try {
-            java.sql.Connection conn = connection;
-            PreparedStatement ps = conn.prepareStatement(query);
+            PreparedStatement ps = connection.prepareStatement(query);
             ps.setInt(1, billID);
             result = ps.executeUpdate();
         } catch (Exception e) {
@@ -402,18 +317,47 @@ public class BillDAO extends MyDAO {
         }
         return result;
     }
+
+
     
+//    public static void main(String[] args) {
+//        BillDAO dao = new BillDAO();
+//        
+//        int billIDToDelete = 18; // Replace with an actual bill ID from your database
+//        
+//        int result = dao.deleteBill(billIDToDelete);
+//        
+//        if (result > 0) {
+//            System.out.println("Bill with ID " + billIDToDelete + " was successfully deleted.");
+//        } else {
+//            System.out.println("Failed to delete bill with ID " + billIDToDelete + ". It might not exist.");
+//        }
+//    }
+//}
+
+
     public static void main(String[] args) {
         BillDAO dao = new BillDAO();
-        
-        int billIDToDelete = 18; // Replace with an actual bill ID from your database
-        
-        int result = dao.deleteBill(billIDToDelete);
-        
-        if (result > 0) {
-            System.out.println("Bill with ID " + billIDToDelete + " was successfully deleted.");
-        } else {
-            System.out.println("Failed to delete bill with ID " + billIDToDelete + ". It might not exist.");
-        }
-    }
-}
+        int billID = 1; // Example room ID
+        double service = 200.0;
+        double electric = 150.0;
+        double water = 100.0;
+        BigDecimal roomFee = new BigDecimal("9900.00");
+        double other = 50.0;
+        double penMoney = 25.0;
+        String deadline = "2024-12-31";
+        String createAt = "2024-07-08";
+        String payAt = null;
+//
+//        //Call updateFeeById method and check the result
+//        boolean result = dao.updateFeeById(billID, service, electric, water, roomFee, other, penMoney, deadline, payAt);
+//     boolean result = dao.addFeeById(billID, service, electric, water, roomFee, other, penMoney, createAt, deadline, payAt);
+//        if (result) {
+//            System.out.println("Fee update successful.");
+//        } else {
+//            System.out.println("Fee update failed.");
+//        }
+
+//        Bill get = dao.getBillDetailByRoomID(1);
+//        System.out.println(get.getDeadline());
+    }}

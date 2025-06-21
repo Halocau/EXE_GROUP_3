@@ -21,10 +21,11 @@ public class RegisterDAO extends DBContext {
 
     public int validatePhoneAndEmail(User ownerProfile) {
         int n = 0;
-        String sql = "select * \n"
-                + "from [user] u join account a\n"
-                + "on u.userID = a.userID\n"
-                + "where userPhone = ? or a.userMail = ?";
+        String sql = "SELECT * " +
+             "FROM `user` u JOIN account a " +
+             "ON u.userID = a.userID " +
+             "WHERE userPhone = ? OR a.userMail = ?";
+
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setString(1, ownerProfile.getUserPhone());
@@ -43,11 +44,10 @@ public class RegisterDAO extends DBContext {
 
     public int addAccount(Account account) {
         int userID = -1;
-        String sql = "INSERT INTO [dbo].[account]\n"
-                + "           ([userMail]\n"
-                + "           ,[userPassword]\n"
-                + "           ,[userRole])\n"
-                + "     VALUES (?,?,?)";
+        String sql = "INSERT INTO account " +
+             "(userMail, userPassword, userRole) " +
+             "VALUES (?, ?, ?)";
+
         try {
             PreparedStatement pre = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pre.setString(1, account.getUserMail());
@@ -70,7 +70,7 @@ public class RegisterDAO extends DBContext {
     
     public List<Account> getListAccount() {
         List<Account> listAccount = new ArrayList<>();
-        String sql = "select * from account";
+        String sql = "SELECT * FROM account";
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             ResultSet rs = pre.executeQuery();
@@ -91,15 +91,9 @@ public class RegisterDAO extends DBContext {
 
     public int addUser(User user, int userID) {
         int n = 0;
-        String sql = "INSERT INTO [dbo].[user]\n"
-                + "           ([userID]\n"
-                + "           ,[userName]\n"
-                + "           ,[userGender]\n"
-                + "           ,[userBirth]\n"
-                + "           ,[userAddress]\n"
-                + "           ,[userPhone]\n"
-                + "           ,[userAvatar])\n"
-                + "     VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO `user` " +
+             "(userID, userName, userGender, userBirth, userAddress, userPhone, userAvatar) " +
+             "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setInt(1, userID);

@@ -24,11 +24,7 @@ import model.Penalty;
 public class RuleDAO extends DBContext {
     public List<Rule> getRule() {
         List<Rule> rule = new ArrayList<>();
-            String sql = "SELECT [ruleID]\n" +
-                            "      ,[ruleName]\n" +
-                            "      ,[img]\n" +
-                            "      ,[penMoney]\n" +
-                            "  FROM [HL_Motel].[dbo].[rule]";
+            String sql = "SELECT ruleID, ruleName, img, penMoney FROM rule";
         try {
             java.sql.Connection conn = connection;
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -53,7 +49,7 @@ public class RuleDAO extends DBContext {
     public ArrayList<Rule> findAll() {
         ArrayList<Rule> rules = new ArrayList<>();
         try {
-            String sql = "select * from [rule]";
+            String sql = "SELECT * FROM rule";
             PreparedStatement ps;
             ResultSet rs;
             ps = connection.prepareStatement(sql);
@@ -70,7 +66,7 @@ public class RuleDAO extends DBContext {
 
     public Rule findById(int id) {
         try {
-            String sql = "select * from [rule] where ruleID = ?";
+            String sql = "SELECT * FROM rule WHERE ruleID = ?";
             PreparedStatement ps;
             ResultSet rs;
             ps = connection.prepareStatement(sql);
@@ -87,7 +83,7 @@ public class RuleDAO extends DBContext {
 
     public void create(Rule rule) {
         try {
-            String sql = "insert into [Rule](ruleName, img, scoreChange, penMoney) values (?,?,?,?)";
+            String sql = "INSERT INTO rule (ruleName, img, scoreChange, penMoney) VALUES (?, ?, ?, ?)";
             PreparedStatement ps;
             ResultSet rs;
             ps = connection.prepareStatement(sql);
@@ -104,7 +100,7 @@ public class RuleDAO extends DBContext {
 
     public void update(Rule rule) {
         try {
-            String sql = "update [Rule] set ruleName = ?, img = ? , scoreChange = ?, penMoney = ? where ruleID = ?";
+            String sql = "UPDATE rule SET ruleName = ?, img = ?, scoreChange = ?, penMoney = ? WHERE ruleID = ?";
             PreparedStatement ps;
             ps = connection.prepareStatement(sql);
             ps.setString(1, rule.getRuleName());
@@ -121,7 +117,7 @@ public class RuleDAO extends DBContext {
 
     public void deleteRule(int ruleId) {
         try {
-            String sql = "delete from [Rule] where ruleID = ?";
+            String sql = "DELETE FROM rule WHERE ruleID = ?";
             PreparedStatement ps;
             ps = connection.prepareStatement(sql);
             ps.setInt(1, ruleId);

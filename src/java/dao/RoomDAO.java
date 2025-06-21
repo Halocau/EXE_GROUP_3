@@ -77,7 +77,7 @@ public class RoomDAO extends DBContext {
 
     public List<Rooms> getRoomsAvailable() {
         List<Rooms> rooms = new ArrayList<>();
-        String query = "SELECT * FROM room where roomStatus = 1";
+        String query = "SELECT * FROM room WHERE roomStatus = 1";
 
         try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
@@ -100,7 +100,7 @@ public class RoomDAO extends DBContext {
     }
 
     public Room findById(int id) {
-        String query = "SELECT * FROM room where roomID = ?";
+        String query = "SELECT * FROM room WHERE roomID = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setInt(1, id);
@@ -125,14 +125,14 @@ public class RoomDAO extends DBContext {
         List<Rooms> rooms = new ArrayList<>();
         String query = null;
         if (flag == 0) {
-            query = "select * from room\n"
-                    + "where roomStatus = 1\n"
-                    + "order by roomID\n"
-                    + "OFFSET ? ROWS FETCH NEXT 10 ROWS only";
+            query = "SELECT * FROM room "
+                    + "WHERE roomStatus = 1 "
+                    + "ORDER BY roomID "
+                    + "OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
         } else if (flag == 1) {
-            query = "select * from room\n"
-                    + "order by roomID\n"
-                    + "OFFSET ? ROWS FETCH NEXT 10 ROWS only";
+            query = "SELECT * FROM room "
+                    + "ORDER BY roomID "
+                    + "OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
         }
         try {
             PreparedStatement ps = connection.prepareStatement(query);
@@ -161,16 +161,16 @@ public class RoomDAO extends DBContext {
         List<Rooms> rooms = new ArrayList<>();
         String query = null;
         if (flag == 0) {
-            query = "select * from room\n"
-                    + "JOIN vip v ON room.vipID = v.vipID\n"
-                    + "where roomStatus = 1 AND v.vipID = ?\n"
-                    + "order by roomID\n"
-                    + "OFFSET ? ROWS FETCH NEXT 10 ROWS only";
+            query = "SELECT * FROM room "
+                    + "JOIN vip v ON room.vipID = v.vipID "
+                    + "WHERE roomStatus = 1 AND v.vipID = ? "
+                    + "ORDER BY roomID "
+                    + "OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
         } else if (flag == 1) {
-            query = "select * from room\n"
-                    + "JOIN vip v ON room.vipID = v.vipID\n"
-                    + "order by roomID\n"
-                    + "OFFSET ? ROWS FETCH NEXT 10 ROWS only";
+            query = "SELECT * FROM room "
+                    + "JOIN vip v ON room.vipID = v.vipID "
+                    + "ORDER BY roomID "
+                    + "OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
         }
         try {
             PreparedStatement ps = connection.prepareStatement(query);
@@ -279,10 +279,9 @@ public class RoomDAO extends DBContext {
                 e.printStackTrace();
             }
         } else if (flag == 1) {
-            String query1 = "select quantity from roomItem ri\n"
-                    + "  join item i \n"
-                    + "  on ri.itemID = i.itemID\n"
-                    + "  where itemName = ? and roomID = ?";
+           String query1 = "SELECT quantity FROM roomItem ri\n" +
+                "JOIN item i ON ri.itemID = i.itemID\n" +
+                "WHERE itemName = ? AND roomID = ?";
             try (PreparedStatement ps = connection.prepareStatement(query1)) {
                 ps.setString(1, itemName);
                 ps.setInt(2, roomID);
@@ -300,8 +299,8 @@ public class RoomDAO extends DBContext {
     }
 
     public User getOwnerProfileByID(int userID) {
-        String query = "select u.userName, u.userGender, u.userBirth, u.userAddress, u.userPhone, a.userMail, u.userAvatar from account a join [user] u on u.userID = a.userID \n"
-                + "  where a.userRole = 2 and u.userID = " + userID;
+        String query = "SELECT u.userName, u.userGender, u.userBirth, u.userAddress, u.userPhone, a.userMail, u.userAvatar FROM account a JOIN [user] u ON u.userID = a.userID \n"
+             + "WHERE a.userRole = 2 AND u.userID = " + userID;
         User ownerProfile = null;
 
         try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
@@ -324,13 +323,13 @@ public class RoomDAO extends DBContext {
 
     public int updateOwnerProfile(User ownerProfile) {
         int n = 0;
-        String sql = "UPDATE [dbo].[user]\n"
-                + "   SET [userName] = ?\n"
-                + "      ,[userGender] = ?\n"
-                + "      ,[userBirth] = ?\n"
-                + "      ,[userAddress] = ?\n"
-                + "      ,[userPhone] = ?      \n"
-                + " WHERE userID = ?";
+        String sql = "UPDATE user "
+           + "SET userName = ?, "
+           + "    userGender = ?, "
+           + "    userBirth = ?, "
+           + "    userAddress = ?, "
+           + "    userPhone = ? "
+           + "WHERE userID = ?";
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setString(1, ownerProfile.getUserName());
@@ -349,9 +348,9 @@ public class RoomDAO extends DBContext {
 
     public int updateAvatar(User ownerProfile) {
         int n = 0;
-        String sql = "UPDATE [dbo].[user]\n"
-                + "   SET [userAvatar] = ?\n"
-                + " WHERE userID = ?";
+        String sql = "UPDATE user "
+           + "SET userAvatar = ? "
+           + "WHERE userID = ?";
         try {
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setString(1, ownerProfile.getUserAvatar());
@@ -364,12 +363,12 @@ public class RoomDAO extends DBContext {
     }
 
     public RoomDetailSe getRoomDetail(int roomid) {
-        String query = "select r.roomID, r.roomFloor, r.roomNumber, r.roomSize, r.roomFee, r.roomImg, \n"
-                + "i.itemName, i.itemImg, ri.quantity, ri.itemID, r.roomOccupant, r.roomStatus\n"
-                + "from room r\n"
-                + "left join roomItem ri on r.roomID = ri.roomID \n"
-                + "left join item i on ri.itemID = i.itemID \n"
-                + "where r.roomID = ?";
+        String query = "select r.roomID, r.roomFloor, r.roomNumber, r.roomSize, r.roomFee, r.roomImg, "
+             + "i.itemName, i.itemImg, ri.quantity, ri.itemID, r.roomOccupant, r.roomStatus "
+             + "from room r "
+             + "left join roomitem ri on r.roomID = ri.roomID "
+             + "left join item i on ri.itemID = i.itemID "
+             + "where r.roomID = ?";
 
         RoomDetailSe roomDetail = null;
         List<String> itemNames = new ArrayList<>();
@@ -421,7 +420,7 @@ public class RoomDAO extends DBContext {
     }
 
     public int deleteRoomItem(int roomID, int itemID) {
-        String query = "DELETE FROM roomItem WHERE roomID = ? AND itemID = ?";
+        String query = "DELETE FROM roomitem WHERE roomID = ? AND itemID = ?";
         int n = 0;
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, roomID);
@@ -435,12 +434,7 @@ public class RoomDAO extends DBContext {
     }
 
     public int addRoomItem(int roomID, int itemID, int quantity) {
-        String query = "INSERT INTO [dbo].[roomItem]\n"
-                + "           ([roomID]\n"
-                + "           ,[itemID]\n"
-                + "           ,[quantity])\n"
-                + "     VALUES\n"
-                + "           (?,?,?)";
+        String query = "INSERT INTO roomitem (roomID, itemID, quantity) VALUES (?, ?, ?)";
         int n = 0;
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, roomID);
@@ -454,7 +448,7 @@ public class RoomDAO extends DBContext {
     }
 
     public int updateItemQuantity(int roomID, int itemID, int quantity) {
-        String query = "UPDATE roomItem SET quantity = ? WHERE roomID = ? AND itemID = ?";
+        String query = "UPDATE roomitem SET quantity = ? WHERE roomID = ? AND itemID = ?";
         int n = 0;
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, quantity);
@@ -468,11 +462,7 @@ public class RoomDAO extends DBContext {
     }
 
     public int updateRoomDetail(int roomID, double roomFee, String roomImg, int roomNumber) {
-        String query = "UPDATE [dbo].[room]\n"
-                + "   SET [roomNumber] = ?\n"
-                + "      ,[roomFee] = ?\n"
-                + "      ,[roomImg] = ?\n"
-                + " WHERE roomID = ?";
+        String query = "UPDATE room SET roomNumber = ?, roomFee = ?, roomImg = ? WHERE roomID = ?";
         int n = 0;
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, roomNumber);
@@ -501,7 +491,7 @@ public class RoomDAO extends DBContext {
     }
 
     public int getTotalRoom() {
-        String query = "select count(*) from room where roomStatus = 1";
+        String query = "SELECT COUNT(*) FROM room WHERE roomStatus = 1";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
@@ -515,7 +505,7 @@ public class RoomDAO extends DBContext {
     }
 
     public int getCurrentRoomNumber(int roomID) {
-        String query = "select roomNumber from room where roomID = ?";
+        String query = "SELECT roomNumber FROM room WHERE roomID = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, roomID);
@@ -530,7 +520,7 @@ public class RoomDAO extends DBContext {
     }
 
     public int updateRoomStatus(int roomID, int roomStatus) {
-        String query = "Update room set roomStatus = ? where roomID = ?";
+        String query = "UPDATE room SET roomStatus = ? WHERE roomID = ?";
         int n = 0;
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, roomStatus);
@@ -543,7 +533,7 @@ public class RoomDAO extends DBContext {
     }
 
     public int updateRoomOccupant(int roomID) {
-        String query = "Update room set roomOccupant += 1  where roomID = ?";
+        String query = "UPDATE room SET roomOccupant = roomOccupant + 1 WHERE roomID = ?";
         int n = 0;
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, roomID);
@@ -556,7 +546,7 @@ public class RoomDAO extends DBContext {
 
     public List<Room> getAllRooms() {
         List<Room> rooms = new ArrayList<>();
-        String sql = "SELECT * FROM Room";
+        String sql = "SELECT * FROM room";
 
         try (Connection conn = connection; PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
@@ -582,7 +572,10 @@ public class RoomDAO extends DBContext {
     public List<RoomItem> getRoomDetails(String roomId) {
         List<RoomItem> roomItems = new ArrayList<>();
 
-        String sql = "select ri.itemID,i.itemName,i.itemImg,ri.quantity from roomItem ri join item i on ri.itemID = i.itemID where ri.roomID = ? ";
+        String sql = "SELECT ri.itemID, i.itemName, i.itemImg, ri.quantity " +
+             "FROM roomitem ri " +
+             "JOIN item i ON ri.itemID = i.itemID " +
+             "WHERE ri.roomID = ?";
 
         try {
             java.sql.Connection conn = connection;
@@ -610,22 +603,22 @@ public class RoomDAO extends DBContext {
 
     public Room getRoomDetailByID(int id) {
         String sql = "SELECT \n"
-                + "    r.roomID,\n"
-                + "    r.roomFloor,\n"
-                + "    r.roomNumber,\n"
-                + "    r.roomSize,\n"
-                + "    r.roomFee,\n"
-                + "    r.roomImg,\n"
-                + "    r.roomOccupant,\n"
-                + "    COUNT(re.renterID) AS total\n"
-                + "FROM \n"
-                + "    Room r\n"
-                + "LEFT JOIN \n"
-                + "    Renter re ON r.roomID = re.roomID\n"
-                + "WHERE \n"
-                + "    r.roomID = ?\n"
-                + "GROUP BY \n"
-                + "    r.roomID, r.roomFloor, r.roomNumber, r.roomSize, r.roomFee, r.roomImg, r.roomOccupant";
+           + "    r.roomID,\n"
+           + "    r.roomFloor,\n"
+           + "    r.roomNumber,\n"
+           + "    r.roomSize,\n"
+           + "    r.roomFee,\n"
+           + "    r.roomImg,\n"
+           + "    r.roomOccupant,\n"
+           + "    COUNT(re.renterID) AS total\n"
+           + "FROM \n"
+           + "    room r\n"
+           + "LEFT JOIN \n"
+           + "    renter re ON r.roomID = re.roomID\n"
+           + "WHERE \n"
+           + "    r.roomID = ?\n"
+           + "GROUP BY \n"
+           + "    r.roomID, r.roomFloor, r.roomNumber, r.roomSize, r.roomFee, r.roomImg, r.roomOccupant";
 
         Room room = null;
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -652,22 +645,22 @@ public class RoomDAO extends DBContext {
 
     public Rooms getRoomByID(int id) {
         String sql = "SELECT \n"
-                + "    r.roomID,\n"
-                + "    r.roomFloor,\n"
-                + "    r.roomNumber,\n"
-                + "    r.roomSize,\n"
-                + "    r.roomFee,\n"
-                + "    r.roomImg,\n"
-                + "    r.roomOccupant\n"
-                + "    COUNT(re.renterID) AS total\n"
-                + "FROM \n"
-                + "    Room r\n"
-                + "LEFT JOIN \n"
-                + "    Renter re ON r.roomID = re.roomID\n"
-                + "WHERE \n"
-                + "    r.roomID = ?\n"
-                + "GROUP BY \n"
-                + "    r.roomID, r.roomFloor, r.roomNumber, r.roomSize, r.roomFee, r.roomImg";
+           + "    r.roomID,\n"
+           + "    r.roomFloor,\n"
+           + "    r.roomNumber,\n"
+           + "    r.roomSize,\n"
+           + "    r.roomFee,\n"
+           + "    r.roomImg,\n"
+           + "    r.roomOccupant,\n"  // <-- fixed comma
+           + "    COUNT(re.renterID) AS total\n"
+           + "FROM \n"
+           + "    room r\n"
+           + "LEFT JOIN \n"
+           + "    renter re ON r.roomID = re.roomID\n"
+           + "WHERE \n"
+           + "    r.roomID = ?\n"
+           + "GROUP BY \n"
+           + "    r.roomID, r.roomFloor, r.roomNumber, r.roomSize, r.roomFee, r.roomImg, r.roomOccupant";
 
         Rooms room = null;
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -695,22 +688,22 @@ public class RoomDAO extends DBContext {
     public Room getRoomDetailByNumber(int roomNumber) {
 
         String sql = "SELECT \n"
-                + "    r.roomID,\n"
-                + "    r.roomFloor,\n"
-                + "    r.roomNumber,\n"
-                + "    r.roomSize,\n"
-                + "    r.roomFee,\n"
-                + "    r.roomImg,\n"
-                + "    r.roomOccupant,\n"
-                + "    COUNT(re.renterID) AS total\n"
-                + "FROM \n"
-                + "    Room r\n"
-                + "LEFT JOIN \n"
-                + "    Renter re ON r.roomID = re.roomID\n"
-                + "WHERE \n"
-                + "    r.roomNumber = ?\n"
-                + "GROUP BY \n"
-                + "    r.roomID, r.roomFloor, r.roomNumber, r.roomSize, r.roomFee, r.roomImg, r.roomOccupant";
+           + "    r.roomID,\n"
+           + "    r.roomFloor,\n"
+           + "    r.roomNumber,\n"
+           + "    r.roomSize,\n"
+           + "    r.roomFee,\n"
+           + "    r.roomImg,\n"
+           + "    r.roomOccupant,\n"
+           + "    COUNT(re.renterID) AS total\n"
+           + "FROM \n"
+           + "    room r\n"
+           + "LEFT JOIN \n"
+           + "    renter re ON r.roomID = re.roomID\n"
+           + "WHERE \n"
+           + "    r.roomNumber = ?\n"
+           + "GROUP BY \n"
+           + "    r.roomID, r.roomFloor, r.roomNumber, r.roomSize, r.roomFee, r.roomImg, r.roomOccupant";
 
         Room room = null;
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -737,10 +730,10 @@ public class RoomDAO extends DBContext {
 
     public void addRoom(Room r) {
         connection = connection;
-       String sql = "INSERT INTO [dbo].[room] "
-        + "([roomFloor], [roomNumber], [roomSize], [roomFee], [roomStatus], "
-        + "[roomOccupant], [roomDepartment], [vipID], [roomImg], [paymentCode]) "
-        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+       String sql = "INSERT INTO room "
+           + "(roomFloor, roomNumber, roomSize, roomFee, roomStatus, "
+           + "roomOccupant, roomDepartment, vipID, roomImg, paymentCode) "
+           + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             statement = connection.prepareStatement(sql, statement.RETURN_GENERATED_KEYS);
