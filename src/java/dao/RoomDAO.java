@@ -784,7 +784,7 @@ public class RoomDAO extends DBContext {
         List<Rooms> get = dao.getRooms();
 
         for (Rooms rooms : get) {
-            System.out.println(rooms.getRoomDepartment());
+            System.out.println(rooms);
         }
     }
 }

@@ -98,9 +98,8 @@
                         <div class="col-lg-7">
                             <div class="img-property-slide-wrap">
                                 <div class="img-property-slide">
-                                <% String base64Image = roomDetail.getRoomImg(); %>
-
-                                <img style="margin-top: 50px;" src="data:image/jpg;base64, <%= base64Image %>" alt="Image" class="img-fluid">
+                                <% String imagePath = roomDetail.getRoomImg(); %>
+                                <img src="<%= request.getContextPath() + imagePath %>" class="img-fluid" style="margin-top: 50px;"/>
 
                             </div>
                         </div>

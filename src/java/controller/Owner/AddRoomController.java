@@ -75,8 +75,8 @@ public class AddRoomController extends HttpServlet {
             String imageUrl = null;
 
             if (part != null && part.getSize() > 0) {
-                String appPath = request.getServletContext().getRealPath("");
-                String imagePath = appPath + File.separator + "images";
+
+                String imagePath = request.getServletContext().getRealPath("/new-image");
 
                 File uploadDir = new File(imagePath);
                 if (!uploadDir.exists()) {
@@ -89,7 +89,8 @@ public class AddRoomController extends HttpServlet {
                 File imageFile = new File(uploadDir, newFileName);
                 part.write(imageFile.getAbsolutePath());
 
-                imageUrl = request.getContextPath() + "/images/" + newFileName;
+// Cấu trúc URL trả về đúng đường dẫn để hiển thị ảnh trên trình duyệt
+                imageUrl = "/new-image/" + newFileName;
             }
 
             Room room = new Room();
@@ -100,7 +101,7 @@ public class AddRoomController extends HttpServlet {
             room.setRoomOccupant(roomOccupant);
             room.setTotal(total);
             room.setVipId(vipId);
-            room.setPaymentCode(paymentCode );
+            room.setPaymentCode(paymentCode);
             room.setRoomStatus(roomStatus); // Set roomStatus
             // Lưu tên file vào Room
             room.setRoomImg(imageUrl);
