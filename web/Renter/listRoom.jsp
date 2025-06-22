@@ -365,7 +365,7 @@
                                     <div class="property-item mb-30">
                                         <a href="OwnerController?service=roomDetail&roomID=<%= room.getRoomID() %>" class="img">
                                             <% String base64Image = room.getRoomImg(); %>
-                                            <img src="data:image/jpg;base64,<%= base64Image %>" class="img-fluid" style="height: 350px; width: 100%;">
+                                            <img src="<%= request.getContextPath() + base64Image %>" class="img-fluid" style="height: 350px; width: 100%;">
                                         </a>
                                         <div class="property-content">
                                             <div class="price mb-2"><span><%= room.getRoomFee().longValue() %>k VND</span></div>
@@ -408,7 +408,7 @@
                                     <div class="property-item mb-30">
                                         <a href="OwnerController?service=roomDetail&roomID=<%= room.getRoomID() %>" class="img">
                                             <% String base64Image = room.getRoomImg(); %>
-                                            <img src="data:image/jpg;base64,<%= base64Image %>" class="img-fluid" style="height: 350px; width: 100%;">
+                                            <img src="<%= request.getContextPath() + base64Image %>" class="img-fluid" style="height: 350px; width: 100%;">
                                         </a>
                                         <div class="property-content">
                                             <div class="price mb-2"><span><%= room.getRoomFee().longValue() %>k VND</span></div>
@@ -452,7 +452,7 @@
                                     <div class="property-item mb-30">
                                         <a href="OwnerController?service=roomDetail&roomID=<%= room.getRoomID() %>" class="img">
                                             <% String base64Image = room.getRoomImg(); %>
-                                            <img src="data:image/jpg;base64,<%= base64Image %>" class="img-fluid" style="height: 350px; width: 100%;">
+                                            <img src="<%= request.getContextPath() + base64Image %>" class="img-fluid" style="height: 350px; width: 100%;">
                                         </a>
                                         <div class="property-content">
                                             <div class="price mb-2"><span><%= room.getRoomFee().longValue() %>k VND</span></div>
@@ -495,7 +495,7 @@
                                     <div class="property-item mb-30">
                                         <a href="OwnerController?service=roomDetail&roomID=<%= room.getRoomID() %>" class="img">
                                             <% String base64Image = room.getRoomImg(); %>
-                                            <img src="data:image/jpg;base64,<%= base64Image %>" class="img-fluid" style="height: 350px; width: 100%;">
+                                            <img src="<%= request.getContextPath() + base64Image %>" class="img-fluid" style="height: 350px; width: 100%;">
                                         </a>
                                         <div class="property-content">
                                             <div class="price mb-2"><span><%= room.getRoomFee().longValue() %>k VND</span></div>

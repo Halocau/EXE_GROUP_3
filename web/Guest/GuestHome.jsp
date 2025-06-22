@@ -67,7 +67,8 @@
                 <div class="hero-slide">
                 <c:forEach var="s" items="${slider}">
                     <div class="img overlay"
-                         style="background-image: url('data:image/jpeg;base64,${s.sliderImg}')"></div>
+                         style="background-image: url('${pageContext.request.contextPath}${s.sliderImg}')">
+                    </div>
                 </c:forEach>
             </div>
             <div class="container">
@@ -99,8 +100,8 @@
                         <div class="property-item mb-5 border rounded p-3">
                             <a href="OwnerController?service=roomDetail&roomID=<%= listRoomVip1.get(i).getRoomID() %>"
                                class="img d-block mb-3">
-                                <% String base64Image=listRoomVip1.get(i).getRoomImg(); %>
-                                <img src="data:image/jpg;base64,<%= base64Image %>"
+                                <% String imagePath = listRoomVip1.get(i).getRoomImg(); %>
+                                <img src="<%= request.getContextPath() + imagePath %>"
                                      class="img-fluid"
                                      style="height: 350px; width: 100%; object-fit: cover;">
                             </a>
@@ -150,11 +151,12 @@
                         <div class="property-item mb-5 border rounded p-3">
                             <a href="OwnerController?service=roomDetail&roomID=<%= listRoomVip2.get(i).getRoomID() %>"
                                class="img d-block mb-3">
-                                <% String base64Image=listRoomVip2.get(i).getRoomImg(); %>
-                                <img src="data:image/jpg;base64,<%= base64Image %>"
+                                <% String imagePath = listRoomVip2.get(i).getRoomImg(); %>
+                                <img src="<%= request.getContextPath() + imagePath %>"
                                      class="img-fluid"
                                      style="height: 350px; width: 100%; object-fit: cover;">
                             </a>
+
                             <div class="property-content">
                                 <div class="price mb-2">
                                     <span>
@@ -205,8 +207,8 @@
                         <div class="property-item mb-5 border rounded p-3">
                             <a href="OwnerController?service=roomDetail&roomID=<%= listRoomVip3.get(i).getRoomID() %>"
                                class="img d-block mb-3">
-                                <% String base64Image=listRoomVip3.get(i).getRoomImg(); %>
-                                <img src="data:image/jpg;base64,<%= base64Image %>"
+                                <% String imagePath = listRoomVip3.get(i).getRoomImg(); %>
+                                <img src="<%= request.getContextPath() + imagePath %>"
                                      class="img-fluid"
                                      style="height: 350px; width: 100%; object-fit: cover;">
 

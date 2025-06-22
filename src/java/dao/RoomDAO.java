@@ -103,7 +103,7 @@ public class RoomDAO extends DBContext {
             query = "SELECT * FROM room "
                     + "WHERE roomStatus = 1 "
                     + "ORDER BY roomID "
-                    + "OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
+                    + "LIMIT 10 OFFSET ?";
         } else if (flag == 1) {
             query = "SELECT * FROM room "
                     + "ORDER BY roomID "
@@ -140,7 +140,7 @@ public class RoomDAO extends DBContext {
                     + "JOIN vip v ON room.vipID = v.vipID "
                     + "WHERE roomStatus = 1 AND v.vipID = ? "
                     + "ORDER BY roomID "
-                    + "OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
+                    + "LIMIT 10 OFFSET ?";
         } else if (flag == 1) {
             query = "SELECT * FROM room "
                     + "JOIN vip v ON room.vipID = v.vipID "
