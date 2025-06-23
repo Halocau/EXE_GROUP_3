@@ -5,16 +5,10 @@
         <servlet-name>RentalOverviewController</servlet-name>
         <servlet-class>controller.Owner.RentalOverviewController</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>ApprovalVip</servlet-name>
-        <servlet-class>controller.Admin.ApprovalVip</servlet-class>
-    </servlet>
+
     <servlet-mapping>
         <servlet-name>RentalOverviewController</servlet-name>
         <url-pattern>/RentalOverviewController</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ApprovalVip</servlet-name>
-        <url-pattern>/approvalVip</url-pattern>
-    </servlet-mapping>
+
 </web-app>
