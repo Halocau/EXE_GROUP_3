@@ -1,5 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="utils.EnvLoader" %>
+
 <!doctype html>
 <html lang="en">
 
@@ -175,7 +177,7 @@
                 <div class="row d-flex justify-content-center pb-5">
                     <div class="col-sm-3 col-md-4 offset-md-1 mobile">
                         <div class="py-4 d-flex justify-content-end">
-                            <h6><a href="http://localhost:8080/HL_Motel/ListRenterController">Return to List</a></h6>
+                            <h6><a href='<%= utils.EnvLoader.get("Origin") %>/HL_Motel/ListRenterController'>Return to List</a></h6>
                         </div>
                         <div class="bg-light rounded d-flex flex-column">
                             <div class="p-2 ml-3"><h4>Bill Recap</h4></div>

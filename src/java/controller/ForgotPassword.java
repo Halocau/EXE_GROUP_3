@@ -77,13 +77,15 @@ public class ForgotPassword extends HttpServlet {
                 }
             });
             try {
+                String origin = utils.EnvLoader.get("Origin"); // Lấy giá trị từ file .env như Java thông thường
+                String link = origin + "/SWP391.E.BL5.G5/enterotp.jsp";
                 MimeMessage message = new MimeMessage(session);
                 message.setFrom(new InternetAddress(email, "Admin"));
                 message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
                 message.setSubject("Request to reset password ");
                 message.setText("Please don't share OTP code with anyone, OTP code exist in 5 minute");
                 message.setText("Hi, for security, please verify your account with the OPT below. "
-                        + "Your OTP is ==========>" + randomOtp + "<========== Click the link to enter otp: " + "http://localhost:9999/SWP391.E.BL5.G5/enterotp.jsp");
+                        + "Your OTP is ==========>" + randomOtp + " <========== Click the link to enter OTP: " + link);
                 Transport.send(message);
                 System.out.println("message sent successfully");
             } catch (MessagingException e) {
