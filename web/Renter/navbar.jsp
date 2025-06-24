@@ -35,6 +35,11 @@
             <li class="${param.service == null || param.service == 'renterhome' ? 'active' : ''}">
                 <a href="rentercontroller?service=renterhome">Home</a>
             </li>
+            
+            <li class="${param.service == null || param.service == 'renterhome' ? 'active' : ''}">
+                <a href="rentercontroller?service=ownerrequest">Request Owner</a>
+            </li>
+            
             <li class="has-children ${(param.service == 'listRoom') ||  (param.service == 'guideandrule') || (param.service == 'RenterRoomDetail') ? 'active' : ''}">
                 <a href="#">View</a>
                 <ul class="dropdown">

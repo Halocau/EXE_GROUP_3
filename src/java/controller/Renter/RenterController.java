@@ -23,6 +23,7 @@ public class RenterController extends HttpServlet {
     private static final String RENTER_UPDATE_PROFILE = "renterupdate";
     private static final String RENTER_NEW = "news";
     private static final String ERROR_PAGE = "error.jsp"; // Define your error page path
+     private static final String REQUEST_OWNER = "ownerrequest";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -61,6 +62,9 @@ public class RenterController extends HttpServlet {
                     break;
                 case RENTER_NEW:
                     request.getRequestDispatcher(RENTER_NEW).forward(request, response);
+                    break;
+                case REQUEST_OWNER:
+                    request.getRequestDispatcher(REQUEST_OWNER).forward(request, response);
                     break;
                 case RENTER_UPDATE_PROFILE:
                     request.getRequestDispatcher("UpdateProfileRenterController?service=formRenterUpdateProfile").forward(request, response);
