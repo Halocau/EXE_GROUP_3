@@ -4,7 +4,6 @@ package controller;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -62,7 +61,7 @@ public class SendEmailServlet extends HttpServlet {
                 content = getRequestSuccessContent(roomCode);
                 break;
 
-            case "host-register":   
+            case "host-register":
                 String emailAccount = request.getParameter("emailAccount");
                 subject = getHostRegisterSubject();
                 content = getHostRegisterContent(emailAccount);
@@ -102,7 +101,9 @@ public class SendEmailServlet extends HttpServlet {
             message.setContent(content, "text/html; charset=utf-8");
 
             Transport.send(message);
-            response.getWriter().println("Email đã được gửi thành công!");
+//            response.getWriter().println("Email đã được gửi thành công!");
+// Chuyển hướng về trang quản lý với tham số báo thành công
+            response.sendRedirect("manage?emailSent=1");
 
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -111,7 +112,6 @@ public class SendEmailServlet extends HttpServlet {
     }
 
     // ================== Các hàm riêng cho từng loại email =====================
-
     private String getVipConfirmSubject() {
         return "[StayNow] Xác nhận đăng ký tin VIP thành công";
     }
@@ -124,7 +124,6 @@ public class SendEmailServlet extends HttpServlet {
                 + "<p>Trân trọng,<br><strong>Đội ngũ StayNow</strong></p>"
                 + getContactInfo();
     }
-
 
     private String getRequestSuccessSubject() {
         return "[StayNow] Yêu cầu thuê phòng thành công!";
