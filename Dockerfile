@@ -26,6 +26,9 @@ COPY web/ /usr/local/tomcat/webapps/ROOT/
 # Copy JAR dependencies to WEB-INF/lib
 COPY lib/ /usr/local/tomcat/webapps/ROOT/WEB-INF/lib/
 
+# Copy environment file
+COPY .env /usr/local/tomcat/webapps/ROOT/.env
+
 # Copy Java source files to a temporary location
 COPY src/java/ /tmp/src/
 
