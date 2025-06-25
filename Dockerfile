@@ -1,5 +1,5 @@
 # Multi-stage build for production
-FROM maven:3.8.4-openjdk-16 AS builder
+FROM maven:3.8.4-openjdk-17 AS builder
 
 # Set working directory
 WORKDIR /app
@@ -20,7 +20,7 @@ COPY web/ ./web/
 RUN mvn clean package -DskipTests
 
 # Production stage
-FROM tomcat:9.0-jdk16-openjdk-slim
+FROM tomcat:9.0-jdk17-openjdk-slim
 
 # Set environment variables
 ENV CATALINA_HOME=/usr/local/tomcat
