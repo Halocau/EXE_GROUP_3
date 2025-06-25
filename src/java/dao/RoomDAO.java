@@ -364,61 +364,68 @@ public class RoomDAO extends DBContext {
     }
 
     public RoomDetailSe getRoomDetail(int roomid) {
-        String query = "select r.roomID, r.roomFloor, r.roomNumber, r.roomSize, r.roomFee, r.roomImg, \n"
-                + "i.itemName, i.itemImg, ri.quantity, ri.itemID, r.roomOccupant, r.roomStatus\n"
-                + "from room r\n"
-                + "left join roomItem ri on r.roomID = ri.roomID \n"
-                + "left join item i on ri.itemID = i.itemID \n"
-                + "where r.roomID = ?";
+    String query = "select r.roomID, r.roomFloor, r.roomNumber, r.roomSize, r.roomFee, r.roomImg,\n"
+            + "       i.itemName, i.itemImg, ri.quantity, ri.itemID,\n"
+            + "       r.roomOccupant, r.roomStatus, r.description, u.userAddress\n"
+            + "from room r\n"
+            + "left join roomItem ri on r.roomID = ri.roomID\n"
+            + "left join item i on ri.itemID = i.itemID\n"
+            + "left join [user] u on r.ownerId = u.userID\n"
+            + "where r.roomID = ?";
 
-        RoomDetailSe roomDetail = null;
-        List<String> itemNames = new ArrayList<>();
-        List<Integer> quantities = new ArrayList<>();
-        List<Integer> itemIDs = new ArrayList<>();
+    RoomDetailSe roomDetail = null;
+    List<String> itemNames = new ArrayList<>();
+    List<Integer> quantities = new ArrayList<>();
+    List<Integer> itemIDs = new ArrayList<>();
 
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, roomid);
-            try (ResultSet rs = ps.executeQuery()) {
-                boolean roomDetailSet = false;
-                while (rs.next()) {
-                    if (!roomDetailSet) {
-                        int roomID = rs.getInt("roomID");
-                        int roomNumber = rs.getInt("roomNumber");
-                        int roomFloor = rs.getInt("roomFloor");
-                        int roomSize = rs.getInt("roomSize");
-                        double roomFee = rs.getDouble("roomFee");
-                        String roomImg = rs.getString("roomImg");
-                        int roomOccupant = rs.getInt("roomOccupant");
-                        int roomStatus = rs.getInt("roomStatus");
-                        roomDetail = new RoomDetailSe(roomID, roomNumber, roomSize, roomFloor,
-                                roomImg, null, null, null, roomFee, null, roomOccupant, roomStatus);
-                        roomDetailSet = true;
-                    }
+    try (PreparedStatement ps = connection.prepareStatement(query)) {
+        ps.setInt(1, roomid);
+        try (ResultSet rs = ps.executeQuery()) {
+            boolean roomDetailSet = false;
+            while (rs.next()) {
+                if (!roomDetailSet) {
+                    int roomID = rs.getInt("roomID");
+                    int roomNumber = rs.getInt("roomNumber");
+                    int roomFloor = rs.getInt("roomFloor");
+                    int roomSize = rs.getInt("roomSize");
+                    double roomFee = rs.getDouble("roomFee");
+                    String roomImg = rs.getString("roomImg");
+                    int roomOccupant = rs.getInt("roomOccupant");
+                    int roomStatus = rs.getInt("roomStatus");
+                    String description = rs.getString("description");
+                    String address = rs.getString("userAddress");
 
-                    int itemID = rs.getInt("itemID");
-                    if (!rs.wasNull()) {
-                        String itemName = rs.getString("itemName");
-                        itemNames.add(itemName);
-
-                        int quantity = rs.getInt("quantity");
-                        quantities.add(quantity);
-
-                        itemIDs.add(itemID);
-                    }
+                    roomDetail = new RoomDetailSe(roomID, roomNumber, roomSize, roomFloor,
+                            roomImg, null, null, null, roomFee, null,
+                            roomOccupant, roomStatus, description, address);
+                    roomDetailSet = true;
                 }
 
-                if (roomDetail != null) {
-                    roomDetail.setItemName(itemNames.toArray(new String[0]));
-                    roomDetail.setQuantity(quantities.stream().mapToInt(i -> i).toArray());
-                    roomDetail.setItemID(itemIDs.stream().mapToInt(i -> i).toArray());
+                int itemID = rs.getInt("itemID");
+                if (!rs.wasNull()) {
+                    String itemName = rs.getString("itemName");
+                    itemNames.add(itemName);
+
+                    int quantity = rs.getInt("quantity");
+                    quantities.add(quantity);
+
+                    itemIDs.add(itemID);
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-        return roomDetail;
+            if (roomDetail != null) {
+                roomDetail.setItemName(itemNames.toArray(new String[0]));
+                roomDetail.setQuantity(quantities.stream().mapToInt(i -> i).toArray());
+                roomDetail.setItemID(itemIDs.stream().mapToInt(i -> i).toArray());
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+
+    return roomDetail;
+}
+
 
     public int deleteRoomItem(int roomID, int itemID) {
         String query = "DELETE FROM roomItem WHERE roomID = ? AND itemID = ?";
@@ -735,33 +742,35 @@ public class RoomDAO extends DBContext {
         return room;
     }
 
-    public void addRoom(Room r) {
-        connection = connection;
-       String sql = "INSERT INTO [dbo].[room] "
-        + "([roomFloor], [roomNumber], [roomSize], [roomFee], [roomStatus], "
-        + "[roomOccupant], [roomDepartment], [vipID], [roomImg], [paymentCode]) "
-        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+public void addRoom(Room r) {
+    String sql = "INSERT INTO [dbo].[room] "
+            + "([roomFloor], [roomNumber], [roomSize], [roomFee], [roomStatus], "
+            + "[roomOccupant], [roomDepartment], [vipID], [roomImg], [paymentCode], [ownerId], [description]) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try {
-            statement = connection.prepareStatement(sql, statement.RETURN_GENERATED_KEYS);
-            statement.setObject(1, r.getRoomFloor());
-            statement.setObject(2, r.getRoomNumber());
-            statement.setObject(3, r.getRoomSize());
-            statement.setObject(4, r.getRoomFee());
-            statement.setObject(5, r.getRoomStatus());
-            statement.setObject(6, r.getRoomOccupant());
-            statement.setObject(7, null);
-            statement.setObject(8, r.getVipId());
-            statement.setObject(9, r.getRoomImg());
-            statement.setObject(10, r.getPaymentCode());
-            statement.executeUpdate();
-            resultSet = statement.getGeneratedKeys();
-        } catch (Exception ex) {
-            ex.printStackTrace(); // 👈 thêm dòng nàyƯ
-            Logger.getLogger(RoomDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    try {
+        statement = connection.prepareStatement(sql, statement.RETURN_GENERATED_KEYS);
+        statement.setObject(1, r.getRoomFloor());
+        statement.setObject(2, r.getRoomNumber());
+        statement.setObject(3, r.getRoomSize());
+        statement.setObject(4, r.getRoomFee());
+        statement.setObject(5, r.getRoomStatus());
+        statement.setObject(6, r.getRoomOccupant());
+        statement.setObject(7, null); // roomDepartment
+        statement.setObject(8, r.getVipId());
+        statement.setObject(9, r.getRoomImg());
+        statement.setObject(10, r.getPaymentCode());
+        statement.setObject(11, r.getOwnerID());
+        statement.setObject(12, r.getDescription()); // ➕ new param
 
+        statement.executeUpdate();
+        resultSet = statement.getGeneratedKeys();
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        Logger.getLogger(RoomDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
+}
+
 
 //      public static void main(String[] args) {
 //        RoomDAO dao = new RoomDAO();
@@ -787,11 +796,32 @@ public class RoomDAO extends DBContext {
 //        }
 //    }
     public static void main(String[] args) {
-        RoomDAO dao = new RoomDAO();
-        List<Rooms> get = dao.getRooms();
+                try {
+            // Initialize DAO (make sure DBContext sets up the connection)
+            RoomDAO roomDAO = new RoomDAO();
 
-        for (Rooms rooms : get) {
-            System.out.println(rooms.getRoomDepartment());
+            // Create a sample Room
+            Room room = new Room();
+            room.setRoomFloor(2);
+            room.setRoomNumber(101);
+            room.setRoomSize(25);
+            room.setRoomFee(new BigDecimal("2500000"));
+            room.setRoomStatus(2); // e.g., available
+            room.setRoomOccupant(2);
+            room.setVipId(1); // Must exist in DB (FK)
+            room.setRoomImg("/images/test_room.jpg");
+            room.setPaymentCode("0");
+            room.setOwnerID(1); // Must exist in DB (FK)
+            room.setTotal(2);   // Optional, depending on your model
+
+            // Call the DAO
+            roomDAO.addRoom(room);
+
+            System.out.println("dangdeptrai Room inserted successfully!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("dangdeptrai Failed to insert room: " + e.getMessage());
         }
     }
 }
