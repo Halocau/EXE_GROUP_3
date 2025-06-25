@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.Account;
+import dao.BillDAO;
 
 /**
  *
@@ -61,9 +62,18 @@ public class Manage extends HttpServlet {
         DAO dao = new DAO(); 
         List<Account> accounts = dao.getAccounts(); 
 
+        // KHÔNG setPassword(null) nữa, chỉ truyền accounts ra view
         request.setAttribute("account", accounts);
 
-        
+        // Thống kê số lượng chủ trọ (role = 'owner')
+        int ownerCount = dao.countAccountByRole("owner");
+        request.setAttribute("ownerCount", ownerCount);
+
+        // Thống kê tổng doanh thu toàn hệ thống
+        BillDAO billDAO = new BillDAO();
+        double totalRevenue = billDAO.getTotalRevenue();
+        request.setAttribute("totalRevenue", totalRevenue);
+
         request.getRequestDispatcher("Admin/Tables.jsp").forward(request, response);
     } 
 

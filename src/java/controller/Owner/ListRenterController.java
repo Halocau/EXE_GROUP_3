@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.RenterList;
 import model.Statistics;
+import dao.RoomDAO;
+import model.Rooms;
 
 /**
  *
@@ -30,6 +32,7 @@ public class ListRenterController extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         RenterDAO renterDAO = new RenterDAO();
+        RoomDAO roomDAO = new RoomDAO();
         
         // Lấy danh sách người thuê
         List<RenterList> renters = renterDAO.getListRenters();
@@ -38,7 +41,36 @@ public class ListRenterController extends HttpServlet {
         // Lấy thông tin thống kê
         Statistics stats = renterDAO.getStatistics();
         request.setAttribute("statistics", stats);
-        
+
+        // --- Xử lý filter và phân trang cho danh sách phòng ---
+        int page = 1;
+        int pageSize = 6;
+        String pageParam = request.getParameter("page");
+        if (pageParam != null) {
+            try { page = Integer.parseInt(pageParam); } catch (Exception e) { page = 1; }
+        }
+        String searchRoomNumber = request.getParameter("searchRoomNumber");
+        String status = request.getParameter("status"); // "all", "occupied", "empty"
+        String minPriceStr = request.getParameter("minPrice");
+        String maxPriceStr = request.getParameter("maxPrice");
+        Integer minPrice = null, maxPrice = null;
+        try { if (minPriceStr != null && !minPriceStr.isEmpty()) minPrice = Integer.parseInt(minPriceStr); } catch(Exception e){}
+        try { if (maxPriceStr != null && !maxPriceStr.isEmpty()) maxPrice = Integer.parseInt(maxPriceStr); } catch(Exception e){}
+
+        // Lấy danh sách phòng đã filter và phân trang
+        List<Rooms> filteredRooms = roomDAO.getFilteredRooms(searchRoomNumber, status, minPrice, maxPrice, page, pageSize);
+        int totalRooms = roomDAO.countFilteredRooms(searchRoomNumber, status, minPrice, maxPrice);
+        int totalPages = (int) Math.ceil((double) totalRooms / pageSize);
+
+        request.setAttribute("filteredRooms", filteredRooms);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("searchRoomNumber", searchRoomNumber);
+        request.setAttribute("status", status);
+        request.setAttribute("minPrice", minPriceStr);
+        request.setAttribute("maxPrice", maxPriceStr);
+        // --- End filter & paging ---
+
         request.getRequestDispatcher("Owner/listRenter.jsp").forward(request, response);
     } 
 
