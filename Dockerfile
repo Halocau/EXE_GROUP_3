@@ -1,5 +1,5 @@
 # Production stage - Direct deployment with Java compilation
-FROM tomcat:9.0-jdk17-openjdk-slim
+FROM tomcat:10.0-jdk17-openjdk-slim
 
 # Set environment variables
 ENV CATALINA_HOME=/usr/local/tomcat
@@ -35,16 +35,26 @@ RUN apt-get update && apt-get install -y openjdk-17-jdk
 # Create classes directory
 RUN mkdir -p /usr/local/tomcat/webapps/ROOT/WEB-INF/classes
 
-# Build classpath for compilation
+# Build classpath for compilation - use Tomcat's servlet API
 RUN echo "Building classpath..." && \
+    echo "Tomcat lib directory contents:" && \
+    ls -la /usr/local/tomcat/lib/ && \
+    echo "" && \
+    echo "WEB-INF/lib directory contents:" && \
+    ls -la /usr/local/tomcat/webapps/ROOT/WEB-INF/lib/ && \
+    echo "" && \
+    echo "Creating classpath..." && \
     find /usr/local/tomcat/lib -name "*.jar" -exec echo -n "{}:" \; > /tmp/classpath.txt && \
     find /usr/local/tomcat/webapps/ROOT/WEB-INF/lib -name "*.jar" -exec echo -n "{}:" \; >> /tmp/classpath.txt && \
-    echo "" >> /tmp/classpath.txt
+    echo "" >> /tmp/classpath.txt && \
+    echo "Final classpath:" && \
+    cat /tmp/classpath.txt
 
 # Compile Java files with all dependencies
 WORKDIR /tmp/src
 RUN echo "Compiling Java files..." && \
     CLASSPATH=$(cat /tmp/classpath.txt) && \
+    echo "Using classpath: $CLASSPATH" && \
     find . -name "*.java" -print -exec javac -cp "$CLASSPATH" -d /usr/local/tomcat/webapps/ROOT/WEB-INF/classes {} \; && \
     echo "Compilation completed"
 
