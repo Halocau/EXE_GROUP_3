@@ -48,6 +48,31 @@ public class UserDAO extends MyDAO {
         return list;
     }
 
+    // trong dao/UserDAO.java
+    public User getUserById(int id) {
+        String sql = "SELECT userID,userName,userGender,userBirth,userAddress,userPhone,userAvatar "
+                + "FROM [User] WHERE userID = ?";
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return new User(
+                        rs.getInt("userID"),
+                        rs.getString("userName"),
+                        rs.getString("userGender"),
+                        rs.getString("userBirth"),
+                        rs.getString("userAddress"),
+                        rs.getString("userPhone"),
+                        rs.getString("userAvatar")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public List<User> getUserAvailable() {
         List<User> list = new ArrayList<>();
         String sql = "  select * from [user] u \n"
@@ -213,11 +238,7 @@ public class UserDAO extends MyDAO {
     public static void main(String[] args) {
         UserDAO dao = new UserDAO();
 
-        List<User> getUserAvailable = dao.getUserAvailable();
-
-        for (User user : getUserAvailable) {
-            System.out.println(user.getUserID());
-        }
+        System.out.println(dao.getUserById(1));
 
     }
 

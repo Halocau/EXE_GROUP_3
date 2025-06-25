@@ -17,6 +17,7 @@ public class User{
     private String userPhone;
     private String userAvatar;
     private Account account;
+    private int vipId;
     private Renter renter;
     private Room room;
     private Security security;
