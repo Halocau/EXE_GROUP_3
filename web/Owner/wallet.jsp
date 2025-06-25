@@ -556,23 +556,25 @@
             <a href="#" class="navbar-brand">Owner</a>
             <ul class="navbar-nav">
                 <li class="<%= (service==null||service.equals("OwnerHome"))?"active":"" %>">
-                    <a href="OwnerController?service=OwnerHome">Home</a>
+                    <a href="rentercontroller?service=renterhome">Home</a>
                 </li>
-                <li class="has-children <%= "pagingRoom".equals(service)?"active":"" %>">
+
+                <li class="has-children ${(param.service == 'listRoom') ||  (param.service == 'guideandrule') || (param.service == 'RenterRoomDetail') ? 'active' : ''}">
                     <a href="#">View</a>
                     <ul class="dropdown">
-                        <li><a href="OwnerController?service=pagingRoom&index=1">List of rooms</a></li>
-                        <li><a href="OwnerController?service=listrequest">List of Request</a></li>
+                        <li><a href="RenterRoomController?service=listRoom&index=1">List Of Rooms</a></li>
+                        <li><a href="renterguideline?service=guideandrule">Guide and Rule</a></li>
+                        <li><a href="RenterRoomDetail?service=RenterRoomDetail">My Room</a></li>
+                        <li><a href="rentercontroller?service=news">News</a></li>
+                        <li><a href="renpen">Penalty</a></li>
                     </ul>
-                </li>
-                <li class="<%= "listRenter".equals(service)?"active":"" %>">
-                    <a href="ListRenterController">Renter Management</a>
-                </li>
-                <li class="<%= "addRoom".equals(service)?"active":"" %>">
-                    <a href="addroom?service=addRoom">Add Room</a>
-                </li>
-                <li class="<%= "walletRenter".equals(service)?"active":"" %>">
-                    <a href="wallet-renter">Wallet</a>
+                </li>           
+                <li><a href="wallet-renter">Wallet</a></li>
+
+                <li><a href="rentercontroller?service=request">Contact Us</a></li>
+
+                <li><a href="listrequest1?service=request">List Request</a></li>
+
                 </li>
                 <li><a href="logout">Logout</a></li>
                 <li class="navbar-avatar">
