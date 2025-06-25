@@ -1,25 +1,4 @@
-# Multi-stage build for production
-FROM maven:3.8.4-openjdk-17 AS builder
-
-# Set working directory
-WORKDIR /app
-
-# Copy pom.xml and build files first for better caching
-COPY pom.xml ./
-COPY build.xml ./
-COPY nbproject/ ./nbproject/
-
-# Download dependencies (this layer will be cached if pom.xml doesn't change)
-RUN mvn dependency:go-offline -B
-
-# Copy source code
-COPY src/ ./src/
-COPY web/ ./web/
-
-# Build the application
-RUN mvn clean package -DskipTests
-
-# Production stage
+# Production stage - Direct deployment
 FROM tomcat:9.0-jdk17-openjdk-slim
 
 # Set environment variables
@@ -41,8 +20,11 @@ RUN apt-get update && apt-get install -y \
 # Remove default Tomcat applications for security
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Copy built application from builder stage
-COPY --from=builder /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
+# Copy the entire web application directory
+COPY web/ /usr/local/tomcat/webapps/ROOT/
+
+# Copy Java source files to WEB-INF/classes (assuming they're already compiled)
+COPY src/java/ /usr/local/tomcat/webapps/ROOT/WEB-INF/classes/
 
 # Copy custom server configuration with port 9090
 COPY docker/server.xml /usr/local/tomcat/conf/server.xml
@@ -51,6 +33,7 @@ COPY docker/server.xml /usr/local/tomcat/conf/server.xml
 RUN mkdir -p /usr/local/tomcat/logs \
     && mkdir -p /usr/local/tomcat/temp \
     && mkdir -p /usr/local/tomcat/work \
+    && mkdir -p /usr/local/tomcat/webapps/ROOT/uploads \
     && chown -R tomcat:tomcat /usr/local/tomcat
 
 # Set proper permissions
