@@ -51,7 +51,7 @@ public class AccountDAO extends MyDAO {
         List<Account> list = new ArrayList<>();
         String sql = ""
                 + "SELECT a.userID, a.userMail, a.userPassword, a.userRole, "
-                + "       u.userName, u.userPhone "
+                + "       u.userName, u.userPhone, u.vipId " // Thêm vipId từ bảng User
                 + "  FROM Account a "
                 + "  JOIN [User] u ON a.userID = u.userID";
         try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -64,12 +64,15 @@ public class AccountDAO extends MyDAO {
                         rs.getString("userPassword"),
                         rs.getInt("userRole")
                 );
-                // 2) Tạo User, chỉ set tên và phone
+                // 2) Tạo User và set thông tin từ bảng User
                 User u = new User();
                 u.setUserName(rs.getString("userName"));
                 u.setUserPhone(rs.getString("userPhone"));
+                u.setVipId(rs.getInt("vipId")); // Gán vipId từ bảng User cho User
+
                 // 3) Gắn User vào Account
                 acc.setUser(u);
+
                 // 4) Thêm vào list
                 list.add(acc);
             }
@@ -77,6 +80,20 @@ public class AccountDAO extends MyDAO {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public void updateUserVip(String email, int newVip) {
+        String sql = "UPDATE [User] "
+                + "SET vipId = ? "
+                + "WHERE userID = (SELECT userID FROM [Account] WHERE userMail = ?)";
+
+        try (PreparedStatement pst = connection.prepareStatement(sql)) {
+            pst.setInt(1, newVip); // Gán giá trị vipId mới
+            pst.setString(2, email); // Gán email từ bảng Account
+            pst.executeUpdate(); // Thực thi câu lệnh UPDATE
+        } catch (SQLException e) {
+            e.printStackTrace(); // Xử lý lỗi nếu có
+        }
     }
 
     //update role
@@ -317,7 +334,7 @@ public class AccountDAO extends MyDAO {
 
     public static void main(String[] args) {
         AccountDAO dao = new AccountDAO();
-        int userID = dao.getUserIdByEmail("maingoctu@gmail.com");
-        System.out.println(userID);
+        dao.updateUserVip("1@1", 1);
+
     }
 }

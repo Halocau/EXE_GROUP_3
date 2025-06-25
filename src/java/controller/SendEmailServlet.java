@@ -107,7 +107,8 @@ public class SendEmailServlet extends HttpServlet {
 
         } catch (MessagingException e) {
             e.printStackTrace();
-            response.getWriter().println("Lỗi khi gửi email: " + e.getMessage());
+//            response.getWriter().println("Lỗi khi gửi email: " + e.getMessage());
+            response.sendRedirect("manage?emailError=1");
         }
     }
 

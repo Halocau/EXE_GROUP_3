@@ -218,6 +218,19 @@ public class User{
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public int getVipId() {
+        return vipId;
+    }
+
+    public void setVipId(int vipId) {
+        this.vipId = vipId;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" + "userID=" + userID + ", userName=" + userName + ", userGender=" + userGender + ", userBirth=" + userBirth + ", userAddress=" + userAddress + ", userPhone=" + userPhone + ", userAvatar=" + userAvatar + ", account=" + account + ", vipId=" + vipId + ", renter=" + renter + ", room=" + room + ", security=" + security + ", email=" + email + '}';
+    }
     
     
 }
