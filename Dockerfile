@@ -1,4 +1,4 @@
-# Production stage - Direct deployment
+# Production stage - Direct deployment with Java compilation
 FROM tomcat:9.0-jdk17-openjdk-slim
 
 # Set environment variables
@@ -23,8 +23,40 @@ RUN rm -rf /usr/local/tomcat/webapps/*
 # Copy the entire web application directory
 COPY web/ /usr/local/tomcat/webapps/ROOT/
 
-# Copy Java source files to WEB-INF/classes (assuming they're already compiled)
-COPY src/java/ /usr/local/tomcat/webapps/ROOT/WEB-INF/classes/
+# Copy JAR dependencies to WEB-INF/lib
+COPY lib/ /usr/local/tomcat/webapps/ROOT/WEB-INF/lib/
+
+# Copy Java source files to a temporary location
+COPY src/java/ /tmp/src/
+
+# Install JDK for compilation
+RUN apt-get update && apt-get install -y openjdk-17-jdk
+
+# Create classes directory
+RUN mkdir -p /usr/local/tomcat/webapps/ROOT/WEB-INF/classes
+
+# Build classpath for compilation
+RUN echo "Building classpath..." && \
+    find /usr/local/tomcat/lib -name "*.jar" -exec echo -n "{}:" \; > /tmp/classpath.txt && \
+    find /usr/local/tomcat/webapps/ROOT/WEB-INF/lib -name "*.jar" -exec echo -n "{}:" \; >> /tmp/classpath.txt && \
+    echo "" >> /tmp/classpath.txt
+
+# Compile Java files with all dependencies
+WORKDIR /tmp/src
+RUN echo "Compiling Java files..." && \
+    CLASSPATH=$(cat /tmp/classpath.txt) && \
+    find . -name "*.java" -print -exec javac -cp "$CLASSPATH" -d /usr/local/tomcat/webapps/ROOT/WEB-INF/classes {} \; && \
+    echo "Compilation completed"
+
+# Verify compilation
+RUN echo "Verifying compiled classes..." && \
+    find /usr/local/tomcat/webapps/ROOT/WEB-INF/classes -name "*.class" | head -10
+
+# Clean up
+RUN rm -rf /tmp/src /tmp/classpath.txt && \
+    apt-get remove -y openjdk-17-jdk && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy custom server configuration with port 9090
 COPY docker/server.xml /usr/local/tomcat/conf/server.xml
