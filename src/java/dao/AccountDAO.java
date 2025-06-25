@@ -4,7 +4,7 @@
  */
 package dao;
 
-import model.Account;
+import model.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.PreparedStatement;
@@ -101,29 +101,71 @@ public class AccountDAO extends MyDAO {
     }
 
     /////////////////////Hung dog code
+//    public Account LoginAccount(String email, String password) {
+//        try {
+//            PreparedStatement ps;
+//            ResultSet rs;
+//            String sql = "SELECT * FROM [HL_Motel].[dbo].[Account] where userMail = ? and userPassword = ?";
+//            ps = connection.prepareStatement(sql);
+//            ps.setString(1, email);
+//            ps.setString(2, password);
+//            rs = ps.executeQuery();
+//            while (rs.next()) {
+//                Account a = new Account();
+//                a.setUserID(rs.getInt(1));
+//                a.setUserMail(rs.getString(2));
+//                a.setUserPassword(rs.getString(4));
+//                a.setUserRole(rs.getInt(4));
+//                return a;
+//            }
+//
+//        } catch (SQLException ex) {
+//            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return null;
+//    }
+    
     public Account LoginAccount(String email, String password) {
-        try {
-            PreparedStatement ps;
-            ResultSet rs;
-            String sql = "SELECT * FROM [HL_Motel].[dbo].[Account] where userMail = ? and userPassword = ?";
-            ps = connection.prepareStatement(sql);
-            ps.setString(1, email);
-            ps.setString(2, password);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                Account a = new Account();
-                a.setUserID(rs.getInt(1));
-                a.setUserMail(rs.getString(2));
-                a.setUserPassword(rs.getString(4));
-                a.setUserRole(rs.getInt(4));
-                return a;
-            }
+    try {
+        String sql = "SELECT a.*, u.* " +
+                     "FROM [HL_Motel].[dbo].[Account] a " +
+                     "JOIN [HL_Motel].[dbo].[User] u ON a.userID = u.userID " +
+                     "WHERE a.userMail = ? AND a.userPassword = ?";
 
-        } catch (SQLException ex) {
-            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, email);
+        ps.setString(2, password);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            Account a = new Account();
+            a.setUserID(rs.getInt("userID"));
+            a.setUserMail(rs.getString("userMail"));
+            a.setUserPassword(rs.getString("userPassword"));
+            a.setUserRole(rs.getInt("userRole"));
+
+            User u = new User();
+            u.setUserID(rs.getInt("userID"));
+            u.setUserName(rs.getString("userName"));
+            u.setUserGender(rs.getString("userGender"));
+            u.setUserBirth(rs.getString("userBirth"));
+            u.setUserAddress(rs.getString("userAddress"));
+            u.setUserPhone(rs.getString("userPhone"));
+            u.setUserAvatar(rs.getString("userAvatar"));
+            u.setVipId(rs.getInt("vipID"));  // 🟢 required
+            u.setEmail(rs.getString("userMail"));
+            u.setAccount(a); // Optional: back-reference
+
+            a.setUser(u); // ✅ this is what fixes your issue
+            return a;
         }
-        return null;
+
+    } catch (SQLException ex) {
+        Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
+    return null;
+}
+
 
     public Account findByEmail(String email) {
         try {

@@ -13,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
 import dao.RoomDAO;
@@ -20,6 +21,7 @@ import dao.VipDAO;
 import java.util.List;
 import model.Room;
 import model.Vip;
+import model.Account;
 
 @WebServlet(name = "AddRoomController", urlPatterns = {"/addroom"})
 @MultipartConfig // Bắt buộc để upload ảnh
@@ -33,14 +35,6 @@ public class AddRoomController extends HttpServlet {
             throws ServletException, IOException {
         String service = request.getParameter("service");
         if (service == null || service.equals("addRoom")) {
-            // Lấy danh sách VIP từ DB
-
-            List<Vip> vipList = vipDAO.getAllVips();
-            request.setAttribute("vipList", vipList);
-
-            // random chuỗi ck
-            String paymentCode = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8).toUpperCase();
-            request.setAttribute("paymentCode", paymentCode);
 
             // Xử lý các logic chuẩn bị cho trang nếu cần (ví dụ: load dữ liệu từ DB)
             request.getRequestDispatcher("Owner/addRoom.jsp").forward(request, response);
@@ -54,43 +48,35 @@ public class AddRoomController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         try {
-            // 1. Lấy dữ liệu từ form
+            HttpSession session = request.getSession(false);
+            Account account = (Account) session.getAttribute("user");
+
+            if (account == null || account.getUser() == null) {
+                response.sendRedirect("login.jsp");
+                return;
+            }
+
+            int ownerId = account.getUser().getUserID();
+            Integer vipId = account.getUser().getVipId(); 
+
+            // 🔸 Get form inputs
             int roomFloor = Integer.parseInt(request.getParameter("roomFloor"));
             int roomNumber = Integer.parseInt(request.getParameter("roomNumber"));
             int roomSize = Integer.parseInt(request.getParameter("roomSize"));
-            int total = Integer.parseInt(request.getParameter("total"));
             BigDecimal roomFee = new BigDecimal(request.getParameter("roomFee"));
             int roomOccupant = Integer.parseInt(request.getParameter("roomOccupant"));
-            String vipIdParam = request.getParameter("vipId");
-            String paymentCode = request.getParameter("paymentCode");
-//            String codePayment = paymentCode +"room"+ roomFloor +"vip"+ vipIdParam;
-            // 2. Set roomStatus based on vipId
-            Integer vipId = null;
-            if (vipIdParam != null && !vipIdParam.trim().isEmpty()) {
-                vipId = Integer.parseInt(vipIdParam);
-            }
-            int roomStatus = (vipId == null) ? 1 : 2;
-            // image
+            String paymentCode = "0";
+            String description = request.getParameter("description");
+
+            int roomStatus = 2;
+
             Part part = request.getPart("roomImg");
-            String imageUrl = null;
+String imageBase64 = null;
 
-            if (part != null && part.getSize() > 0) {
-                String appPath = request.getServletContext().getRealPath("");
-                String imagePath = appPath + File.separator + "images";
-
-                File uploadDir = new File(imagePath);
-                if (!uploadDir.exists()) {
-                    uploadDir.mkdirs();
-                }
-
-                String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
-                String newFileName = System.currentTimeMillis() + "_" + fileName;
-
-                File imageFile = new File(uploadDir, newFileName);
-                part.write(imageFile.getAbsolutePath());
-
-                imageUrl = request.getContextPath() + "/images/" + newFileName;
-            }
+if (part != null && part.getSize() > 0) {
+    byte[] imageBytes = part.getInputStream().readAllBytes();
+    imageBase64 = java.util.Base64.getEncoder().encodeToString(imageBytes);
+}
 
             Room room = new Room();
             room.setRoomFloor(roomFloor);
@@ -98,17 +84,15 @@ public class AddRoomController extends HttpServlet {
             room.setRoomSize(roomSize);
             room.setRoomFee(roomFee);
             room.setRoomOccupant(roomOccupant);
-            room.setTotal(total);
             room.setVipId(vipId);
-            room.setPaymentCode(paymentCode );
-            room.setRoomStatus(roomStatus); // Set roomStatus
-            // Lưu tên file vào Room
-            room.setRoomImg(imageUrl);
+            room.setPaymentCode(paymentCode);
+            room.setRoomStatus(roomStatus);
+            room.setRoomImg(imageBase64);
+            room.setOwnerID(ownerId); 
+            room.setDescription(description);
 
-            // 4. Gọi DAO để lưu vào DB
             roomDAO.addRoom(room);
 
-            // 5. Redirect hoặc forward sau khi thành công
             response.sendRedirect(request.getContextPath() + "/OwnerController");
 
         } catch (Exception e) {
