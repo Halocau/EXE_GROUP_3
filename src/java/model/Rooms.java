@@ -17,12 +17,32 @@ public class Rooms {
     private int roomOccupant;
     private String roomDepartment;
     private Vip vip;
+    private String userAddress;
+    private String userPhone;
+    private String facebook;
 
     public Rooms(Item item, RoomItem roomitem) {
         this.item = item;
         this.roomitem = roomitem;
     }
 
+    public Rooms(int roomID, int roomFloor, int roomNumber, int roomSize, String roomImg, BigDecimal roomFee, int roomStatus, int roomOccupant, String roomDepartment, Vip vip,
+            String userAddress, String userPhone, String facebook) {
+        this.roomID = roomID;
+        this.roomFloor = roomFloor;
+        this.roomNumber = roomNumber;
+        this.roomSize = roomSize;
+        this.roomImg = roomImg;
+        this.roomFee = roomFee;
+        this.roomStatus = roomStatus;
+        this.roomOccupant = roomOccupant;
+        this.roomDepartment = roomDepartment;
+        this.vip = vip;
+        this.userAddress = userAddress;
+        this.userPhone = userPhone;
+        this.facebook = facebook;
+    }
+    
     public Rooms(int roomID, int roomFloor, int roomNumber, int roomSize, String roomImg, BigDecimal roomFee, int roomStatus, int roomOccupant, String roomDepartment, Vip vip) {
         this.roomID = roomID;
         this.roomFloor = roomFloor;
@@ -180,5 +200,29 @@ public class Rooms {
 
     public void setVip(Vip vip) {
         this.vip = vip;
+    }
+
+    public String getUserAddress() {
+        return userAddress;
+    }
+
+    public void setUserAddress(String userAddress) {
+        this.userAddress = userAddress;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
+    }
+
+    public String getFacebook() {
+        return facebook;
+    }
+
+    public void setFacebook(String facebook) {
+        this.facebook = facebook;
     }
 }
