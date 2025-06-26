@@ -187,9 +187,9 @@ public class RoomDAO extends DBContext {
                 int roomStatus = rs.getInt("roomStatus");
                 int roomOccupant = rs.getInt("roomOccupant");
                 String roomDepartment = rs.getString("roomDepartment");
-                String userAddress = "1";
-                String userPhone = "1";
-                String facebook = "1";
+                String userAddress = "Thôm 3, Thạch Hoà, Thạch Thất, Hà Nội";
+                String userPhone = "0335473231";
+                String facebook = "https://www.facebook.com/";
 
                 Vip vip = new Vip();
                 vip.setVipID(rs.getInt("vipID"));

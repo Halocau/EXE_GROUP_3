@@ -175,15 +175,13 @@
                                 <div class="text-muted small mb-1">Thôn 3, Tân Xã, Thạch Thất</div>
                                 <div class="fw-semibold">Room <%= listRoomVip1.get(i).getRoomNumber() %></div>
                                 <div class="specs d-flex my-3 text-secondary">
-                                    <span class="me-4"><i class="bi bi-bed me-1"></i><%= listRoomVip1.get(i).getRoomSize() %> beds</span>
-                                    <span class="me-4"><i class="bi bi-building me-1"></i><%= listRoomVip1.get(i).getRoomFloor() %> Floor</span>
+                                    <span class="me-2"><i class="bi bi-bed me-1"></i><%= listRoomVip1.get(i).getRoomSize() %> beds</span>
+                                    <span class="me-2"><i class="bi bi-building me-1"></i><%= listRoomVip1.get(i).getRoomFloor() %> Floor</span>
                                     <a href="https://zalo.me/<%= listRoomVip1.get(i).getUserPhone() %>" target="_blank" class="text-decoration-none">
                                         <img src="${pageContext.request.contextPath}/image_new/zalo-icon.jpg" alt="Zalo" style="width: 18px; height: 18px; margin-right: 6px;">
-                                        <%= listRoomVip1.get(i).getUserPhone() %>
                                     </a>
                                     <a href="<%= listRoomVip1.get(i).getFacebook() %>" target="_blank" class="text-decoration-none">
                                         <img src="${pageContext.request.contextPath}/image_new/facebook-icon.png" alt="Zalo" style="width: 18px; height: 18px; margin-right: 6px;">
-                                        <%= listRoomVip1.get(i).getFacebook() %>
                                     </a>
                                 </div>
                                 <a href="GuestController?service=roomDetail&roomID=<%= listRoomVip1.get(i).getRoomID() %>" class="btn btn-outline-primary w-100 rounded-pill">See details</a>
