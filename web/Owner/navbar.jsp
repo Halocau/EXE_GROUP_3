@@ -51,7 +51,8 @@
 <!--            <li><a class="<%= "addrenter".equals(service) ? "active" : "" %>" href="AddRenterController?service=addrenter">Add Renter</a></li>-->
             <li><a href="ListRenterController">Renter Management</a></li>
             <li><a href="addroom?service=addRoom">Add Room</a></li>
-
+            <li><a href="wallet-renter">Wallet</a>
+<!--            <li><a href="wallet-renter">Wallet</a></li>-->
             <!--            <li class="dropdown has-children <%=("displayNews".equals(service) || "addnews".equals(service) || "ruleList".equals(service) || "addGuideline".equals(service) || "displayslider".equals(service)
                     || "penaltys".equals(service))  ? "active" : "" %>">
                 

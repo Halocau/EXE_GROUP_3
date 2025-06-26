@@ -1,9 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%-- Document : roomTable Created on : 27 thg 5, 2024, 11:02:30 Author : Admin --%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@page contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -56,32 +52,11 @@
                 <nav class="sb-sidenav accordion sb-sidenav-dark">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-
-
-                            <div class="sb-sidenav-menu-heading">Addons</div>
-                            <a class="nav-link" href="manage">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Account
-                            </a>
-
-                            </a>
-                            <a class="nav-link" href="selist">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Security List
-                            </a>
-                            <a class="nav-link" href="rooms">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Room List
-                            </a>
-                            <a class="nav-link" href="sendemail">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Send Email
-                            </a>
-                            <a class="nav-link" href="approvalVip">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                VIP Approval
-                            </a>
-
+                            <div class="sb-sidenav-menu-heading">Quản lý</div>
+                            <a class="nav-link active" href="manage"><div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>Accounts</a>
+                            <a class="nav-link" href="selist"><div class="sb-nav-link-icon"><i class="fas fa-shield-alt"></i></div>Security List</a>
+                            <a class="nav-link" href="rooms"><div class="sb-nav-link-icon"><i class="fas fa-door-open"></i></div>Room List</a>
+                            <a class="nav-link" href="approvalVip"><div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>VIP Approval</a>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
@@ -120,23 +95,19 @@
                                     <c:forEach var="acc" items="${account}">
                                         <tr>
                                             <td>${acc.userMail}</td>
-                                            <td>${acc.userPassword}</td>
+                                            <td>${acc.user.userName}</td>
+                                            <td>${acc.user.userPhone}</td>
                                             <td>
-                                                <c:if test="${acc.userRole == 1}">
-                                                    Renter
-                                                </c:if>
-                                                <c:if test="${acc.userRole == 2}">
-                                                    Owner
-                                                </c:if>
-                                                <c:if test="${acc.userRole == 3}">
-                                                    Security
-                                                </c:if>
-                                                <c:if test="${acc.userRole == 4}">
-                                                    Admin
-                                                </c:if>
-                                                <c:if test="${acc.userRole == 0}">
-                                                    DeActive
-                                                </c:if>
+                                                <form action="manage" method="post" class="d-inline">
+                                                    <input type="hidden" name="email" value="${acc.userMail}"/>
+                                                    <select name="role" onchange="this.form.submit()"
+                                                            class="form-select form-select-sm border-0 bg-transparent p-0">
+                                                        <option value="0" ${acc.userRole==0?'selected':''}>DeActive</option>
+                                                        <option value="1" ${acc.userRole==1?'selected':''}>User</option>
+                                                        <option value="2" ${acc.userRole==2?'selected':''}>Renter</option>
+                                                        <option value="4" ${acc.userRole==4?'selected':''}>Admin</option>
+                                                    </select>
+                                                </form>
                                             </td>
 
                                             <td>

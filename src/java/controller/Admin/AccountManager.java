@@ -2,11 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
+
 package controller.Admin;
 
 import dao.AccountDAO;
-import dao.DAO;
-import dao.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,15 +16,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Account;
-import dao.BillDAO;
 
 /**
  *
- * @author pc
+ * @author Admin
  */
-@WebServlet(name = "Manage", urlPatterns = {"/manage"})
-public class Manage extends HttpServlet {
-
+@WebServlet(name = "AccountManager", urlPatterns = {"/accountmanager"})
+public class AccountManager extends HttpServlet {
+   
     // Helper method để kiểm tra quyền admin
     private boolean isAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -51,16 +49,7 @@ public class Manage extends HttpServlet {
         List<Account> accounts = accountDAO.getAccountsWithUser();
         request.setAttribute("account", accounts);
 
-        // Thống kê số lượng chủ trọ (role = 'owner')
-        int ownerCount = dao.countAccountByRole("owner");
-        request.setAttribute("ownerCount", ownerCount);
-
-        // Thống kê tổng doanh thu toàn hệ thống
-        BillDAO billDAO = new BillDAO();
-        double totalRevenue = billDAO.getTotalRevenue();
-        request.setAttribute("totalRevenue", totalRevenue);
-
-        request.getRequestDispatcher("Admin/Tables.jsp").forward(request, response);
+        request.getRequestDispatcher("Admin/AccountManager.jsp").forward(request, response);
     }
 
     @Override

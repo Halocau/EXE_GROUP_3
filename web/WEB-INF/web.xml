@@ -5,10 +5,8 @@
         <servlet-name>RentalOverviewController</servlet-name>
         <servlet-class>controller.Owner.RentalOverviewController</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>RentalOverviewController</servlet-name>
         <url-pattern>/RentalOverviewController</url-pattern>
     </servlet-mapping>
-
 </web-app>
