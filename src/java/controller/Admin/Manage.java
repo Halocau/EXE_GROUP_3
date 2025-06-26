@@ -45,15 +45,15 @@ public class Manage extends HttpServlet {
             response.sendRedirect("login.jsp");
             return;
         }
-//        DAO dao = new DAO();
-//        List<Account> accounts = dao.getAccounts();
+      DAO dao = new DAO();
+     List<Account> accounts = dao.getAccounts();
         AccountDAO accountDAO = new AccountDAO();
-        List<Account> accounts = accountDAO.getAccountsWithUser();
+ //       List<Account> accounts = accountDAO.getAccountsWithUser();
         request.setAttribute("account", accounts);
 
-        // Thống kê số lượng chủ trọ (role = 'owner')
-        int ownerCount = dao.countAccountByRole("owner");
-        request.setAttribute("ownerCount", ownerCount);
+ //        Thống kê số lượng chủ trọ (role = 'owner')
+       int ownerCount = dao.countAccountByRole("owner");
+       request.setAttribute("ownerCount", ownerCount);
 
         // Thống kê tổng doanh thu toàn hệ thống
         BillDAO billDAO = new BillDAO();

@@ -1,9 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%-- Document : roomTable Created on : 27 thg 5, 2024, 11:02:30 Author : Admin --%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@page contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -80,6 +77,10 @@
                             <a class="nav-link" href="approvalVip">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 VIP Approval
+                            </a>
+                            <a class="nav-link" href="owner-statics">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Owner Statics
                             </a>
 
                         </div>
