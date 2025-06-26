@@ -6,16 +6,23 @@
             <file>file:/D:/Desktop/EXE/EXE_GROUP_3/src/java/controller/SendEmailServlet.java</file>
         </group>
         <group>
-            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/dao/DBContext.java</file>
-            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/dao/DAO.java</file>
-            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/controller/ChangePasswordController.java</file>
-            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/nbproject/build-impl.xml</file>
-        </group>
-        <group>
             <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/web/Owner/navbar.jsp</file>
             <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/controller/Owner/RentalOverviewController.java</file>
             <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/controller/Owner/AddRenterController.java</file>
             <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/dao/RoomDAO.java</file>
+        </group>
+        <group>
+            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/web/statistics.jsp</file>
+            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/web/Owner/navbar.jsp</file>
+            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/controller/Owner/RentalOverviewController.java</file>
+            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/dao/RenterDAO.java</file>
+            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/controller/Owner/AddRenterController.java</file>
+            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/controller/Owner/ListRenterController.java</file>
+            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/web/WEB-INF/web.xml</file>
+            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/web/Owner/listRenter.jsp</file>
+            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/dao/RenterDAO_temp.java</file>
+            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/dao/RoomDAO.java</file>
+            <file>file:/D:/Ky8/Exe2/EXE_GROUP_3/src/java/dao/RenterDAO_new.java</file>
         </group>
     </open-files>
 </project-private>

@@ -262,6 +262,11 @@
                 box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             }
 
+            .nav, .nav-tabs {
+                display: flex;
+                justify-content: start !important;
+            }
+
         </style>
     </head>
     <body>
@@ -588,5 +593,156 @@
 
         <!-- Template Main Javascript File -->
         <script src="js/main_owner.js"></script>
+
+        <!-- Room Detail Statistics Table with Filter and Pagination -->
+        <div class="container mt-5">
+            <ul class="nav nav-tabs justify-content-center" id="ownerTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link <%= (request.getParameter("tab") == null || "rooms".equals(request.getParameter("tab"))) ? "active" : "" %>" id="rooms-tab" data-bs-toggle="tab" data-bs-target="#rooms" type="button" role="tab" aria-controls="rooms" aria-selected="true">Room Detail Statistics</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link <%= "renters".equals(request.getParameter("tab")) ? "active" : "" %>" id="renters-tab" data-bs-toggle="tab" data-bs-target="#renters" type="button" role="tab" aria-controls="renters" aria-selected="false">List of Renters</button>
+                </li>
+            </ul>
+            <div class="tab-content pt-3" id="ownerTabContent">
+                <div class="tab-pane fade <%= (request.getParameter("tab") == null || "rooms".equals(request.getParameter("tab"))) ? "show active" : "" %>" id="rooms" role="tabpanel" aria-labelledby="rooms-tab">
+                    <!-- Room Detail Statistics Table with Filter and Pagination (filter, bảng phòng) đặt ở tab đầu tiên -->
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header bg-info text-white">
+                                    <h4 class="mb-0">Room Detail Statistics</h4>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Filter Form -->
+                                    <form method="get" action="ListRenterController" class="row g-3 mb-3">
+                                        <input type="hidden" name="tab" value="rooms"/>
+                                        <div class="col-md-3">
+                                            <input type="text" name="searchRoomNumber" class="form-control" placeholder="Search by Room Number" value="<%= request.getAttribute("searchRoomNumber") != null ? request.getAttribute("searchRoomNumber") : "" %>">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <select name="status" class="form-select">
+                                                <option value="all" <%= (request.getAttribute("status") == null || "all".equals(request.getAttribute("status"))) ? "selected" : "" %>>All Status</option>
+                                                <option value="occupied" <%= "occupied".equals(request.getAttribute("status")) ? "selected" : "" %>>Occupied</option>
+                                                <option value="empty" <%= "empty".equals(request.getAttribute("status")) ? "selected" : "" %>>Empty</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input type="number" name="minPrice" class="form-control" placeholder="Min Price" value="<%= request.getAttribute("minPrice") != null ? request.getAttribute("minPrice") : "" %>">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input type="number" name="maxPrice" class="form-control" placeholder="Max Price" value="<%= request.getAttribute("maxPrice") != null ? request.getAttribute("maxPrice") : "" %>">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="submit" class="btn btn-primary w-100">Filter</button>
+                                        </div>
+                                    </form>
+                                    <!-- End Filter Form -->
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Room Number</th>
+                                                    <th>Floor</th>
+                                                    <th>Room Fee</th>
+                                                    <th>Status</th>
+                                                    <th>Detail</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <% 
+                                                java.util.List<model.Rooms> filteredRooms = (java.util.List<model.Rooms>) request.getAttribute("filteredRooms");
+                                                if (filteredRooms == null) {
+                                                    dao.RoomDAO roomDAO = new dao.RoomDAO();
+                                                    filteredRooms = roomDAO.getRooms();
+                                                }
+                                                for (model.Rooms room : filteredRooms) { 
+                                            %>
+                                                <tr>
+                                                    <td><%= room.getRoomNumber() %></td>
+                                                    <td><%= room.getRoomFloor() %></td>
+                                                    <td><%= room.getRoomFee() != null ? String.format("%,.0f", room.getRoomFee()) : "" %> VND</td>
+                                                    <td>
+                                                        <% if(room.getRoomOccupant() > 0) { %>
+                                                            <span class="badge bg-success">Occupied</span>
+                                                        <% } else { %>
+                                                            <span class="badge bg-secondary">Empty</span>
+                                                        <% } %>
+                                                    </td>
+                                                    <td>
+                                                        <a href="OwnerController?service=roomDetail&roomID=<%= room.getRoomID() %>" class="btn btn-primary btn-sm">View Detail</a>
+                                                    </td>
+                                                </tr>
+                                            <% } %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- Pagination -->
+                                    <nav aria-label="Room pagination">
+                                        <ul class="pagination justify-content-center">
+                                            <% 
+                                                Integer currentPage = (Integer) request.getAttribute("currentPage");
+                                                Integer totalPages = (Integer) request.getAttribute("totalPages");
+                                                if (currentPage == null) currentPage = 1;
+                                                if (totalPages == null) totalPages = 1;
+                                                String searchRoomNumber = (String) request.getAttribute("searchRoomNumber");
+                                                String status = (String) request.getAttribute("status");
+                                                String minPrice = (String) request.getAttribute("minPrice");
+                                                String maxPrice = (String) request.getAttribute("maxPrice");
+                                                for (int i = 1; i <= totalPages; i++) {
+                                            %>
+                                            <li class="page-item <%= (i == currentPage) ? "active" : "" %>">
+                                                <form method="get" action="ListRenterController" style="display:inline;">
+                                                    <input type="hidden" name="page" value="<%= i %>"/>
+                                                    <input type="hidden" name="tab" value="rooms"/>
+                                                    <input type="hidden" name="searchRoomNumber" value="<%= searchRoomNumber != null ? searchRoomNumber : "" %>"/>
+                                                    <input type="hidden" name="status" value="<%= status != null ? status : "all" %>"/>
+                                                    <input type="hidden" name="minPrice" value="<%= minPrice != null ? minPrice : "" %>"/>
+                                                    <input type="hidden" name="maxPrice" value="<%= maxPrice != null ? maxPrice : "" %>"/>
+                                                    <button type="submit" class="page-link"><%= i %></button>
+                                                </form>
+                                            </li>
+                                            <% } %>
+                                        </ul>
+                                    </nav>
+                                    <!-- End Pagination -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade <%= "renters".equals(request.getParameter("tab")) ? "show active" : "" %>" id="renters" role="tabpanel" aria-labelledby="renters-tab">
+                    <!-- Danh sách người thuê (giữ nguyên phần hiện tại) -->
+                    <div class="row" id="roomContainer">
+                        <div class="table-container">
+                            <table id="renterTable">
+                                <thead>
+                                    <tr>
+                                        <th>Renter Name</th>
+                                        <th>Room Number</th>
+                                        <th>Room Floor</th>
+                                        <th>Balance</th>
+                                        <th>Room Fee</th>                                               
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <% for (model.RenterList renters : (java.util.List<model.RenterList>) request.getAttribute("listRenters")) { %>
+                                <tr class="property-content">
+                                    <td><a href="ViewRenterProfileController?renterID=<%= renters.getUserID() %>"><%= renters.getUserName() %></a></td>
+                                    <td><%= renters.getRoomNumber() %></td>
+                                    <td><%= renters.getRoomFloor() %></td>
+                                    <td><%= renters.getBalance() %></td>
+                                    <td>
+                                        <a href="roomfee?roomID=<%= renters.getRoomID() %>">See Detail</a>
+                                    </td>
+                                </tr>
+                                <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

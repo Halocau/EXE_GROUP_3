@@ -1,5 +1,6 @@
 <%-- Document : roomTable Created on : 27 thg 5, 2024, 11:02:30 Author : Admin --%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -73,6 +74,10 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 VIP Approval
                             </a>
+                            <a class="nav-link" href="owner-statics">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Owner Statics
+                            </a>
 
                         </div>
                     </div>
@@ -112,7 +117,9 @@
                                         <tr>
 
                                             <td>${acc.userMail}</td>
-                                            <td>${acc.userPassword}</td>
+                                            <td>
+                                                <c:forEach var="i" begin="1" end="${fn:length(acc.userPassword)}">*</c:forEach>
+                                            </td>
                                             <td>
                                                 <c:if test="${acc.userRole == 1}">
                                                     Renter

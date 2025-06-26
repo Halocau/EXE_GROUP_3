@@ -794,4 +794,95 @@ public class RoomDAO extends DBContext {
             System.out.println(rooms.getRoomDepartment());
         }
     }
+
+    // Lấy danh sách phòng có filter và phân trang
+    public List<Rooms> getFilteredRooms(String searchRoomNumber, String status, Integer minPrice, Integer maxPrice, int page, int pageSize) {
+        List<Rooms> rooms = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM room WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+        if (searchRoomNumber != null && !searchRoomNumber.isEmpty()) {
+            sql.append(" AND roomNumber LIKE ?");
+            params.add("%" + searchRoomNumber + "%");
+        }
+        if (status != null && !status.equals("all") && !status.isEmpty()) {
+            if (status.equals("occupied")) {
+                sql.append(" AND roomOccupant > 0");
+            } else if (status.equals("empty")) {
+                sql.append(" AND roomOccupant = 0");
+            }
+        }
+        if (minPrice != null) {
+            sql.append(" AND roomFee >= ?");
+            params.add(minPrice);
+        }
+        if (maxPrice != null) {
+            sql.append(" AND roomFee <= ?");
+            params.add(maxPrice);
+        }
+        sql.append(" ORDER BY roomID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        params.add((page - 1) * pageSize);
+        params.add(pageSize);
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int idx = 1;
+            for (Object param : params) {
+                ps.setObject(idx++, param);
+            }
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int roomID = rs.getInt("roomID");
+                int roomFloor = rs.getInt("roomFloor");
+                int roomNumber = rs.getInt("roomNumber");
+                int roomSize = rs.getInt("roomSize");
+                BigDecimal roomFee = rs.getBigDecimal("roomFee");
+                String roomImg = rs.getString("roomImg");
+                int roomStatus = rs.getInt("roomStatus");
+                int roomOccupant = rs.getInt("roomOccupant");
+                String roomDepartment = rs.getString("roomDepartment");
+                Rooms room = new Rooms(roomID, roomFloor, roomNumber, roomSize, roomImg, roomFee, roomStatus, roomOccupant, roomDepartment);
+                rooms.add(room);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rooms;
+    }
+
+    // Đếm tổng số phòng sau khi filter
+    public int countFilteredRooms(String searchRoomNumber, String status, Integer minPrice, Integer maxPrice) {
+        int count = 0;
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM room WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+        if (searchRoomNumber != null && !searchRoomNumber.isEmpty()) {
+            sql.append(" AND roomNumber LIKE ?");
+            params.add("%" + searchRoomNumber + "%");
+        }
+        if (status != null && !status.equals("all") && !status.isEmpty()) {
+            if (status.equals("occupied")) {
+                sql.append(" AND roomOccupant > 0");
+            } else if (status.equals("empty")) {
+                sql.append(" AND roomOccupant = 0");
+            }
+        }
+        if (minPrice != null) {
+            sql.append(" AND roomFee >= ?");
+            params.add(minPrice);
+        }
+        if (maxPrice != null) {
+            sql.append(" AND roomFee <= ?");
+            params.add(maxPrice);
+        }
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int idx = 1;
+            for (Object param : params) {
+                ps.setObject(idx++, param);
+            }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
 }
