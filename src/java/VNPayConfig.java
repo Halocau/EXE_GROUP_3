@@ -1,4 +1,3 @@
-package utility;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
@@ -16,8 +15,6 @@ public class VNPayConfig {
     public static final String vnp_HashSecret = "DLLU32CIEXBO4WVSIK1TGHML2EPXRP0H";
     public static final String vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     String origin = utils.EnvLoader.get("Origin");
-    public static final String vnp_ReturnUrl = origin + "/SWP391.E.BL5.G5/VNPay_ReturnController";
-
     public static String getIpAddress(HttpServletRequest request) {
         String ipAddress = request.getHeader("X-Forwarded-For");
         if (ipAddress == null) {
