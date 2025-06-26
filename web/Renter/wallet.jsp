@@ -818,8 +818,8 @@
             document.getElementById('open-modal-btn').addEventListener('click', function () {
                 var userSlug = slugify(tenTro);
                 var parts = ['HSLN', userSlug, tenKhach, 'DKCT'];
-                var content = parts.join('_');
-
+//                var content = parts.join('_');
+                var content = parts.join('');
                 document.getElementById('modal-input').value = content;
                 document.getElementById('payment-modal').style.display = 'block';
             });

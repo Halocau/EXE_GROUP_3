@@ -870,8 +870,8 @@
                     var userSlug = slugify(tenTro);
                     // Nối bằng dấu gạch dưới
                     var parts = ['HSLN', userSlug, tenKhach, vipCode];
-                    var content = parts.join('_');
-
+//                    var content = parts.join('_');
+                    var content = parts.join('');
                     document.getElementById('modal-input').value = content;
                     document.getElementById('payment-modal').style.display = 'block';
                 });
