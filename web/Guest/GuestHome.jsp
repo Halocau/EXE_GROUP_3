@@ -172,7 +172,7 @@
                             </a>
                             <div class="property-content">
                                 <div class="price fw-bold text-danger mb-1"><%= listRoomVip1.get(i).getRoomFee().longValue() %>k VND – <%= listRoomVip1.get(i).getVip().getVipName() %></div>
-                                <div class="text-muted small mb-1">Thôn 3, Tân Xã, Thạch Thất</div>
+                                <div class="text-muted small mb-1"><%= listRoomVip1.get(i).getUserAddress() %></div>
                                 <div class="fw-semibold">Room <%= listRoomVip1.get(i).getRoomNumber() %></div>
                                 <div class="specs d-flex my-3 text-secondary">
                                     <span class="me-2"><i class="bi bi-bed me-1"></i><%= listRoomVip1.get(i).getRoomSize() %> beds</span>
