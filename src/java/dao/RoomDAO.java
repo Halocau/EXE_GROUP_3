@@ -49,7 +49,7 @@ public class RoomDAO extends DBContext {
         }
         return rooms;
     }
-    
+
     public List<Rooms> getRoomsByIdRoomSatatus(int idRoomStatus) {
         List<Rooms> rooms = new ArrayList<>();
         String query = "SELECT * FROM room where roomStatus = ?";
@@ -187,11 +187,14 @@ public class RoomDAO extends DBContext {
                 int roomStatus = rs.getInt("roomStatus");
                 int roomOccupant = rs.getInt("roomOccupant");
                 String roomDepartment = rs.getString("roomDepartment");
+                String userAddress = "1";
+                String userPhone = "1";
+                String facebook = "1";
 
                 Vip vip = new Vip();
                 vip.setVipID(rs.getInt("vipID"));
                 vip.setVipName(rs.getString("vipName"));
-                Rooms room = new Rooms(roomID, roomFloor, roomNumber, roomSize, roomImg, roomFee, roomStatus, roomOccupant, roomDepartment, vip);
+                Rooms room = new Rooms(roomID, roomFloor, roomNumber, roomSize, roomImg, roomFee, roomStatus, roomOccupant, roomDepartment, vip, userAddress, userPhone, facebook);
                 rooms.add(room);
             }
         } catch (SQLException e) {
@@ -737,10 +740,10 @@ public class RoomDAO extends DBContext {
 
     public void addRoom(Room r) {
         connection = connection;
-       String sql = "INSERT INTO [dbo].[room] "
-        + "([roomFloor], [roomNumber], [roomSize], [roomFee], [roomStatus], "
-        + "[roomOccupant], [roomDepartment], [vipID], [roomImg], [paymentCode]) "
-        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO [dbo].[room] "
+                + "([roomFloor], [roomNumber], [roomSize], [roomFee], [roomStatus], "
+                + "[roomOccupant], [roomDepartment], [vipID], [roomImg], [paymentCode]) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             statement = connection.prepareStatement(sql, statement.RETURN_GENERATED_KEYS);
