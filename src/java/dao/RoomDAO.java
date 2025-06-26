@@ -49,7 +49,7 @@ public class RoomDAO extends DBContext {
         }
         return rooms;
     }
-    
+
     public List<Rooms> getRoomsByIdRoomSatatus(int idRoomStatus) {
         List<Rooms> rooms = new ArrayList<>();
         String query = "SELECT * FROM room where roomStatus = ?";
@@ -161,11 +161,13 @@ public class RoomDAO extends DBContext {
         List<Rooms> rooms = new ArrayList<>();
         String query = null;
         if (flag == 0) {
-            query = "select * from room\n"
-                    + "JOIN vip v ON room.vipID = v.vipID\n"
-                    + "where roomStatus = 1 AND v.vipID = ?\n"
-                    + "order by roomID\n"
-                    + "OFFSET ? ROWS FETCH NEXT 10 ROWS only";
+             query = "SELECT room.*, u.userAddress, u.userPhone, v.vipName "
+                    + "FROM room "
+                    + "JOIN vip v ON room.vipID = v.vipID "
+                    + " JOIN [user] u ON room.ownerId = u.userID "
+                    + "WHERE roomStatus = 1 AND v.vipID = ? "
+                    + "ORDER BY roomID "
+                    + "OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
         } else if (flag == 1) {
             query = "select * from room\n"
                     + "JOIN vip v ON room.vipID = v.vipID\n"
@@ -187,11 +189,14 @@ public class RoomDAO extends DBContext {
                 int roomStatus = rs.getInt("roomStatus");
                 int roomOccupant = rs.getInt("roomOccupant");
                 String roomDepartment = rs.getString("roomDepartment");
+                String userAddress = rs.getString("userAddress");
+                String userPhone = rs.getString("userPhone");
+                String facebook = rs.getString("facebook");
 
                 Vip vip = new Vip();
                 vip.setVipID(rs.getInt("vipID"));
                 vip.setVipName(rs.getString("vipName"));
-                Rooms room = new Rooms(roomID, roomFloor, roomNumber, roomSize, roomImg, roomFee, roomStatus, roomOccupant, roomDepartment, vip);
+                Rooms room = new Rooms(roomID, roomFloor, roomNumber, roomSize, roomImg, roomFee, roomStatus, roomOccupant, roomDepartment, vip, userAddress, userPhone, facebook);
                 rooms.add(room);
             }
         } catch (SQLException e) {
@@ -737,10 +742,10 @@ public class RoomDAO extends DBContext {
 
     public void addRoom(Room r) {
         connection = connection;
-       String sql = "INSERT INTO [dbo].[room] "
-        + "([roomFloor], [roomNumber], [roomSize], [roomFee], [roomStatus], "
-        + "[roomOccupant], [roomDepartment], [vipID], [roomImg], [paymentCode]) "
-        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO [dbo].[room] "
+                + "([roomFloor], [roomNumber], [roomSize], [roomFee], [roomStatus], "
+                + "[roomOccupant], [roomDepartment], [vipID], [roomImg], [paymentCode]) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             statement = connection.prepareStatement(sql, statement.RETURN_GENERATED_KEYS);
