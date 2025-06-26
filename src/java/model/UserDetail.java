@@ -73,8 +73,6 @@ public class UserDetail{
         this.userRole = userRole;
     }
 
-    
-
     public int getUserID() {
         return userID;
     }
@@ -202,8 +200,11 @@ public class UserDetail{
     public void setEmail(String email) {
         this.email = email;
     }
-    
-    
-    
-    
+
+    @Override
+    public String toString() {
+        return "UserDetail{" + "userID=" + userID + ", userMail=" + userMail + ", userPassword=" + userPassword + ", userRole=" + userRole + ", user=" + user + ", userName=" + userName + ", userGender=" + userGender + ", userBirth=" + userBirth + ", userAddress=" + userAddress + ", userPhone=" + userPhone + ", userAvatar=" + userAvatar + ", account=" + account + ", renter=" + renter + ", room=" + room + ", security=" + security + ", email=" + email + '}';
+    }
+
+   
 }

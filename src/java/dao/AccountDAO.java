@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.User;
 
 /**
  *
@@ -44,6 +45,68 @@ public class AccountDAO extends MyDAO {
             System.out.println("Fail: " + e.getMessage());
         }
         return account;
+    }
+
+    public List<Account> getAccountsWithUser() {
+        List<Account> list = new ArrayList<>();
+        String sql = ""
+                + "SELECT a.userID, a.userMail, a.userPassword, a.userRole, "
+                + "       u.userName, u.userPhone, u.vipId " // Thêm vipId từ bảng User
+                + "  FROM Account a "
+                + "  JOIN [User] u ON a.userID = u.userID";
+        try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                // 1) Tạo Account từ cột trả về
+                Account acc = new Account(
+                        rs.getInt("userID"),
+                        rs.getString("userMail"),
+                        rs.getString("userPassword"),
+                        rs.getInt("userRole")
+                );
+                // 2) Tạo User và set thông tin từ bảng User
+                User u = new User();
+                u.setUserName(rs.getString("userName"));
+                u.setUserPhone(rs.getString("userPhone"));
+                u.setVipId(rs.getInt("vipId")); // Gán vipId từ bảng User cho User
+
+                // 3) Gắn User vào Account
+                acc.setUser(u);
+
+                // 4) Thêm vào list
+                list.add(acc);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public void updateUserVip(String email, int newVip) {
+        String sql = "UPDATE [User] "
+                + "SET vipId = ? "
+                + "WHERE userID = (SELECT userID FROM [Account] WHERE userMail = ?)";
+
+        try (PreparedStatement pst = connection.prepareStatement(sql)) {
+            pst.setInt(1, newVip); // Gán giá trị vipId mới
+            pst.setString(2, email); // Gán email từ bảng Account
+            pst.executeUpdate(); // Thực thi câu lệnh UPDATE
+        } catch (SQLException e) {
+            e.printStackTrace(); // Xử lý lỗi nếu có
+        }
+    }
+
+    //update role
+    public boolean updateUserRole(String email, int newRole) {
+        String sql = "UPDATE [Account] SET userRole = ? WHERE userMail = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, newRole);
+            ps.setString(2, email);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
 
     //List Account by userRole (Renter)
@@ -186,7 +249,7 @@ public class AccountDAO extends MyDAO {
         }
         return null;
     }
-    
+
     public int getUserIdByEmail(String email) {
         int userID = 0;
         try {
@@ -197,7 +260,7 @@ public class AccountDAO extends MyDAO {
             ps.setString(1, email);
             rs = ps.executeQuery();
             if (rs.next()) {
-              userID = rs.getInt("userID");
+                userID = rs.getInt("userID");
             }
 
         } catch (SQLException ex) {
@@ -254,7 +317,7 @@ public class AccountDAO extends MyDAO {
         }
         return null;
     }
-   
+
     public void updatePassword(Account a) {
         String sql = "UPDATE Account SET [userPassword] = ? WHERE userID = ?";
         try {
@@ -268,9 +331,10 @@ public class AccountDAO extends MyDAO {
             e.printStackTrace();
         }
     }
-        public static void main(String[] args) {
+
+    public static void main(String[] args) {
         AccountDAO dao = new AccountDAO();
-        int userID = dao.getUserIdByEmail("maingoctu@gmail.com");
-            System.out.println(userID);
+        dao.updateUserVip("1@1", 1);
+
     }
 }
