@@ -138,6 +138,14 @@ public class User{
     public void setUserID(int userID) {
         this.userID = userID;
     }
+    
+    public int getVipId() {
+        return vipId;
+    }
+
+    public void setVipId(int vipID) {
+        this.vipId = vipID;
+    }
 
     public String getUserName() {
         return userName;

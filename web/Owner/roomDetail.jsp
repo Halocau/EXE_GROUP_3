@@ -120,7 +120,7 @@
                             <p class="textDetail">Area: 22m²</p>
                             <p class="textDetail">Room Floor: <%= roomDetail.getRoomFloor()%></p>
                             <p class="textDetail">Room Size: <%= roomDetail.getRoomSize()%></p>
-                            <p class="textDetail">Facilities: There is air conditioning, private toilet, comfortable living hours</p>
+                            <p class="textDetail">Description: <%= roomDetail.getRoomDescription()%></p>
                             <p class="textDetail">In the room are available: </p>
                             <% 
                             String[] itemNames = roomDetail.getItemName(); 
@@ -136,7 +136,7 @@
                                     }
                                 }
                             %>
-                            <p class="textDetail">Address: Thon 3, Tan Xa, Thach That, Ha Noi</p>
+                            <p class="textDetail">Address: <%= roomDetail.getAddress()%></p>
                             <p class="textDetail">Contact Info: 0123456789</p>                            
                             <% for (String renterName : listNameRenter) { %>
                             <p class="textDetail">Renter: 

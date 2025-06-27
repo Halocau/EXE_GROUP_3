@@ -19,6 +19,8 @@ public class RoomDetailSe {
     private int[] itemID;
     private int roomOccupant; // thêm ngày 21 / 7
     private int roomStatus; // thêm ngày 21 / 7
+    private String roomDescription;
+    private String address;
 
     public RoomDetailSe(int roomID, int roomNumber, int roomSize, int roomFloor, 
             String roomImg, String[] itemName, byte[] itemImg, int[] quantity, 
@@ -36,6 +38,27 @@ public class RoomDetailSe {
         this.roomOccupant = roomOccupant;
         this.roomStatus = roomStatus;
     }
+    
+    public RoomDetailSe(int roomID, int roomNumber, int roomSize, int roomFloor,
+            String roomImg, String[] itemName, byte[] itemImg, int[] quantity,
+            double roomFee, int[] itemID, int roomOccupant, int roomStatus,
+            String roomDescription, String address) {
+
+        this.roomID = roomID;
+        this.roomNumber = roomNumber;
+        this.roomSize = roomSize;
+        this.roomFloor = roomFloor;
+        this.roomImg = roomImg;
+        this.itemName = itemName;
+        this.itemImg = itemImg;
+        this.quantity = quantity;
+        this.roomFee = roomFee;
+        this.itemID = itemID;
+        this.roomOccupant = roomOccupant;
+        this.roomStatus = roomStatus;
+        this.roomDescription = roomDescription;
+        this.address = address;
+    }
 
     public int[] getItemID() {
         return itemID;
@@ -44,7 +67,23 @@ public class RoomDetailSe {
     public void setItemID(int[] itemID) {
         this.itemID = itemID;
     }
-    
+
+    public String getRoomDescription() {
+        return roomDescription;
+    }
+
+    public void setRoomDescription(String roomDescription) {
+        this.roomDescription = roomDescription;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public double getRoomFee() {
         return roomFee;
     }
