@@ -137,7 +137,7 @@
                                 }
                             %>
                             <p class="textDetail">Address: <%= roomDetail.getAddress()%></p>
-                            <p class="textDetail">Contact Info: 0123456789</p>                            
+                            <p class="textDetail">Contact Info: <%= roomDetail.getPhone()%></p>
                             <% for (String renterName : listNameRenter) { %>
                             <p class="textDetail">Renter: 
                             <a style="color: blue;" href="#"> <%= renterName %> </a> 

@@ -376,7 +376,7 @@ public class RoomDAO extends DBContext {
     public RoomDetailSe getRoomDetail(int roomid) {
         String query = "select r.roomID, r.roomFloor, r.roomNumber, r.roomSize, r.roomFee, r.roomImg,\n"
                 + "       i.itemName, i.itemImg, ri.quantity, ri.itemID,\n"
-                + "       r.roomOccupant, r.roomStatus, r.description, u.userAddress\n"
+                + "       r.roomOccupant, r.roomStatus, r.description, u.userAddress, u.userPhone\n"
                 + "from room r\n"
                 + "left join roomItem ri on r.roomID = ri.roomID\n"
                 + "left join item i on ri.itemID = i.itemID\n"
@@ -404,10 +404,11 @@ public class RoomDAO extends DBContext {
                         int roomStatus = rs.getInt("roomStatus");
                         String description = rs.getString("description");
                         String address = rs.getString("userAddress");
+                        String userPhone = rs.getString("userPhone");
 
                         roomDetail = new RoomDetailSe(roomID, roomNumber, roomSize, roomFloor,
                                 roomImg, null, null, null, roomFee, null,
-                                roomOccupant, roomStatus, description, address);
+                                roomOccupant, roomStatus, description, address, userPhone);
                         roomDetailSet = true;
                     }
 
@@ -756,8 +757,8 @@ public class RoomDAO extends DBContext {
     public void addRoom(Room r) {
         String sql = "INSERT INTO [dbo].[room] "
                 + "([roomFloor], [roomNumber], [roomSize], [roomFee], [roomStatus], "
-                + "[roomOccupant], [roomDepartment], [vipID], [roomImg], [paymentCode], [ownerId], [description]) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "[roomOccupant], [roomDepartment], [vipID], [roomImg], [paymentCode], [ownerId], [description], [facebook]) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             statement = connection.prepareStatement(sql, statement.RETURN_GENERATED_KEYS);
@@ -767,13 +768,13 @@ public class RoomDAO extends DBContext {
             statement.setObject(4, r.getRoomFee());
             statement.setObject(5, r.getRoomStatus());
             statement.setObject(6, r.getRoomOccupant());
-            statement.setObject(7, null); // roomDepartment
+            statement.setObject(7, null); 
             statement.setObject(8, r.getVipId());
             statement.setObject(9, r.getRoomImg());
             statement.setObject(10, r.getPaymentCode());
             statement.setObject(11, r.getOwnerID());
-            statement.setObject(12, r.getDescription()); // ➕ new param
-
+            statement.setObject(12, r.getDescription());
+            statement.setObject(13, null);
             statement.executeUpdate();
             resultSet = statement.getGeneratedKeys();
         } catch (Exception ex) {

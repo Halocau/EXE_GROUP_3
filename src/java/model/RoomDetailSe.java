@@ -21,6 +21,7 @@ public class RoomDetailSe {
     private int roomStatus; // thêm ngày 21 / 7
     private String roomDescription;
     private String address;
+    private String phone;
 
     public RoomDetailSe(int roomID, int roomNumber, int roomSize, int roomFloor, 
             String roomImg, String[] itemName, byte[] itemImg, int[] quantity, 
@@ -42,7 +43,7 @@ public class RoomDetailSe {
     public RoomDetailSe(int roomID, int roomNumber, int roomSize, int roomFloor,
             String roomImg, String[] itemName, byte[] itemImg, int[] quantity,
             double roomFee, int[] itemID, int roomOccupant, int roomStatus,
-            String roomDescription, String address) {
+            String roomDescription, String address, String phone) {
 
         this.roomID = roomID;
         this.roomNumber = roomNumber;
@@ -58,6 +59,7 @@ public class RoomDetailSe {
         this.roomStatus = roomStatus;
         this.roomDescription = roomDescription;
         this.address = address;
+        this.phone = phone;
     }
 
     public int[] getItemID() {
@@ -82,6 +84,14 @@ public class RoomDetailSe {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+    
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public double getRoomFee() {

@@ -227,13 +227,6 @@ public class User{
         this.email = email;
     }
 
-    public int getVipId() {
-        return vipId;
-    }
-
-    public void setVipId(int vipId) {
-        this.vipId = vipId;
-    }
 
     @Override
     public String toString() {
