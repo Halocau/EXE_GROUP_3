@@ -769,7 +769,7 @@ public class RoomDAO extends DBContext {
             statement.setObject(5, r.getRoomStatus());
             statement.setObject(6, r.getRoomOccupant());
             statement.setObject(7, null); 
-            statement.setObject(8, r.getVipId());
+            statement.setObject(8, null);
             statement.setObject(9, r.getRoomImg());
             statement.setObject(10, r.getPaymentCode());
             statement.setObject(11, r.getOwnerID());
@@ -806,35 +806,41 @@ public class RoomDAO extends DBContext {
     // System.out.println(rooms.getRoomID());
     // }
     // }
+
+
+
     public static void main(String[] args) {
         try {
-            // Initialize DAO (make sure DBContext sets up the connection)
-            RoomDAO roomDAO = new RoomDAO();
+            // Khởi tạo DAO (phải chắc chắn RoomDAO tự thiết lập connection trong constructor)
+            RoomDAO roomDAO = new RoomDAO(); // constructor này phải khởi tạo 'connection'
 
-            // Create a sample Room
+            // Tạo đối tượng Room mẫu
             Room room = new Room();
-            room.setRoomFloor(2);
-            room.setRoomNumber(101);
-            room.setRoomSize(25);
-            room.setRoomFee(new BigDecimal("2500000"));
-            room.setRoomStatus(2); // e.g., available
-            room.setRoomOccupant(2);
-            room.setVipId(1); // Must exist in DB (FK)
-            room.setRoomImg("/images/test_room.jpg");
-            room.setPaymentCode("0");
-            room.setOwnerID(1); // Must exist in DB (FK)
-            room.setTotal(2); // Optional, depending on your model
+            room.setRoomFloor(2);                      // Tầng
+            room.setRoomNumber(101);                   // Số phòng
+            room.setRoomSize(25);                      // Diện tích
+            room.setRoomFee(new BigDecimal("2500000")); // Giá thuê
+            room.setRoomStatus(1);                     // Trạng thái phòng
+            room.setRoomOccupant(2);                   // Số người
+            room.setVipId(1);                          // ID VIP (FK phải tồn tại trong DB)
+            room.setRoomImg("/images/test_room.jpg");  // Ảnh phòng
+            room.setPaymentCode("0");                  // Mã thanh toán
+            room.setOwnerID(15);                        // Chủ sở hữu (FK)
+            room.setDescription("Phòng thử nghiệm cho test."); // Mô tả (có thể null)
+            // Facebook hiện tại bạn đang set null trong SQL nên không cần set ở đây
 
-            // Call the DAO
+            // Gọi hàm thêm phòng
             roomDAO.addRoom(room);
 
-            System.out.println("dangdeptrai Room inserted successfully!");
+            System.out.println("✅ Room inserted successfully!");
 
         } catch (Exception e) {
+            System.err.println("❌ Failed to insert room: " + e.getMessage());
             e.printStackTrace();
-            System.out.println("dangdeptrai Failed to insert room: " + e.getMessage());
         }
     }
+
+
 
     // Lấy danh sách phòng có filter và phân trang
     public List<Rooms> getFilteredRooms(String searchRoomNumber, String status, Integer minPrice, Integer maxPrice,
