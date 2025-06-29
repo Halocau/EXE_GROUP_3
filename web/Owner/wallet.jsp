@@ -739,7 +739,7 @@
                 </li>
                 <li><a href="ListRenterController">Renter Management</a></li>
                 <li><a href="addroom?service=addRoom">Add Room</a></li>
-                <li><a href="wallet-renter">Wallet</a></li>
+                <li><a href="wallet-renter">Service</a></li>
                 </li>
                 <li><a href="logout">Logout</a></li>
                 <li class="navbar-avatar">

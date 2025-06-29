@@ -4,6 +4,8 @@
  */
 package model;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author Creep
@@ -25,8 +27,28 @@ public class UserDetail{
     private Room room;
     private Security security;
     private String email;
-
+private BigDecimal wallet;
     public UserDetail() {
+    }
+
+    public UserDetail(int userID, String userMail, String userPassword, int userRole, User user, String userName, String userGender, String userBirth, String userAddress, String userPhone, String userAvatar, Account account, Renter renter, Room room, Security security, String email, BigDecimal wallet) {
+        this.userID = userID;
+        this.userMail = userMail;
+        this.userPassword = userPassword;
+        this.userRole = userRole;
+        this.user = user;
+        this.userName = userName;
+        this.userGender = userGender;
+        this.userBirth = userBirth;
+        this.userAddress = userAddress;
+        this.userPhone = userPhone;
+        this.userAvatar = userAvatar;
+        this.account = account;
+        this.renter = renter;
+        this.room = room;
+        this.security = security;
+        this.email = email;
+        this.wallet = wallet;
     }
 
     public UserDetail(String userName, String userGender, String userBirth, String userAddress, String userPhone,String userMail, String userAvatar) {
@@ -115,6 +137,14 @@ public class UserDetail{
 
     public String getUserName() {
         return userName;
+    }
+
+    public BigDecimal getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(BigDecimal wallet) {
+        this.wallet = wallet;
     }
 
     public void setUserName(String userName) {

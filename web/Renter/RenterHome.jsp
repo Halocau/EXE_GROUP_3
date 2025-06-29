@@ -22,7 +22,7 @@
         <link rel="stylesheet" href="css/aos.css">
         <link rel="stylesheet" href="css/style.css">
 
-        <title>HoLa Motel</title>
+        <title>HoLa StayNow</title>
 
         <style>
             /* Ensure the links fill the entire item */
