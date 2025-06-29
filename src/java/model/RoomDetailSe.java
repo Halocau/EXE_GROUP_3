@@ -22,6 +22,7 @@ public class RoomDetailSe {
     private String roomDescription;
     private String address;
     private String phone;
+    private String roomName;
 
     public RoomDetailSe(int roomID, int roomNumber, int roomSize, int roomFloor, 
             String roomImg, String[] itemName, byte[] itemImg, int[] quantity, 
@@ -43,7 +44,7 @@ public class RoomDetailSe {
     public RoomDetailSe(int roomID, int roomNumber, int roomSize, int roomFloor,
             String roomImg, String[] itemName, byte[] itemImg, int[] quantity,
             double roomFee, int[] itemID, int roomOccupant, int roomStatus,
-            String roomDescription, String address, String phone) {
+            String roomDescription, String address, String phone, String roomName) {
 
         this.roomID = roomID;
         this.roomNumber = roomNumber;
@@ -60,6 +61,7 @@ public class RoomDetailSe {
         this.roomDescription = roomDescription;
         this.address = address;
         this.phone = phone;
+        this.roomName = roomName;
     }
 
     public int[] getItemID() {
@@ -94,6 +96,14 @@ public class RoomDetailSe {
         this.phone = phone;
     }
 
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
+    }
+    
     public double getRoomFee() {
         return roomFee;
     }

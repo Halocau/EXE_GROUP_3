@@ -67,6 +67,7 @@ public class AddRoomController extends HttpServlet {
             int roomOccupant = Integer.parseInt(request.getParameter("roomOccupant"));
             String paymentCode = "0";
             String description = request.getParameter("description");
+            String roomName = request.getParameter("roomName");
 
             int roomStatus = 2;
 
@@ -90,7 +91,7 @@ if (part != null && part.getSize() > 0) {
             room.setRoomImg(imageBase64);
             room.setOwnerID(ownerId); 
             room.setDescription(description);
-
+            room.setRoomName(roomName);
             roomDAO.addRoom(room);
 
             response.sendRedirect(request.getContextPath() + "/OwnerController");

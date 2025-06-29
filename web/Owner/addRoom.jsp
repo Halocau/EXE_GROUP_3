@@ -58,6 +58,11 @@
 
                     <div class="row g-3">
                         <div class="col-md-6">
+                            <label for="roomName" class="form-label">Room Name</label>
+                            <input type="text" class="form-control" id="roomName" name="roomName" maxlength="250" required>
+                        </div>
+
+                        <div class="col-md-6">
                             <label for="roomFloor" class="form-label">Room Floor</label>
                             <input type="number" class="form-control" id="roomFloor" name="roomFloor" required>
                         </div>

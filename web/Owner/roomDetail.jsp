@@ -110,7 +110,8 @@
                     </div>
                     <div class="col-lg-4">
                         <div class="d-block agent-box p-5">
-                            <h2 class="heading text-primary" style="font-weight: 700"> Room <%= roomDetail.getRoomNumber()%></h2>
+                            <h2 class="heading text-primary" style="font-weight: 700"> <%= roomDetail.getRoomName()%></h2>
+                            <p class="textDetail">Room Number: <%= roomDetail.getRoomNumber()%></p>
                             <%
                                DecimalFormat df = new DecimalFormat("#,###");
                                String formattedFee = df.format(roomDetail.getRoomFee() * 1000);

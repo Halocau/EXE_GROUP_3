@@ -376,7 +376,7 @@ public class RoomDAO extends DBContext {
     public RoomDetailSe getRoomDetail(int roomid) {
         String query = "select r.roomID, r.roomFloor, r.roomNumber, r.roomSize, r.roomFee, r.roomImg,\n"
                 + "       i.itemName, i.itemImg, ri.quantity, ri.itemID,\n"
-                + "       r.roomOccupant, r.roomStatus, r.description, u.userAddress, u.userPhone\n"
+                + "       r.roomOccupant, r.roomStatus, r.description, u.userAddress, u.userPhone, r.roomName\n"
                 + "from room r\n"
                 + "left join roomItem ri on r.roomID = ri.roomID\n"
                 + "left join item i on ri.itemID = i.itemID\n"
@@ -405,10 +405,11 @@ public class RoomDAO extends DBContext {
                         String description = rs.getString("description");
                         String address = rs.getString("userAddress");
                         String userPhone = rs.getString("userPhone");
+                        String roomName = rs.getString("roomName");
 
                         roomDetail = new RoomDetailSe(roomID, roomNumber, roomSize, roomFloor,
                                 roomImg, null, null, null, roomFee, null,
-                                roomOccupant, roomStatus, description, address, userPhone);
+                                roomOccupant, roomStatus, description, address, userPhone, roomName);
                         roomDetailSet = true;
                     }
 
@@ -756,9 +757,10 @@ public class RoomDAO extends DBContext {
 
     public void addRoom(Room r) {
         String sql = "INSERT INTO [dbo].[room] "
-                + "([roomFloor], [roomNumber], [roomSize], [roomFee], [roomStatus], "
-                + "[roomOccupant], [roomDepartment], [vipID], [roomImg], [paymentCode], [ownerId], [description], [facebook]) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "([roomFloor], [roomNumber], [roomSize], [roomFee], [roomStatus], "
+            + "[roomOccupant], [roomDepartment], [vipID], [roomImg], "
+            + "[paymentCode], [ownerId], [description], [facebook], [roomName]) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             statement = connection.prepareStatement(sql, statement.RETURN_GENERATED_KEYS);
@@ -775,6 +777,7 @@ public class RoomDAO extends DBContext {
             statement.setObject(11, r.getOwnerID());
             statement.setObject(12, r.getDescription());
             statement.setObject(13, null);
+            statement.setObject(14, r.getRoomName());
             statement.executeUpdate();
             resultSet = statement.getGeneratedKeys();
         } catch (Exception ex) {
