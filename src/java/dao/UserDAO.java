@@ -236,10 +236,43 @@ public class UserDAO extends MyDAO {
     }
 
     public static void main(String[] args) {
-        UserDAO dao = new UserDAO();
+        UserDAO userDAO = new UserDAO();
 
-        System.out.println(dao.getUserById(1));
+        // Thay đổi thông tin email và số tiền nạp phù hợp với DB của bạn
+        String testEmail = "1@1"; // Email phải tồn tại trong bảng Account
+        BigDecimal amountToAdd = new BigDecimal("100000");
 
+        userDAO.addMoneyToWallet(testEmail, amountToAdd);
+
+        System.out.println("✅ Đã nạp " + amountToAdd + " VND vào tài khoản " + testEmail);
+    }
+
+    public void addMoneyToWallet(String email, BigDecimal amountToAdd) {
+        String sql = "UPDATE [User] SET wallet = ISNULL(wallet, 0) + ? WHERE userID = (SELECT userID FROM Account WHERE userMail = ?)";
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setBigDecimal(1, amountToAdd);
+            ps.setString(2, email);
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public BigDecimal getWalletByUserId(int userId) {
+        String sql = "SELECT wallet FROM [User] WHERE userID = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBigDecimal("wallet");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return BigDecimal.ZERO;
     }
 
 }
