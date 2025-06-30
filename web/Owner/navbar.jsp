@@ -37,7 +37,7 @@
             </head>
 
             <body>
-                <ul class="js-clone-nav d-none d-lg-inline-block text-start site-menu float-end">
+                <ul class="js-clone-nav d-flex justify-content-center align-items-center site-menu" style="gap: 18px;">
                     <li class="<%= (service == null || service.equals(" OwnerHome")) ? "active" : "" %>"><a
                             href="OwnerController?service=OwnerHome">Home</a></li>
                     <li class="has-children <%= " pagingRoom".equals(service) ? "active" : "" %>">
