@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import model.UserDetail;
 
 /**
  *
@@ -273,6 +274,33 @@ public class UserDAO extends MyDAO {
             e.printStackTrace();
         }
         return BigDecimal.ZERO;
+    }
+
+    public UserDetail getUserDetailByEmail(String userEmail) {
+        String sql = "SELECT u.userID, u.userName, u.userGender, u.userBirth, u.userAddress, u.userPhone, u.userAvatar, u.wallet, a.userMail "
+                + "FROM [User] u JOIN Account a ON u.userID = a.userID "
+                + "WHERE a.userMail = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, userEmail);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    UserDetail userDetail = new UserDetail();
+                    userDetail.setUserID(rs.getInt("userID"));
+                    userDetail.setUserName(rs.getString("userName"));
+                    userDetail.setUserGender(rs.getString("userGender"));
+                    userDetail.setUserBirth(rs.getString("userBirth"));
+                    userDetail.setUserAddress(rs.getString("userAddress"));
+                    userDetail.setUserPhone(rs.getString("userPhone"));
+                    userDetail.setUserAvatar(rs.getString("userAvatar"));
+                    userDetail.setWallet(rs.getBigDecimal("wallet"));
+                    userDetail.setUserMail(rs.getString("userMail"));
+                    return userDetail;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

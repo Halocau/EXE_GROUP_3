@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import model.UserDetail;
 
 /**
  *
@@ -37,10 +38,15 @@ public class updatewallet extends HttpServlet {
             BigDecimal amount = new BigDecimal(amountStr);
             UserDAO dao = new UserDAO();
             dao.addMoneyToWallet(email, amount);
-            response.sendRedirect("manage?walletUpdated=true");
+
+            // Cập nhật session với thông tin mới từ database
+            UserDetail updatedUser = dao.getUserDetailByEmail(email);
+            request.getSession().setAttribute("userDetail", updatedUser); // <== RẤT QUAN TRỌNG
+
+            response.sendRedirect("profile.jsp?walletUpdated=true");
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("manage?walletError=true");
+            response.sendRedirect("profile.jsp?walletError=true");
         }
     }
 

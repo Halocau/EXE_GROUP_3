@@ -10,8 +10,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import dao.UserDAO;
 import jakarta.servlet.http.HttpSession;
+import model.UserDetail;
 
-@WebServlet(name="RenterController", urlPatterns={"/rentercontroller"})
+@WebServlet(name = "RenterController", urlPatterns = {"/rentercontroller"})
 public class RenterController extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(RenterController.class.getName());
@@ -25,7 +26,7 @@ public class RenterController extends HttpServlet {
     private static final String ERROR_PAGE = "error.jsp"; // Define your error page path
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
         HttpSession session = request.getSession();
@@ -84,13 +85,13 @@ public class RenterController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 

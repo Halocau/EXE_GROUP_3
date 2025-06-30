@@ -10,8 +10,9 @@ import java.math.BigDecimal;
  *
  * @author Creep
  */
-public class UserDetail{
-     private int userID;
+public class UserDetail {
+
+    private int userID;
     private String userMail;
     private String userPassword;
     private int userRole;
@@ -27,7 +28,8 @@ public class UserDetail{
     private Room room;
     private Security security;
     private String email;
-private BigDecimal wallet;
+    private BigDecimal wallet;
+
     public UserDetail() {
     }
 
@@ -51,7 +53,7 @@ private BigDecimal wallet;
         this.wallet = wallet;
     }
 
-    public UserDetail(String userName, String userGender, String userBirth, String userAddress, String userPhone,String userMail, String userAvatar) {
+    public UserDetail(String userName, String userGender, String userBirth, String userAddress, String userPhone, String userMail, String userAvatar) {
         this.userName = userName;
         this.userGender = userGender;
         this.userBirth = userBirth;
@@ -61,8 +63,6 @@ private BigDecimal wallet;
         this.userAvatar = userAvatar;
     }
 
-    
-    
     public UserDetail(int userID, String userMail, String userPassword, int userRole, User user, String userName, String userGender, String userBirth, String userAddress, String userPhone, String userAvatar, Account account, Renter renter, Room room, Security security, String email) {
         this.userID = userID;
         this.userMail = userMail;
@@ -82,7 +82,7 @@ private BigDecimal wallet;
         this.email = email;
     }
 
-    public UserDetail(int userID, String userName, String userGender, String userBirth, String userAddress, String userPhone, String userAvatar, String userMail, String userPassword, int userRole) {    
+    public UserDetail(int userID, String userName, String userGender, String userBirth, String userAddress, String userPhone, String userAvatar, String userMail, String userPassword, int userRole) {
         this.userName = userName;
         this.userGender = userGender;
         this.userBirth = userBirth;
@@ -236,5 +236,4 @@ private BigDecimal wallet;
         return "UserDetail{" + "userID=" + userID + ", userMail=" + userMail + ", userPassword=" + userPassword + ", userRole=" + userRole + ", user=" + user + ", userName=" + userName + ", userGender=" + userGender + ", userBirth=" + userBirth + ", userAddress=" + userAddress + ", userPhone=" + userPhone + ", userAvatar=" + userAvatar + ", account=" + account + ", renter=" + renter + ", room=" + room + ", security=" + security + ", email=" + email + '}';
     }
 
-   
 }

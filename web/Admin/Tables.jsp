@@ -258,7 +258,7 @@
                         <input type="hidden" name="email" id="walletEmail" />
                         <p><strong>Họ tên:</strong> <span id="walletUserName"></span></p>
                         <p><strong>SĐT:</strong> <span id="walletPhone"></span></p>
-                        <p><strong>Số dư hiện tại:</strong> <span id="walletAmount" class="text-success fw-bold"></span> VND</p>
+                        <p><strong>Số dư hiện tại:</strong> <span id="walletAmount" class="text-success fw-boldSố dư"></span> VND</p>
                         <div class="mb-3">
                             <label for="amountToAdd" class="form-label">Cộng thêm số tiền (VND)</label>
                             <input type="number" name="amount" id="amountToAdd" class="form-control" min="0" required>
