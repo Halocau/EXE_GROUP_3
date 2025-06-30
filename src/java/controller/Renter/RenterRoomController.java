@@ -57,11 +57,26 @@ public class RenterRoomController extends HttpServlet {
         UserDAO userDAO = new UserDAO();
         RenterDAO renterDAO = new RenterDAO();
         HttpSession session = request.getSession();
-        
+
         String email = (String) session.getAttribute("email");
         String password = (String) session.getAttribute("password");
+
+// ⚠️ Kiểm tra session null
+        if (email == null || password == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
         UserDetail userDetail = renterDAO.RenterBasicDetail(email, password);
-        int userID = userDetail.getUserID();
+
+// ⚠️ Kiểm tra userDetail null
+        if (userDetail == null) {
+            response.sendRedirect("login.jsp"); // hoặc show thông báo lỗi đăng nhập
+            return;
+        }
+
+        int userID = userDetail.getUserID(); // chỉ gọi nếu userDetail != null
+
         int isRenter = userDAO.isRenter(userID);
         int index = Integer.parseInt(request.getParameter("index"));
         if (index == 0) {
@@ -74,7 +89,7 @@ public class RenterRoomController extends HttpServlet {
         if (totalRoom % 6 != 0) {
             totalPage++;
         }
-        
+
         request.setAttribute("isRenter", isRenter);
         request.setAttribute("totalPage", totalPage);
         request.setAttribute("index", index);
@@ -109,12 +124,11 @@ public class RenterRoomController extends HttpServlet {
             int userID = basicUserDetail.getUserID();
             request.setAttribute("userID", userID);
             request.setAttribute("roomDetail", roomDetail);
-            
+
             // random chuỗi ck
             String paymentCode = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8).toUpperCase();
             request.setAttribute("paymentCode", paymentCode);
-            
-            
+
             request.getRequestDispatcher("Renter/confirmRentRoom.jsp").forward(request, response);
         } else if (flag == 1) {
             boolean unlockRoom = daoRenter.unlockRoom(roomID);

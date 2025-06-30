@@ -20,6 +20,15 @@ public class Rooms {
     private String userAddress;
     private String userPhone;
     private String facebook;
+    private String roomName;
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
+    }
 
     public Rooms(Item item, RoomItem roomitem) {
         this.item = item;
@@ -42,7 +51,7 @@ public class Rooms {
         this.userPhone = userPhone;
         this.facebook = facebook;
     }
-    
+
     public Rooms(int roomID, int roomFloor, int roomNumber, int roomSize, String roomImg, BigDecimal roomFee, int roomStatus, int roomOccupant, String roomDepartment, Vip vip) {
         this.roomID = roomID;
         this.roomFloor = roomFloor;
@@ -55,7 +64,7 @@ public class Rooms {
         this.roomDepartment = roomDepartment;
         this.vip = vip;
     }
-    
+
     public Rooms(int roomID, int roomFloor, int roomNumber, int roomSize, String roomImg, BigDecimal roomFee, int roomStatus, int roomOccupant, String roomDepartment) {
         this.roomID = roomID;
         this.roomFloor = roomFloor;

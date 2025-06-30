@@ -41,9 +41,10 @@ public class RoomDAO extends DBContext {
                 int roomStatus = rs.getInt("roomStatus");
                 int roomOccupant = rs.getInt("roomOccupant");
                 String rooomDepartment = rs.getString("roomDepartment");
-
+                String roomName = rs.getString(null);
                 Rooms room = new Rooms(roomID, roomFloor, roomNumber, roomSize, roomImg, roomFee, roomStatus,
                         roomOccupant, rooomDepartment);
+                room.setRoomName(roomName);
                 rooms.add(room);
             }
         } catch (SQLException e) {
@@ -151,9 +152,13 @@ public class RoomDAO extends DBContext {
                 int roomStatus = rs.getInt("roomStatus");
                 int roomOccupant = rs.getInt("roomOccupant");
                 String roomDepartment = rs.getString("roomDepartment");
-
+                String roomName = rs.getString("roomName");
+                if (roomName == null) {
+                    roomName = "";
+                }
                 Rooms room = new Rooms(roomID, roomFloor, roomNumber, roomSize, roomImg, roomFee, roomStatus,
                         roomOccupant, roomDepartment);
+                room.setRoomName(roomName);
                 rooms.add(room);
             }
         } catch (SQLException e) {
@@ -576,9 +581,7 @@ public class RoomDAO extends DBContext {
         List<Room> rooms = new ArrayList<>();
         String sql = "SELECT * FROM Room";
 
-        try (Connection conn = connection;
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = connection; PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Room room = new Room();
@@ -757,10 +760,10 @@ public class RoomDAO extends DBContext {
 
     public void addRoom(Room r) {
         String sql = "INSERT INTO [dbo].[room] "
-            + "([roomFloor], [roomNumber], [roomSize], [roomFee], [roomStatus], "
-            + "[roomOccupant], [roomDepartment], [vipID], [roomImg], "
-            + "[paymentCode], [ownerId], [description], [facebook], [roomName]) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "([roomFloor], [roomNumber], [roomSize], [roomFee], [roomStatus], "
+                + "[roomOccupant], [roomDepartment], [vipID], [roomImg], "
+                + "[paymentCode], [ownerId], [description], [facebook], [roomName]) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             statement = connection.prepareStatement(sql, statement.RETURN_GENERATED_KEYS);
@@ -770,7 +773,7 @@ public class RoomDAO extends DBContext {
             statement.setObject(4, r.getRoomFee());
             statement.setObject(5, r.getRoomStatus());
             statement.setObject(6, r.getRoomOccupant());
-            statement.setObject(7, null); 
+            statement.setObject(7, null);
             statement.setObject(8, null);
             statement.setObject(9, r.getRoomImg());
             statement.setObject(10, r.getPaymentCode());
@@ -809,9 +812,6 @@ public class RoomDAO extends DBContext {
     // System.out.println(rooms.getRoomID());
     // }
     // }
-
-
-
     public static void main(String[] args) {
         try {
             // Khởi tạo DAO (phải chắc chắn RoomDAO tự thiết lập connection trong constructor)
@@ -842,8 +842,6 @@ public class RoomDAO extends DBContext {
             e.printStackTrace();
         }
     }
-
-
 
     // Lấy danh sách phòng có filter và phân trang
     public List<Rooms> getFilteredRooms(String searchRoomNumber, String status, Integer minPrice, Integer maxPrice,
