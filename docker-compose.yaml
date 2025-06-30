@@ -25,7 +25,25 @@ services:
           cpus: '0.25'
     networks:
       - coolify
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.staynow.rule=Host(`staynow.tinkering.vn`)
+      - traefik.http.routers.staynow.entrypoints=https
+      - traefik.http.routers.staynow.tls.certresolver=letsencrypt
+      - traefik.http.services.staynow.loadbalancer.server.port=9090
+      - traefik.http.services.staynow.loadbalancer.server.scheme=http
+      
+      # WebSocket upgrade headers middleware
+      - traefik.http.middlewares.websocket-headers.headers.customrequestheaders.Connection=upgrade
+      - traefik.http.middlewares.websocket-headers.headers.customrequestheaders.Upgrade=websocket
 
+      # WebSocket route for /chat
+      - traefik.http.routers.chat-edu-center.rule=Host(`staynow.tinkering.vn`) && PathPrefix(`/chat`)
+      - traefik.http.routers.chat-edu-center.entrypoints=https
+      - traefik.http.routers.chat-edu-center.tls.certresolver=letsencrypt
+      - traefik.http.routers.chat-edu-center.service=staynow
+      - traefik.http.routers.chat-edu-center.middlewares=websocket-headers
+      
 volumes:
   tomcat_logs:
   tomcat_temp:
