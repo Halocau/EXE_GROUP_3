@@ -68,6 +68,8 @@ public class OwnerController extends HttpServlet {
             OwnerHome(request, response);
         } else if (service.equals("pagingRoom")) {
             listRoom(request, response);
+        } else if (service.equals("pagingMyRoom")) {
+            listMyRoom(request, response);
         } else if (service.equals("ownerProfile")) {
             getOwnerProfile(request, response, 0);
         } else if (service.equals("editOwnerProfile")) {
@@ -121,6 +123,35 @@ public class OwnerController extends HttpServlet {
         request.setAttribute("allRooms", allRooms);
 
         request.getRequestDispatcher("Owner/rooms.jsp").forward(request, response);
+    }
+
+    private void listMyRoom(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RoomDAO dao = new RoomDAO();
+        HttpSession session = request.getSession(false);
+        Account account = (Account) session.getAttribute("user");
+
+        if (account == null || account.getUser() == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+        int ownerId = account.getUser().getUserID();
+        int index = Integer.parseInt(request.getParameter("index"));
+
+        List<Rooms> rooms = dao.pagingMyRoom(index, 1, ownerId);
+        List<Rooms> allRooms = dao.getMyRooms(ownerId);
+        int totalRoom = dao.getTotalMyRoom(ownerId);
+        int totalPage = totalRoom / 6;
+        if (totalRoom % 6 != 0) {
+            totalPage++;
+        }
+
+        request.setAttribute("totalPage", totalPage);
+        request.setAttribute("index", index);
+        request.setAttribute("rooms", rooms);
+        request.setAttribute("allRooms", allRooms);
+
+        request.getRequestDispatcher("Owner/rooms.jsp").forward(request, response);
+
     }
 
     private void roomDetail(HttpServletRequest request, HttpServletResponse response, int flag) throws ServletException, IOException {

@@ -44,8 +44,8 @@
                         <a href="#">View</a>
                         <ul class="dropdown">
                             <li><a href="OwnerController?service=pagingRoom&index=1">List of rooms</a></li>
+                            <li><a href="OwnerController?service=pagingMyRoom&index=1">My rooms</a></li>
                             <li><a href="OwnerController?service=listrequest">List of Request</a></li>
-
                         </ul>
                     </li>
                     <!--            <li><a class="<%= "addrenter".equals(service) ? "active" : "" %>" href="AddRenterController?service=addrenter">Add Renter</a></li>-->

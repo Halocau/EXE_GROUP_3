@@ -51,6 +51,34 @@ public class RoomDAO extends DBContext {
         return rooms;
     }
 
+    public List<Rooms> getMyRooms(int ownerId) {
+        List<Rooms> rooms = new ArrayList<>();
+        String query = "SELECT * FROM room WHERE ownerId = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, ownerId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int roomID = rs.getInt("roomID");
+                int roomFloor = rs.getInt("roomFloor");
+                int roomNumber = rs.getInt("roomNumber");
+                int roomSize = rs.getInt("roomSize");
+                BigDecimal roomFee = rs.getBigDecimal("roomFee");
+                String roomImg = rs.getString("roomImg");
+                int roomStatus = rs.getInt("roomStatus");
+                int roomOccupant = rs.getInt("roomOccupant");
+                String roomDepartment = rs.getString("roomDepartment");
+
+                Rooms room = new Rooms(roomID, roomFloor, roomNumber, roomSize, roomImg, roomFee, roomStatus,
+                        roomOccupant, roomDepartment);
+                rooms.add(room);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rooms;
+    }
+
     public List<Rooms> getRoomsByIdRoomSatatus(int idRoomStatus) {
         List<Rooms> rooms = new ArrayList<>();
         String query = "SELECT * FROM room where roomStatus = ?";
@@ -158,6 +186,49 @@ public class RoomDAO extends DBContext {
             }
         } catch (SQLException e) {
         }
+        return rooms;
+    }
+
+    public List<Rooms> pagingMyRoom(int index, int flag, int ownerId) {
+        List<Rooms> rooms = new ArrayList<>();
+        String query = null;
+
+        if (flag == 0) {
+            query = "SELECT * FROM room "
+                    + "WHERE roomStatus = 1 AND ownerId = ? "
+                    + "ORDER BY roomID "
+                    + "OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
+        } else if (flag == 1) {
+            query = "SELECT * FROM room "
+                    + "WHERE ownerId = ? "
+                    + "ORDER BY roomID "
+                    + "OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
+        }
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, ownerId);
+            ps.setInt(2, (index - 1) * 6);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int roomID = rs.getInt("roomID");
+                int roomFloor = rs.getInt("roomFloor");
+                int roomNumber = rs.getInt("roomNumber");
+                int roomSize = rs.getInt("roomSize");
+                BigDecimal roomFee = rs.getBigDecimal("roomFee");
+                String roomImg = rs.getString("roomImg");
+                int roomStatus = rs.getInt("roomStatus");
+                int roomOccupant = rs.getInt("roomOccupant");
+                String roomDepartment = rs.getString("roomDepartment");
+
+                Rooms room = new Rooms(roomID, roomFloor, roomNumber, roomSize, roomImg, roomFee, roomStatus,
+                        roomOccupant, roomDepartment);
+                rooms.add(room);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return rooms;
     }
 
@@ -532,6 +603,21 @@ public class RoomDAO extends DBContext {
         return -1;
     }
 
+    public int getTotalMyRoom(int ownerId) {
+        String query = "SELECT COUNT(*) FROM room WHERE roomStatus = 1 AND ownerId = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, ownerId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     public int getCurrentRoomNumber(int roomID) {
         String query = "select roomNumber from room where roomID = ?";
 
@@ -576,9 +662,7 @@ public class RoomDAO extends DBContext {
         List<Room> rooms = new ArrayList<>();
         String sql = "SELECT * FROM Room";
 
-        try (Connection conn = connection;
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = connection; PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Room room = new Room();
@@ -757,10 +841,10 @@ public class RoomDAO extends DBContext {
 
     public void addRoom(Room r) {
         String sql = "INSERT INTO [dbo].[room] "
-            + "([roomFloor], [roomNumber], [roomSize], [roomFee], [roomStatus], "
-            + "[roomOccupant], [roomDepartment], [vipID], [roomImg], "
-            + "[paymentCode], [ownerId], [description], [facebook], [roomName]) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "([roomFloor], [roomNumber], [roomSize], [roomFee], [roomStatus], "
+                + "[roomOccupant], [roomDepartment], [vipID], [roomImg], "
+                + "[paymentCode], [ownerId], [description], [facebook], [roomName]) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             statement = connection.prepareStatement(sql, statement.RETURN_GENERATED_KEYS);
@@ -770,7 +854,7 @@ public class RoomDAO extends DBContext {
             statement.setObject(4, r.getRoomFee());
             statement.setObject(5, r.getRoomStatus());
             statement.setObject(6, r.getRoomOccupant());
-            statement.setObject(7, null); 
+            statement.setObject(7, null);
             statement.setObject(8, null);
             statement.setObject(9, r.getRoomImg());
             statement.setObject(10, r.getPaymentCode());
@@ -809,41 +893,33 @@ public class RoomDAO extends DBContext {
     // System.out.println(rooms.getRoomID());
     // }
     // }
-
-
-
     public static void main(String[] args) {
-        try {
-            // Khởi tạo DAO (phải chắc chắn RoomDAO tự thiết lập connection trong constructor)
-            RoomDAO roomDAO = new RoomDAO(); // constructor này phải khởi tạo 'connection'
+        RoomDAO roomDAO = new RoomDAO(); // Ensure your RoomDAO sets up DB connection
 
-            // Tạo đối tượng Room mẫu
-            Room room = new Room();
-            room.setRoomFloor(2);                      // Tầng
-            room.setRoomNumber(101);                   // Số phòng
-            room.setRoomSize(25);                      // Diện tích
-            room.setRoomFee(new BigDecimal("2500000")); // Giá thuê
-            room.setRoomStatus(1);                     // Trạng thái phòng
-            room.setRoomOccupant(2);                   // Số người
-            room.setVipId(1);                          // ID VIP (FK phải tồn tại trong DB)
-            room.setRoomImg("/images/test_room.jpg");  // Ảnh phòng
-            room.setPaymentCode("0");                  // Mã thanh toán
-            room.setOwnerID(15);                        // Chủ sở hữu (FK)
-            room.setDescription("Phòng thử nghiệm cho test."); // Mô tả (có thể null)
-            // Facebook hiện tại bạn đang set null trong SQL nên không cần set ở đây
+        int ownerId = 15;   // 🔍 Replace with a real ownerId in your database
+        int pageIndex = 1;  // 🧭 Test with other indexes like 2, 3...
+        int flag = 1;       // Use 0 for only active rooms, 1 for all rooms of owner
 
-            // Gọi hàm thêm phòng
-            roomDAO.addRoom(room);
+        List<Rooms> rooms = roomDAO.pagingMyRoom(pageIndex, flag, ownerId);
 
-            System.out.println("✅ Room inserted successfully!");
-
-        } catch (Exception e) {
-            System.err.println("❌ Failed to insert room: " + e.getMessage());
-            e.printStackTrace();
+        System.out.println("📄 Paging result for owner ID " + ownerId + ", page index " + pageIndex + ":");
+        if (rooms.isEmpty()) {
+            System.out.println("❌ No rooms found for this page.");
+        } else {
+            for (Rooms room : rooms) {
+                System.out.println("Room ID: " + room.getRoomID());
+                System.out.println(" - Floor: " + room.getRoomFloor());
+                System.out.println(" - Number: " + room.getRoomNumber());
+                System.out.println(" - Size: " + room.getRoomSize());
+                System.out.println(" - Fee: " + room.getRoomFee());
+                System.out.println(" - Status: " + room.getRoomStatus());
+                System.out.println(" - Occupant: " + room.getRoomOccupant());
+                System.out.println(" - Department: " + room.getRoomDepartment());
+                System.out.println(" - Image present: " + (room.getRoomImg() != null));
+                System.out.println("------------------------------");
+            }
         }
     }
-
-
 
     // Lấy danh sách phòng có filter và phân trang
     public List<Rooms> getFilteredRooms(String searchRoomNumber, String status, Integer minPrice, Integer maxPrice,

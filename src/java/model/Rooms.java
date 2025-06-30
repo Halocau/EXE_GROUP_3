@@ -20,11 +20,38 @@ public class Rooms {
     private String userAddress;
     private String userPhone;
     private String facebook;
-
+    private String description;
+    private String paymentCode;
+    private int ownerID;
+    private String roomName;
+    
     public Rooms(Item item, RoomItem roomitem) {
         this.item = item;
         this.roomitem = roomitem;
     }
+    
+    public Rooms(int roomID, int roomFloor, int roomNumber, int roomSize, String roomImg,
+            BigDecimal roomFee, int roomStatus, int roomOccupant, String roomDepartment,
+            Vip vip, String userAddress, String userPhone, String facebook,
+            String description, String roomName, int ownerID) {
+        this.roomID = roomID;
+        this.roomFloor = roomFloor;
+        this.roomNumber = roomNumber;
+        this.roomSize = roomSize;
+        this.roomImg = roomImg;
+        this.roomFee = roomFee;
+        this.roomStatus = roomStatus;
+        this.roomOccupant = roomOccupant;
+        this.roomDepartment = roomDepartment;
+        this.vip = vip;
+        this.userAddress = userAddress;
+        this.userPhone = userPhone;
+        this.facebook = facebook;
+        this.description = description;
+        this.roomName = roomName;
+        this.ownerID = ownerID;
+    }
+
 
     public Rooms(int roomID, int roomFloor, int roomNumber, int roomSize, String roomImg, BigDecimal roomFee, int roomStatus, int roomOccupant, String roomDepartment, Vip vip,
             String userAddress, String userPhone, String facebook) {
@@ -108,6 +135,38 @@ public class Rooms {
 
     public int getRoomFloor() {
         return roomFloor;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getPaymentCode() {
+        return paymentCode;
+    }
+
+    public void setPaymentCode(String paymentCode) {
+        this.paymentCode = paymentCode;
+    }
+    
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
+    }
+
+    public int getOwnerID() {
+        return ownerID;
+    }
+
+    public void setOwnerID(int ownerID) {
+        this.ownerID = ownerID;
     }
 
     public void setRoomFloor(int roomFloor) {
