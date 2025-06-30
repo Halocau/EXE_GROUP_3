@@ -10,11 +10,12 @@ ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true 
 # Create non-root user for security
 RUN groupadd -r tomcat && useradd -r -g tomcat tomcat
 
-# Install necessary packages
+# Install necessary packages including curl and wget for healthcheck
 RUN apt-get update && apt-get install -y \
     fontconfig \
     libfreetype6 \
     curl \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # Remove default Tomcat applications for security
@@ -65,7 +66,7 @@ RUN echo "Compiling Java files..." && \
 RUN echo "Verifying compiled classes..." && \
     find /usr/local/tomcat/webapps/ROOT/WEB-INF/classes -name "*.class" | head -10
 
-# Clean up
+# Clean up JDK but keep curl and wget for healthcheck
 RUN rm -rf /tmp/src /tmp/classpath.txt && \
     apt-get remove -y openjdk-17-jdk && \
     apt-get autoremove -y && \
@@ -90,9 +91,9 @@ USER tomcat
 # Expose port 9090
 EXPOSE 9090
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:9090/ || exit 1
+# Health check with improved reliability
+HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=5 \
+    CMD curl -f --connect-timeout 5 --max-time 10 http://localhost:9090/ || wget --timeout=10 --tries=1 -q -O - http://localhost:9090/ || exit 1
 
 # Start Tomcat
 CMD ["catalina.sh", "run"]
