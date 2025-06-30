@@ -8,7 +8,7 @@ services:
     ports:
       - "9090:9090"
     environment:
-      - JAVA_OPTS=-Djava.security.egd=file:/dev/./urandom -Xmx1024m -Xms512m
+      - JAVA_OPTS=-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xmx512m -XX:+UseG1GC
       - CATALINA_OPTS=-Dfile.encoding=UTF-8
       - CATALINA_PORT=9090
     volumes:

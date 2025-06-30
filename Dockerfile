@@ -5,7 +5,7 @@ FROM tomcat:10.0-jdk17-openjdk-slim
 ENV CATALINA_HOME=/usr/local/tomcat
 ENV CATALINA_BASE=/usr/local/tomcat
 ENV CATALINA_TMPDIR=/usr/local/tomcat/temp
-ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xmx512m -XX:MaxPermSize=256m -XX:+UseConcMarkSweepGC"
+ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xmx512m -XX:+UseG1GC"
 
 # Create non-root user for security
 RUN groupadd -r tomcat && useradd -r -g tomcat tomcat
@@ -92,7 +92,7 @@ USER tomcat
 EXPOSE 9090
 
 # Health check with improved reliability
-HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=5 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=5 \
     CMD curl -f --connect-timeout 5 --max-time 10 http://localhost:9090/ || wget --timeout=10 --tries=1 -q -O - http://localhost:9090/ || exit 1
 
 # Start Tomcat
