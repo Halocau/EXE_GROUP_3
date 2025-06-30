@@ -249,16 +249,6 @@
 
             </div>
 
-            <div class="section">
-                <div class="row justify-content-center footer-cta" data-aos="fade-up">
-                    <div class="col-lg-7 mx-auto text-center">
-                        <h2 class="mb-4 ">Join Zalo Group to get help better</h2>
-                        <p><a href="https://zalo.me/g/pimjmz442" target="_blank"
-                              class="btn btn-primary text-white py-3 px-4">Click here to Join</a></p>
-                    </div> <!-- /.col-lg-7 -->
-                </div> <!-- /.row -->
-            </div>
-
             <div class="site-footer">
                 <div class="container">
 
