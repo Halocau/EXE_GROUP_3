@@ -363,7 +363,7 @@
                             if (room.getRoomStatus() == 1) { %>
                                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" data-room-name="<%= room.getRoomNumber() %>" data-room-price="<%= room.getRoomFee().longValue() %>">
                                     <div class="property-item mb-30">
-                                        <a href="OwnerController?service=roomDetail&roomID=<%= room.getRoomID() %>" class="img">
+                                        <a href="RenterRoomController?service=roomDetail&roomID=<%= room.getRoomID() %>" class="img">
                                             <% String base64Image = room.getRoomImg(); %>
                                             <img src="data:image/jpg;base64,<%= base64Image %>" class="img-fluid" style="height: 350px; width: 100%;">
                                         </a>
@@ -406,7 +406,7 @@
                             if (room.getRoomStatus() == 1) { %>
                                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" data-room-name="<%= room.getRoomNumber() %>" data-room-price="<%= room.getRoomFee().longValue() %>">
                                     <div class="property-item mb-30">
-                                        <a href="OwnerController?service=roomDetail&roomID=<%= room.getRoomID() %>" class="img">
+                                        <a href="RenterRoomController?service=roomDetail&roomID=<%= room.getRoomID() %>" class="img">
                                             <% String base64Image = room.getRoomImg(); %>
                                             <img src="data:image/jpg;base64,<%= base64Image %>" class="img-fluid" style="height: 350px; width: 100%;">
                                         </a>
