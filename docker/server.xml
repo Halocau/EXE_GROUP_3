@@ -14,7 +14,6 @@
                redirectPort="8443"
                maxThreads="200"
                minSpareThreads="10"
-               maxSpareThreads="50"
                acceptCount="100"
                enableLookups="false"
                compression="on"

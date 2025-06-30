@@ -88,17 +88,12 @@ RUN chown -R tomcat:tomcat /usr/local/tomcat/conf
 # Switch to non-root user
 USER tomcat
 
-# Expose port 9090 (internal servlet port)
+# Expose port 9090
 EXPOSE 9090
 
-# Health check with comprehensive monitoring
-HEALTHCHECK --interval=30s --timeout=15s --start-period=180s --retries=3 \
-    CMD curl -f --connect-timeout 10 --max-time 15 --retry 2 --retry-delay 5 \
-         -H "User-Agent: HealthCheck/1.0" \
-         http://localhost:9090/ || \
-         wget --timeout=15 --tries=2 --waitretry=5 \
-              --user-agent="HealthCheck/1.0" \
-              -q -O - http://localhost:9090/ || exit 1
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:9090/ || exit 1
 
 # Start Tomcat
 CMD ["catalina.sh", "run"]
