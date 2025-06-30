@@ -1,0 +1,51 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+build/
+target/
+*.war
+*.jar
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Documentation
+README.md
+*.md
+
+# Docker
+Dockerfile
+docker-compose.yaml
+.dockerignore
+
+# Backup
+backup/
+
+# Node modules (if any)
+node_modules/
+
+# Environment files (will be copied separately)
+.env.example
+.env.local
+.env.development
+.env.test
+.env.production 

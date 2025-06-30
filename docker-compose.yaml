@@ -15,14 +15,6 @@ services:
       - tomcat_logs:/usr/local/tomcat/logs
       - tomcat_temp:/usr/local/tomcat/temp
       - app_uploads:/usr/local/tomcat/webapps/ROOT/uploads
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9090/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
     deploy:
       resources:
         limits:
@@ -31,24 +23,8 @@ services:
         reservations:
           memory: 512M
           cpus: '0.25'
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.staynow.rule=Host(`staynow.tinkering.vn`)
-      - traefik.http.routers.staynow.entrypoints=https
-      - traefik.http.routers.staynow.tls.certresolver=letsencrypt
-      - traefik.http.services.staynow.loadbalancer.server.port=9090
-      - traefik.http.services.staynow.loadbalancer.server.scheme=http
-      
-      # WebSocket upgrade headers middleware
-      - traefik.http.middlewares.websocket-headers.headers.customrequestheaders.Connection=upgrade
-      - traefik.http.middlewares.websocket-headers.headers.customrequestheaders.Upgrade=websocket
-
-      # WebSocket route for /chat
-      - traefik.http.routers.chat-edu-center.rule=Host(`staynow.tinkering.vn`) && PathPrefix(`/chat`)
-      - traefik.http.routers.chat-edu-center.entrypoints=https
-      - traefik.http.routers.chat-edu-center.tls.certresolver=letsencrypt
-      - traefik.http.routers.chat-edu-center.service=staynow
-      - traefik.http.routers.chat-edu-center.middlewares=websocket-headers
+    networks:
+      - coolify
 
 volumes:
   tomcat_logs:
@@ -57,5 +33,5 @@ volumes:
   # db_data:
 
 networks:
-  app-network:
-    driver: bridge
+  coolify:
+    external: true
