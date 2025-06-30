@@ -302,5 +302,4 @@ public class UserDAO extends MyDAO {
         }
         return null;
     }
-
 }

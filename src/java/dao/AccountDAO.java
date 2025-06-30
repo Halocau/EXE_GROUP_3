@@ -51,7 +51,7 @@ public class AccountDAO extends MyDAO {
         List<Account> list = new ArrayList<>();
         String sql = ""
                 + "SELECT a.userID, a.userMail, a.userPassword, a.userRole, "
-                + "       u.userName, u.userPhone, u.vipId " // Thêm vipId từ bảng User
+                + "       u.userName, u.userPhone, u.vipId, u.wallet " // Thêm vipId từ bảng User
                 + "  FROM Account a "
                 + "  JOIN [User] u ON a.userID = u.userID";
         try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -69,7 +69,7 @@ public class AccountDAO extends MyDAO {
                 u.setUserName(rs.getString("userName"));
                 u.setUserPhone(rs.getString("userPhone"));
                 u.setVipId(rs.getInt("vipId")); // Gán vipId từ bảng User cho User
-
+                u.setWallet(rs.getBigDecimal("wallet"));  // ✅ gán wallet
                 // 3) Gắn User vào Account
                 acc.setUser(u);
 
@@ -187,48 +187,46 @@ public class AccountDAO extends MyDAO {
 //        }
 //        return null;
 //    }
-    
     public Account LoginAccount(String email, String password) {
-    try {
-        String sql = "SELECT a.*, u.* " +
-                     "FROM [HL_Motel].[dbo].[Account] a " +
-                     "JOIN [HL_Motel].[dbo].[User] u ON a.userID = u.userID " +
-                     "WHERE a.userMail = ? AND a.userPassword = ?";
+        try {
+            String sql = "SELECT a.*, u.* "
+                    + "FROM [HL_Motel].[dbo].[Account] a "
+                    + "JOIN [HL_Motel].[dbo].[User] u ON a.userID = u.userID "
+                    + "WHERE a.userMail = ? AND a.userPassword = ?";
 
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setString(1, email);
-        ps.setString(2, password);
-        ResultSet rs = ps.executeQuery();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
 
-        if (rs.next()) {
-            Account a = new Account();
-            a.setUserID(rs.getInt("userID"));
-            a.setUserMail(rs.getString("userMail"));
-            a.setUserPassword(rs.getString("userPassword"));
-            a.setUserRole(rs.getInt("userRole"));
+            if (rs.next()) {
+                Account a = new Account();
+                a.setUserID(rs.getInt("userID"));
+                a.setUserMail(rs.getString("userMail"));
+                a.setUserPassword(rs.getString("userPassword"));
+                a.setUserRole(rs.getInt("userRole"));
 
-            User u = new User();
-            u.setUserID(rs.getInt("userID"));
-            u.setUserName(rs.getString("userName"));
-            u.setUserGender(rs.getString("userGender"));
-            u.setUserBirth(rs.getString("userBirth"));
-            u.setUserAddress(rs.getString("userAddress"));
-            u.setUserPhone(rs.getString("userPhone"));
-            u.setUserAvatar(rs.getString("userAvatar"));
-            u.setVipId(rs.getInt("vipID"));  // 🟢 required
-            u.setEmail(rs.getString("userMail"));
-            u.setAccount(a); // Optional: back-reference
+                User u = new User();
+                u.setUserID(rs.getInt("userID"));
+                u.setUserName(rs.getString("userName"));
+                u.setUserGender(rs.getString("userGender"));
+                u.setUserBirth(rs.getString("userBirth"));
+                u.setUserAddress(rs.getString("userAddress"));
+                u.setUserPhone(rs.getString("userPhone"));
+                u.setUserAvatar(rs.getString("userAvatar"));
+                u.setVipId(rs.getInt("vipID"));  // 🟢 required
+                u.setEmail(rs.getString("userMail"));
+                u.setAccount(a); // Optional: back-reference
 
-            a.setUser(u); // ✅ this is what fixes your issue
-            return a;
+                a.setUser(u); // ✅ this is what fixes your issue
+                return a;
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-    } catch (SQLException ex) {
-        Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        return null;
     }
-    return null;
-}
-
 
     public Account findByEmail(String email) {
         try {

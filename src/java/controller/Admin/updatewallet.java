@@ -13,6 +13,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.util.List;
+import model.Account;
 import model.UserDetail;
 
 /**
@@ -43,10 +45,11 @@ public class updatewallet extends HttpServlet {
             UserDetail updatedUser = dao.getUserDetailByEmail(email);
             request.getSession().setAttribute("userDetail", updatedUser); // <== RẤT QUAN TRỌNG
 
-            response.sendRedirect("profile.jsp?walletUpdated=true");
+            response.sendRedirect("manage?walletUpdated=true");
+
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("profile.jsp?walletError=true");
+            response.sendRedirect("manage?walletError=true");
         }
     }
 
