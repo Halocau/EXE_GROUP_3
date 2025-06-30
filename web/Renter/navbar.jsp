@@ -47,7 +47,7 @@
             </li>               
             <li class="${param.service == "paymentList" ? "active" : ''}"><a href="WalletController">Wallet</a></li>
             <li><a href="rentercontroller?service=request">Contact Us</a></li>
-            <li><a href="listrequest1?service=request">List Request</a></li>
+            <!--<li><a href="listrequest1?service=request">List Request</a></li>-->
             <li><a href="logout">Logout</a></li>
             <li>
                 <a href="rentercontroller?service=renterprofile">
