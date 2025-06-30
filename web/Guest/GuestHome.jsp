@@ -164,7 +164,7 @@
                     <% for (int i = 0; i < listRoomVip1.size(); i++) { %>
                     <div class="col-md-6 col-lg-6 mb-4">
                         <div class="property-card vip-1 h-100 shadow-sm rounded-3 p-3 border">
-                            <a href="OwnerController?service=roomDetail&roomID=<%= listRoomVip1.get(i).getRoomID() %>">
+                            <a href="GuestController?service=roomDetail&roomID=<%= listRoomVip1.get(i).getRoomID() %>">
                                 <% String base64Image = listRoomVip1.get(i).getRoomImg(); %>
                                 <img src="data:image/jpg;base64,<%= base64Image %>"
                                      class="room-img img-fluid d-block mx-auto rounded-2"
@@ -199,7 +199,7 @@
      for (int i = 0; i < listRoomVip2.size(); i++) { %>
                     <div class="col-md-4 col-lg-4 mb-4">
                         <div class="property-card vip-2 h-100 shadow-sm rounded-3 p-3 border">
-                            <a href="OwnerController?service=roomDetail&roomID=<%= listRoomVip2.get(i).getRoomID() %>">
+                            <a href="GuestController?service=roomDetail&roomID=<%= listRoomVip2.get(i).getRoomID() %>">
                                 <% String base64Image = listRoomVip2.get(i).getRoomImg(); %>
                                 <img src="data:image/jpg;base64,<%= base64Image %>"
                                      class="room-img img-fluid d-block mx-auto rounded-2"
@@ -226,7 +226,7 @@
      for (int i = 0; i < listRoomVip3.size(); i++) { %>
                     <div class="col-md-3 col-lg-3 mb-4">
                         <div class="property-card vip-3 h-100 shadow-sm rounded-3 p-3 border">
-                            <a href="OwnerController?service=roomDetail&roomID=<%= listRoomVip3.get(i).getRoomID() %>">
+                            <a href="GuestController?service=roomDetail&roomID=<%= listRoomVip3.get(i).getRoomID() %>">
                                 <% String base64Image = listRoomVip3.get(i).getRoomImg(); %>
                                 <img src="data:image/jpg;base64,<%= base64Image %>"
                                      class="room-img img-fluid d-block mx-auto rounded-2"
@@ -247,16 +247,6 @@
                     <% } %>
                 </div>
 
-            </div>
-
-            <div class="section">
-                <div class="row justify-content-center footer-cta" data-aos="fade-up">
-                    <div class="col-lg-7 mx-auto text-center">
-                        <h2 class="mb-4 ">Join Zalo Group to get help better</h2>
-                        <p><a href="https://zalo.me/g/pimjmz442" target="_blank"
-                              class="btn btn-primary text-white py-3 px-4">Click here to Join</a></p>
-                    </div> <!-- /.col-lg-7 -->
-                </div> <!-- /.row -->
             </div>
 
             <div class="site-footer">
