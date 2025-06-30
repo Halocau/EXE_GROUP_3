@@ -164,7 +164,7 @@
                     <% for (int i = 0; i < listRoomVip1.size(); i++) { %>
                     <div class="col-md-6 col-lg-6 mb-4">
                         <div class="property-card vip-1 h-100 shadow-sm rounded-3 p-3 border">
-                            <a href="OwnerController?service=roomDetail&roomID=<%= listRoomVip1.get(i).getRoomID() %>">
+                            <a href="GuestController?service=roomDetail&roomID=<%= listRoomVip1.get(i).getRoomID() %>">
                                 <% String base64Image = listRoomVip1.get(i).getRoomImg(); %>
                                 <img src="data:image/jpg;base64,<%= base64Image %>"
                                      class="room-img img-fluid d-block mx-auto rounded-2"
@@ -199,7 +199,7 @@
      for (int i = 0; i < listRoomVip2.size(); i++) { %>
                     <div class="col-md-4 col-lg-4 mb-4">
                         <div class="property-card vip-2 h-100 shadow-sm rounded-3 p-3 border">
-                            <a href="OwnerController?service=roomDetail&roomID=<%= listRoomVip2.get(i).getRoomID() %>">
+                            <a href="GuestController?service=roomDetail&roomID=<%= listRoomVip2.get(i).getRoomID() %>">
                                 <% String base64Image = listRoomVip2.get(i).getRoomImg(); %>
                                 <img src="data:image/jpg;base64,<%= base64Image %>"
                                      class="room-img img-fluid d-block mx-auto rounded-2"
@@ -226,7 +226,7 @@
      for (int i = 0; i < listRoomVip3.size(); i++) { %>
                     <div class="col-md-3 col-lg-3 mb-4">
                         <div class="property-card vip-3 h-100 shadow-sm rounded-3 p-3 border">
-                            <a href="OwnerController?service=roomDetail&roomID=<%= listRoomVip3.get(i).getRoomID() %>">
+                            <a href="GuestController?service=roomDetail&roomID=<%= listRoomVip3.get(i).getRoomID() %>">
                                 <% String base64Image = listRoomVip3.get(i).getRoomImg(); %>
                                 <img src="data:image/jpg;base64,<%= base64Image %>"
                                      class="room-img img-fluid d-block mx-auto rounded-2"
