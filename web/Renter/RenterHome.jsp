@@ -29,7 +29,8 @@
         <link rel="stylesheet" href="css/aos.css">
         <link rel="stylesheet" href="css/style.css">
 
-        <title>HoLa Motel</title>
+        <title>HoLa StayNow</title>
+
         <style>
             /* Tiêu đề danh sách */
             .vip-1-title::after,

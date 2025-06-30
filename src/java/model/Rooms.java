@@ -69,7 +69,7 @@ public class Rooms {
         this.userPhone = userPhone;
         this.facebook = facebook;
     }
-    
+
     public Rooms(int roomID, int roomFloor, int roomNumber, int roomSize, String roomImg, BigDecimal roomFee, int roomStatus, int roomOccupant, String roomDepartment, Vip vip) {
         this.roomID = roomID;
         this.roomFloor = roomFloor;
@@ -82,7 +82,7 @@ public class Rooms {
         this.roomDepartment = roomDepartment;
         this.vip = vip;
     }
-    
+
     public Rooms(int roomID, int roomFloor, int roomNumber, int roomSize, String roomImg, BigDecimal roomFee, int roomStatus, int roomOccupant, String roomDepartment) {
         this.roomID = roomID;
         this.roomFloor = roomFloor;

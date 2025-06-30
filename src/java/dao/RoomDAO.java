@@ -41,9 +41,10 @@ public class RoomDAO extends DBContext {
                 int roomStatus = rs.getInt("roomStatus");
                 int roomOccupant = rs.getInt("roomOccupant");
                 String rooomDepartment = rs.getString("roomDepartment");
-
+                String roomName = rs.getString(null);
                 Rooms room = new Rooms(roomID, roomFloor, roomNumber, roomSize, roomImg, roomFee, roomStatus,
                         roomOccupant, rooomDepartment);
+                room.setRoomName(roomName);
                 rooms.add(room);
             }
         } catch (SQLException e) {
@@ -179,9 +180,13 @@ public class RoomDAO extends DBContext {
                 int roomStatus = rs.getInt("roomStatus");
                 int roomOccupant = rs.getInt("roomOccupant");
                 String roomDepartment = rs.getString("roomDepartment");
-
+                String roomName = rs.getString("roomName");
+                if (roomName == null) {
+                    roomName = "";
+                }
                 Rooms room = new Rooms(roomID, roomFloor, roomNumber, roomSize, roomImg, roomFee, roomStatus,
                         roomOccupant, roomDepartment);
+                room.setRoomName(roomName);
                 rooms.add(room);
             }
         } catch (SQLException e) {
@@ -1012,5 +1017,17 @@ public class RoomDAO extends DBContext {
             e.printStackTrace();
         }
         return count;
+    }
+
+    public boolean updateRoomStatusWallet(int roomID, int status) {
+        String query = "Update room set roomStatus = ? where roomID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, status);
+            ps.setInt(2, roomID);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

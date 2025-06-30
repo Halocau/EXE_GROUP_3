@@ -4,12 +4,15 @@
  */
 package model;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author Creep
  */
-public class UserDetail{
-     private int userID;
+public class UserDetail {
+
+    private int userID;
     private String userMail;
     private String userPassword;
     private int userRole;
@@ -25,11 +28,32 @@ public class UserDetail{
     private Room room;
     private Security security;
     private String email;
+    private BigDecimal wallet;
 
     public UserDetail() {
     }
 
-    public UserDetail(String userName, String userGender, String userBirth, String userAddress, String userPhone,String userMail, String userAvatar) {
+    public UserDetail(int userID, String userMail, String userPassword, int userRole, User user, String userName, String userGender, String userBirth, String userAddress, String userPhone, String userAvatar, Account account, Renter renter, Room room, Security security, String email, BigDecimal wallet) {
+        this.userID = userID;
+        this.userMail = userMail;
+        this.userPassword = userPassword;
+        this.userRole = userRole;
+        this.user = user;
+        this.userName = userName;
+        this.userGender = userGender;
+        this.userBirth = userBirth;
+        this.userAddress = userAddress;
+        this.userPhone = userPhone;
+        this.userAvatar = userAvatar;
+        this.account = account;
+        this.renter = renter;
+        this.room = room;
+        this.security = security;
+        this.email = email;
+        this.wallet = wallet;
+    }
+
+    public UserDetail(String userName, String userGender, String userBirth, String userAddress, String userPhone, String userMail, String userAvatar) {
         this.userName = userName;
         this.userGender = userGender;
         this.userBirth = userBirth;
@@ -39,8 +63,6 @@ public class UserDetail{
         this.userAvatar = userAvatar;
     }
 
-    
-    
     public UserDetail(int userID, String userMail, String userPassword, int userRole, User user, String userName, String userGender, String userBirth, String userAddress, String userPhone, String userAvatar, Account account, Renter renter, Room room, Security security, String email) {
         this.userID = userID;
         this.userMail = userMail;
@@ -60,7 +82,7 @@ public class UserDetail{
         this.email = email;
     }
 
-    public UserDetail(int userID, String userName, String userGender, String userBirth, String userAddress, String userPhone, String userAvatar, String userMail, String userPassword, int userRole) {    
+    public UserDetail(int userID, String userName, String userGender, String userBirth, String userAddress, String userPhone, String userAvatar, String userMail, String userPassword, int userRole) {
         this.userName = userName;
         this.userGender = userGender;
         this.userBirth = userBirth;
@@ -115,6 +137,14 @@ public class UserDetail{
 
     public String getUserName() {
         return userName;
+    }
+
+    public BigDecimal getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(BigDecimal wallet) {
+        this.wallet = wallet;
     }
 
     public void setUserName(String userName) {
@@ -206,5 +236,4 @@ public class UserDetail{
         return "UserDetail{" + "userID=" + userID + ", userMail=" + userMail + ", userPassword=" + userPassword + ", userRole=" + userRole + ", user=" + user + ", userName=" + userName + ", userGender=" + userGender + ", userBirth=" + userBirth + ", userAddress=" + userAddress + ", userPhone=" + userPhone + ", userAvatar=" + userAvatar + ", account=" + account + ", renter=" + renter + ", room=" + room + ", security=" + security + ", email=" + email + '}';
     }
 
-   
 }

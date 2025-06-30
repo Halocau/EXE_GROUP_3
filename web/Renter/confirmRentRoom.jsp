@@ -2,9 +2,11 @@
 <%@page import="model.RoomDetailSe"%>
 <%@ page import="java.util.Base64" %>
 <%@ page import="java.text.DecimalFormat" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <% RoomDetailSe roomDetail = (RoomDetailSe) request.getAttribute("roomDetail");  
    int userID = (int) request.getAttribute("userID"); 
+
 %>
 
 <!doctype html>
@@ -108,7 +110,7 @@
                 padding: 10px 20px;
                 text-align: center;
                 display: inline-block;
-                width: 150px; /* ?i?u ch?nh k�ch th??c theo � mu?n */
+                width: 150px; /* ?i?u ch?nh kích th??c theo ý mu?n */
                 text-decoration: none;
                 border: none;
                 cursor: pointer;
@@ -195,25 +197,14 @@
                             <div class="confirm-rent">
                                 <table class="payment-table">
                                     <tr>
-                                        <td>Rent Price (4 months):</td>
-                                        <td><%= formattedFeePerQuarterly %>k VND</td> 
-                                    </tr>
-                                    <tr>
                                         <td>Rent Price (x1 month):</td>
                                         <td><%= formattedFeePerMonth %>k VND</td>
                                     </tr>
-                                    <tr>
-                                        <td>Deposit:</td>
-                                        <td>2000k VND</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Total Amount:</td>
-                                        <td><%= formattedFeeTotal %>k VND</td> 
-                                    </tr>
                                 </table>
-                                    
+
+
                                 <div class="payment-options"> 
-                                    <button type="button" onclick="showQRCode()">Pay Online</button> 
+                                    <button type="button" onclick="showWalletModal()">Pay Online</button>
                                     <a href="RenterRoomController?service=cancelRoom&roomID=<%= roomDetail.getRoomID() %>" class="cancel-link">Cancel</a> 
                                 </div>
 
@@ -296,6 +287,28 @@
 
             </div> <!-- /.container -->
         </div> <!-- /.site-footer -->
+        <!-- Payment Confirmation Modal -->
+        <div id="wallet-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+             background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+            <div style="background:#fff; padding:30px; border-radius:8px; width:400px; position:relative; text-align:center;">
+                <h4>Xác nhận thanh toán</h4>
+                <p>Số dư ví của bạn: 
+                    <strong><%= request.getAttribute("wallet") != null ? request.getAttribute("wallet") + "k VND" : "Không khả dụng" %></strong>
+                </p>
+
+
+                <p>Giá cần thanh toán: <strong><%= formattedFeePerMonth %>k VND</strong></p>
+
+                <form method="post" action="PayOnlineController">
+                    <input type="hidden" name="userID" value="<%= userID %>" />
+                    <input type="hidden" name="roomID" value="<%= roomDetail.getRoomID() %>" />
+                    <input type="hidden" name="amount" value="<%= roomDetail.getRoomFee() %>" />
+
+                    <button type="submit" style="background-color: #28a745; color: white; padding: 10px 20px;">Xác nhận</button>
+                    <button type="button" onclick="hideWalletModal()" style="margin-left: 10px; background: #dc3545; color: white; padding: 10px 20px;">Hủy</button>
+                </form>
+            </div>
+        </div>
 
 
         <script src="js/bootstrap.bundle.min.js"></script>
@@ -305,13 +318,14 @@
         <script src="js/counter.js"></script>
         <script src="js/custom.js"></script>
         <script>
-    function showQRCode() {
-        document.getElementById("qr-overlay").style.display = "flex";
-    }
+                        function showWalletModal() {
+                            document.getElementById("wallet-modal").style.display = "flex";
+                        }
 
-    function hideQRCode() {
-        document.getElementById("qr-overlay").style.display = "none";
-    }
+                        function hideWalletModal() {
+                            document.getElementById("wallet-modal").style.display = "none";
+                        }
         </script>
+
     </body>
 </html>
