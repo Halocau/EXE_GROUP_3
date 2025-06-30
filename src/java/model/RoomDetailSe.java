@@ -19,6 +19,10 @@ public class RoomDetailSe {
     private int[] itemID;
     private int roomOccupant; // thêm ngày 21 / 7
     private int roomStatus; // thêm ngày 21 / 7
+    private String roomDescription;
+    private String address;
+    private String phone;
+    private String roomName;
 
     public RoomDetailSe(int roomID, int roomNumber, int roomSize, int roomFloor, 
             String roomImg, String[] itemName, byte[] itemImg, int[] quantity, 
@@ -36,6 +40,29 @@ public class RoomDetailSe {
         this.roomOccupant = roomOccupant;
         this.roomStatus = roomStatus;
     }
+    
+    public RoomDetailSe(int roomID, int roomNumber, int roomSize, int roomFloor,
+            String roomImg, String[] itemName, byte[] itemImg, int[] quantity,
+            double roomFee, int[] itemID, int roomOccupant, int roomStatus,
+            String roomDescription, String address, String phone, String roomName) {
+
+        this.roomID = roomID;
+        this.roomNumber = roomNumber;
+        this.roomSize = roomSize;
+        this.roomFloor = roomFloor;
+        this.roomImg = roomImg;
+        this.itemName = itemName;
+        this.itemImg = itemImg;
+        this.quantity = quantity;
+        this.roomFee = roomFee;
+        this.itemID = itemID;
+        this.roomOccupant = roomOccupant;
+        this.roomStatus = roomStatus;
+        this.roomDescription = roomDescription;
+        this.address = address;
+        this.phone = phone;
+        this.roomName = roomName;
+    }
 
     public int[] getItemID() {
         return itemID;
@@ -43,6 +70,38 @@ public class RoomDetailSe {
 
     public void setItemID(int[] itemID) {
         this.itemID = itemID;
+    }
+
+    public String getRoomDescription() {
+        return roomDescription;
+    }
+
+    public void setRoomDescription(String roomDescription) {
+        this.roomDescription = roomDescription;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
     
     public double getRoomFee() {

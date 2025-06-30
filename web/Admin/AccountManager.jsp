@@ -57,8 +57,6 @@
                             <a class="nav-link" href="selist"><div class="sb-nav-link-icon"><i class="fas fa-shield-alt"></i></div>Security List</a>
                             <a class="nav-link" href="rooms"><div class="sb-nav-link-icon"><i class="fas fa-door-open"></i></div>Room List</a>
                             <a class="nav-link" href="approvalVip"><div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>VIP Approval</a>
-                            <a class="nav-link" href="owner-statics"><div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>Ownerstatics</a>
-
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
@@ -135,13 +133,6 @@
                                                    data-email="${acc.userMail}" title="Gửi email">
                                                     <i class="fas fa-envelope"></i>
                                                 </a>
-                                                <!-- Wallet -->
-                                                <a href="#" class="text-warning" data-bs-toggle="modal" data-bs-target="#walletModal"
-                                                   data-username="${acc.user.userName}" data-phone="${acc.user.userPhone}"
-                                                   data-wallet="${acc.user.wallet != null ? acc.user.wallet : 0}" data-email="${acc.userMail}">
-                                                    <i class="fas fa-wallet"></i>
-                                                </a>
-
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -247,81 +238,46 @@
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"></script>
         <script src="AdminCSS/js/datatables-simple-demo.js"></script>
         <script src="AdminCSS/js/scripts.js"></script>
-        <div class="modal fade" id="walletModal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <form action="updatewallet" method="post" class="modal-content">
-                    <div class="modal-header bg-warning text-dark">
-                        <h5 class="modal-title">Ví người dùng</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="email" id="walletEmail" />
-                        <p><strong>Họ tên:</strong> <span id="walletUserName"></span></p>
-                        <p><strong>SĐT:</strong> <span id="walletPhone"></span></p>
-                        <p><strong>Số dư hiện tại:</strong> <span id="walletAmount" class="text-success fw-boldSố dư"></span> VND</p>
-                        <div class="mb-3">
-                            <label for="amountToAdd" class="form-label">Cộng thêm số tiền (VND)</label>
-                            <input type="number" name="amount" id="amountToAdd" class="form-control" min="0" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                        <button type="submit" class="btn btn-warning">Cộng tiền</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+
         <script>
-                                        // Wallet modal - điền dữ liệu khi mở
-                                        const walletModal = document.getElementById('walletModal');
-                                        walletModal.addEventListener('show.bs.modal', function (e) {
-                                            const btn = e.relatedTarget;
-                                            document.getElementById('walletEmail').value = btn.getAttribute('data-email');
-                                            document.getElementById('walletUserName').textContent = btn.getAttribute('data-username');
-                                            document.getElementById('walletPhone').textContent = btn.getAttribute('data-phone');
-                                            document.getElementById('walletAmount').textContent = parseInt(btn.getAttribute('data-wallet') || 0).toLocaleString();
+                                        // Modal Edit: điền dữ liệu
+                                        var editModal = document.getElementById('editModal');
+                                        editModal.addEventListener('show.bs.modal', function (e) {
+                                            var btn = e.relatedTarget;
+                                            editModal.querySelector('#editEmail').value = btn.getAttribute('data-email');
+                                            editModal.querySelector('#editPassword').value = btn.getAttribute('data-password');
+                                            editModal.querySelector('#editRole').value = btn.getAttribute('data-role');
                                         });
 
-        </script>
-        <script>
-            // Modal Edit: điền dữ liệu
-            var editModal = document.getElementById('editModal');
-            editModal.addEventListener('show.bs.modal', function (e) {
-                var btn = e.relatedTarget;
-                editModal.querySelector('#editEmail').value = btn.getAttribute('data-email');
-                editModal.querySelector('#editPassword').value = btn.getAttribute('data-password');
-                editModal.querySelector('#editRole').value = btn.getAttribute('data-role');
-            });
+                                        // Modal Email: gán recipient & reset phụ kiện
+                                        var emailModal = document.getElementById('emailModal');
+                                        emailModal.addEventListener('show.bs.modal', function (e) {
+                                            var to = e.relatedTarget.getAttribute('data-email');
+                                            this.querySelector('#emailTo').value = to;
+                                            this.querySelector('#emailAction').value = '';
+                                            onEmailTypeChange();
+                                        });
 
-            // Modal Email: gán recipient & reset phụ kiện
-            var emailModal = document.getElementById('emailModal');
-            emailModal.addEventListener('show.bs.modal', function (e) {
-                var to = e.relatedTarget.getAttribute('data-email');
-                this.querySelector('#emailTo').value = to;
-                this.querySelector('#emailAction').value = '';
-                onEmailTypeChange();
-            });
+                                        // Hiện/ẩn input phụ
+                                        function onEmailTypeChange() {
+                                            document.querySelectorAll('[id^="extra-"]').forEach(el => el.classList.add('d-none'));
+                                            var sel = document.getElementById('extra-' + document.getElementById('emailAction').value);
+                                            if (sel)
+                                                sel.classList.remove('d-none');
+                                        }
 
-            // Hiện/ẩn input phụ
-            function onEmailTypeChange() {
-                document.querySelectorAll('[id^="extra-"]').forEach(el => el.classList.add('d-none'));
-                var sel = document.getElementById('extra-' + document.getElementById('emailAction').value);
-                if (sel)
-                    sel.classList.remove('d-none');
-            }
-
-            // SweetAlert2 thông báo kết quả gửi email
-            document.addEventListener('DOMContentLoaded', function () {
-                const params = new URLSearchParams(window.location.search);
-                if (params.has('emailSent')) {
-                    Swal.fire({icon: 'success', title: 'Gửi email thành công', timer: 2000, showConfirmButton: false});
-                    history.replaceState(null, null, window.location.pathname);
-                }
-                if (params.has('emailError')) {
-                    Swal.fire({icon: 'error', title: 'Gửi email thất bại', text: 'Vui lòng thử lại sau.'});
-                    history.replaceState(null, null, window.location.pathname);
-                }
-            });
+                                        // SweetAlert2 thông báo kết quả gửi email
+                                        document.addEventListener('DOMContentLoaded', function () {
+                                            const params = new URLSearchParams(window.location.search);
+                                            if (params.has('emailSent')) {
+                                                Swal.fire({icon: 'success', title: 'Gửi email thành công', timer: 2000, showConfirmButton: false});
+                                                history.replaceState(null, null, window.location.pathname);
+                                            }
+                                            if (params.has('emailError')) {
+                                                Swal.fire({icon: 'error', title: 'Gửi email thất bại', text: 'Vui lòng thử lại sau.'});
+                                                history.replaceState(null, null, window.location.pathname);
+                                            }
+                                        });
         </script>
     </body>
 </html>

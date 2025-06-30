@@ -110,7 +110,8 @@
                     </div>
                     <div class="col-lg-4">
                         <div class="d-block agent-box p-5">
-                            <h2 class="heading text-primary" style="font-weight: 700"> Room <%= roomDetail.getRoomNumber()%></h2>
+                            <h2 class="heading text-primary" style="font-weight: 700"> <%= roomDetail.getRoomName()%></h2>
+                            <p class="textDetail">Room Number: <%= roomDetail.getRoomNumber()%></p>
                             <%
                                DecimalFormat df = new DecimalFormat("#,###");
                                String formattedFee = df.format(roomDetail.getRoomFee() * 1000);
@@ -120,7 +121,7 @@
                             <p class="textDetail">Area: 22m²</p>
                             <p class="textDetail">Room Floor: <%= roomDetail.getRoomFloor()%></p>
                             <p class="textDetail">Room Size: <%= roomDetail.getRoomSize()%></p>
-                            <p class="textDetail">Facilities: There is air conditioning, private toilet, comfortable living hours</p>
+                            <p class="textDetail">Description: <%= roomDetail.getRoomDescription()%></p>
                             <p class="textDetail">In the room are available: </p>
                             <% 
                             String[] itemNames = roomDetail.getItemName(); 
@@ -136,8 +137,8 @@
                                     }
                                 }
                             %>
-                            <p class="textDetail">Address: Thon 3, Tan Xa, Thach That, Ha Noi</p>
-                            <p class="textDetail">Contact Info: 0123456789</p>                            
+                            <p class="textDetail">Address: <%= roomDetail.getAddress()%></p>
+                            <p class="textDetail">Contact Info: <%= roomDetail.getPhone()%></p>
                             <% for (String renterName : listNameRenter) { %>
                             <p class="textDetail">Renter: 
                             <a style="color: blue;" href="#"> <%= renterName %> </a> 

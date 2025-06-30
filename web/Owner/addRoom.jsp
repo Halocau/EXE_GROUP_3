@@ -58,6 +58,11 @@
 
                     <div class="row g-3">
                         <div class="col-md-6">
+                            <label for="roomName" class="form-label">Room Name</label>
+                            <input type="text" class="form-control" id="roomName" name="roomName" maxlength="250" required>
+                        </div>
+
+                        <div class="col-md-6">
                             <label for="roomFloor" class="form-label">Room Floor</label>
                             <input type="number" class="form-control" id="roomFloor" name="roomFloor" required>
                         </div>
@@ -77,15 +82,17 @@
                             <label for="roomOccupant" class="form-label">Room Occupant</label>
                             <input type="number" class="form-control" id="roomOccupant" name="roomOccupant" required>
                         </div>
-                        <div class="col-md-6">
-                            <label for="total" class="form-label">Total</label>
-                            <input type="number" class="form-control" id="total" name="total" required>
+                        
+                        <div class="col-md-12">
+                            <label for="description" class="form-label">Room Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" maxlength="300"></textarea>
                         </div>
+
                         <!--                        <div class="col-md-6">
                                                     <label for="vipId" class="form-label">VipId</label>
                                                     <input type="number" class="form-control" id="vipId"" name="vipId" required>
                                                 </div>-->
-                        <div class="col-md-6">
+<!--                        <div class="col-md-6">
                             <label for="vipId" class="form-label">Vip Type</label>
                             <select class="form-select" id="vipId" name="vipId"  onchange="showVipPopup()">
                                 <option value="">-- Select VIP --</option>
@@ -94,7 +101,7 @@
                                 </c:forEach>
                             </select>
 
-                        </div>
+                        </div>-->
 
                         <!--                        <div class="col-md-6">
                                                     <label for="item" class="form-label">Item</label>
@@ -110,7 +117,6 @@
                             <span id="fileError" class="text-danger"></span>
                         </div>
                     </div>
-                    <input type="hidden" name="paymentCode" value="${paymentCode}">
 
                     <div class="text-center mt-4">
                         <button type="submit" class="btn btn-success px-4" onclick="return validateFile()">
@@ -121,39 +127,6 @@
                         </a>
                     </div>
                 </form>
-
-                <!-- VIP Popup (ảnh cố định) -->
-                <div id="vipPopup" class="modal" tabindex="-1" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000;">
-                    <div class="modal-dialog" style="max-width:700px; margin:5% auto; background:white; border-radius:10px;">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Thông tin các loại Tin VIP</h5>
-                                <button type="button" class="btn-close" onclick="closeVipPopup()"></button>
-                            </div>
-                            <div class="modal-body text-center">
-                                <!-- Ảnh thông tin VIP đã có -->
-<!--                                <img src="${pageContext.request.contextPath}/uploads/aVip.png" alt="VIP Info" class="img-fluid mb-3">-->
-
-                                <!-- Ảnh mã QR mới thêm -->
-                                <img src="${pageContext.request.contextPath}/uploads/qr.png" alt="QR Payment" class="img-fluid mb-3" >
-                                <!-- Dòng nội dung chuyển khoản -->
-                                <p class="mt-2 text-dark">
-                                    <strong>Nội dung chuyển khoản:</strong>
-                                    <span class="text-primary" style="font-weight: bold; letter-spacing: 1px;">
-                                        ${paymentCode}
-                                    </span>
-                                </p>
-                                <!-- Dòng thông báo -->
-                                <p class="mt-3 fw-bold text-danger">Sau khi xác nhận chuyển tiền bài sẽ hiện lên</p>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" onclick="closeVipPopup()">Đóng</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
 
@@ -195,7 +168,5 @@
                 document.getElementById('vipPopup').style.display = 'none';
             }
         </script>
-
-
     </body>
 </html>

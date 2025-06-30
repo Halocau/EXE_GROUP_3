@@ -17,6 +17,10 @@ public class Room {
     private Integer vipId;
     private String paymentCode;
     private int roomStatus;
+    private int ownerID;
+    private String description;
+    private String roomName;
+    
     public Room(Item item, RoomItem roomitem) {
         this.item = item;
         this.roomitem = roomitem;
@@ -124,6 +128,30 @@ public class Room {
 
     public void setRoomID(int roomID) {
         this.roomID = roomID;
+    }
+    
+    public int getOwnerID() {
+        return ownerID;
+    }
+
+    public void setOwnerID(int ownerID) {
+        this.ownerID = ownerID;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 
     public int getRoomFloor() {

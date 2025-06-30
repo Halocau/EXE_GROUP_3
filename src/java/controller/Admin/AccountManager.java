@@ -2,11 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
+
 package controller.Admin;
 
 import dao.AccountDAO;
-import dao.DAO;
-import dao.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -20,11 +19,11 @@ import model.Account;
 
 /**
  *
- * @author pc
+ * @author Admin
  */
-@WebServlet(name = "Manage", urlPatterns = {"/manage"})
-public class Manage extends HttpServlet {
-
+@WebServlet(name = "AccountManager", urlPatterns = {"/accountmanager"})
+public class AccountManager extends HttpServlet {
+   
     // Helper method để kiểm tra quyền admin
     private boolean isAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -50,7 +49,7 @@ public class Manage extends HttpServlet {
         List<Account> accounts = accountDAO.getAccountsWithUser();
         request.setAttribute("account", accounts);
 
-        request.getRequestDispatcher("Admin/Tables.jsp").forward(request, response);
+        request.getRequestDispatcher("Admin/AccountManager.jsp").forward(request, response);
     }
 
     @Override

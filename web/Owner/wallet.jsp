@@ -1,6 +1,5 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <% String service=(String) request.getParameter("service"); %>
-
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -726,28 +725,26 @@
             <a href="#" class="navbar-brand">Owner</a>
             <button class="navbar-toggle" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
             <ul class="navbar-nav">
-                <li class="${param.service == null || param.service == 'renterhome' ? 'active' : ''}">
-                    <a href="rentercontroller?service=renterhome">Home</a>
-                </li>
-                <li class="has-children ${(param.service == 'listRoom') ||  (param.service == 'guideandrule') || (param.service == 'RenterRoomDetail') ? 'active' : ''}">
+                <li class="<%= (service == null || service.equals("OwnerHome")) ? "active" : "" %>"><a href="OwnerController?service=OwnerHome">Home</a></li>            
+
+
+                <li
+                    class="has-children ${(param.service == 'listRoom') ||  (param.service == 'guideandrule') || (param.service == 'RenterRoomDetail') ? 'active' : ''}">
                     <a href="#">View</a>
                     <ul class="dropdown">
-                        <li><a href="RenterRoomController?service=listRoom&index=1">List Of Rooms</a></li>
-                        <li><a href="renterguideline?service=guideandrule">Guide and Rule</a></li>
-                        <li><a href="RenterRoomDetail?service=RenterRoomDetail">My Room</a></li>
-                        <li><a href="rentercontroller?service=news">News</a></li>
-                        <li><a href="renpen">Penalty</a></li>
-                    </ul>
-                </li>               
-    <!--            <li class="${param.service == "paymentList" ? "active" : ''}"><a href="WalletController">Wallet</a></li>-->
-                <li><a href="WalletController">Service</a></li>
+                        <li><a href="OwnerController?service=pagingRoom&index=1">List of rooms</a></li>
+                        <li><a href="OwnerController?service=listrequest">List of Request</a></li>
 
-                <li><a href="rentercontroller?service=request">Contact Us</a></li>
-                <li><a href="listrequest1?service=request">List Request</a></li>
+                    </ul>
+                </li>
+                <li><a href="ListRenterController">Renter Management</a></li>
+                <li><a href="addroom?service=addRoom">Add Room</a></li>
+                <li><a href="wallet-renter">Service</a></li>
+                </li>
                 <li><a href="logout">Logout</a></li>
                 <li class="navbar-avatar">
-                    <a href="rentercontroller?service=renterprofile">
-                        <img src="data:image/jpg;base64,${imgAvata}" alt="Profile Image" width="30px" height="30px" style="border-radius: 10px;">
+                    <a href="OwnerController?service=ownerProfile">
+                        <img src="data:image/jpg;base64,${imgAvata}" alt="Profile" />
                     </a>
                 </li>
             </ul>
@@ -755,24 +752,63 @@
 
         <!-- MEMBERSHIP SECTION -->
         <section class="membership-section">
-            <h2>Đăng ký chủ trọ</h2>
+            <h2>Chọn gói đăng tin VIP</h2>
             <p class="desc">
-                Để trở thành chủ trọ và sử dụng các chức năng đặc biệt tại Hola StayNow, bạn cần đăng ký với mức phí
-                50.000đ.
+                Để có thể sử dụng một số các chức năng đặc biệt tại Hola StayNow
+                các bạn cần phải đăng ký tin VIP dưới đây là các gói thành viên cùng với các đặc quyền theo từng
+                gói.
             </p>
-            <div class="membership-cards" style="justify-content:center;">
-                <div class="membership-card featured" style="max-width:350px;">
+            <div class="membership-cards">
+                <!-- VIP CARD -->
+                <div class="membership-card featured">
                     <div class="card-header vip">
-                        <h3>Đăng ký chủ trọ</h3>
-                        <p>50.000₫ / 1 lần đăng ký</p>
-                        <div class="ribbon">HOT</div>
+                        <h3>VIP 1</h3>
+                        <p>300,000₫ cho 1 tháng</p>
+                        <div class="ribbon">FEATURED</div>
                     </div>
                     <ul class="features-list">
-                        <li><i class="fa-solid fa-check"></i> Được đăng phòng, quản lý trọ</li>
-                        <li><i class="fa-solid fa-check"></i> Ưu tiên hỗ trợ từ hệ thống</li>
-                        <li><i class="fa-solid fa-check"></i> Nhận thông báo mới nhất</li>
+                        <li><i class="fa-solid fa-check"></i> Sở hữu màu username đặc biệt</li>
+                        <li><i class="fa-solid fa-check"></i> Không cần chờ duyệt khi đăng bài</li>
+                        <li><i class="fa-solid fa-check"></i> Nhận FUO Point khi comment đáp án</li>
+                        <li><i class="fa-solid fa-check"></i> Được hỗ trợ ưu tiên giải đáp thắc mắc</li>
                     </ul>
-                    <button class="btn-pay" id="open-modal-btn">Thanh toán</button>
+                    <button class="btn-pay" data-vipcode="VIP1" data-price="300,000₫">
+                        Thanh toán
+                    </button>
+                </div>
+                <!-- VIP CARD -->
+                <div class="membership-card featured">
+                    <div class="card-header vip">
+                        <h3>VIP 2</h3>
+                        <p>220,000₫ cho 1 tháng</p>
+                        <div class="ribbon">FEATURED</div>
+                    </div>
+                    <ul class="features-list">
+                        <li><i class="fa-solid fa-check"></i> Sở hữu màu username đặc biệt</li>
+                        <li><i class="fa-solid fa-check"></i> Không cần chờ duyệt khi đăng bài</li>
+                        <li><i class="fa-solid fa-check"></i> Nhận FUO Point khi comment đáp án</li>
+                        <li><i class="fa-solid fa-check"></i> Được hỗ trợ ưu tiên giải đáp thắc mắc</li>
+                    </ul>
+                    <button class="btn-pay" data-vipcode="VIP2" data-price="220,000₫">
+                        Thanh toán
+                    </button>
+                </div>
+                <!-- VIP CARD -->
+                <div class="membership-card featured">
+                    <div class="card-header vip">
+                        <h3>VIP 3</h3>
+                        <p>170,000₫ cho 1 tháng</p>
+                        <div class="ribbon">FEATURED</div>
+                    </div>
+                    <ul class="features-list">
+                        <li><i class="fa-solid fa-check"></i> Sở hữu màu username đặc biệt</li>
+                        <li><i class="fa-solid fa-check"></i> Không cần chờ duyệt khi đăng bài</li>
+                        <li><i class="fa-solid fa-check"></i> Nhận FUO Point khi comment đáp án</li>
+                        <li><i class="fa-solid fa-check"></i> Được hỗ trợ ưu tiên giải đáp thắc mắc</li>
+                    </ul>
+                    <button class="btn-pay" data-vipcode="VIP3" data-price="170,000₫">
+                        Thanh toán
+                    </button>
                 </div>
             </div>
         </section>
@@ -782,10 +818,12 @@
             <div class="modal-content">
                 <span class="modal-close"
                       style="position:absolute; top:0.5rem; right:1rem; font-size:1.5rem; cursor:pointer;">&times;</span>
-                <h3>Thanh toán đăng ký chủ trọ</h3>
+                <h3>Thanh toán gói <span id="modal-package"></span></h3>
+                <p>Số tiền: <strong id="modal-price"></strong></p>
                 <div class="modal-qr">
-                    <img src="https://img.vietqr.io/image/970415-113366668888-qr_only.png" alt="QR Code" />
+                    <img src='https://img.vietqr.io/image/970415-113366668888-qr_only.png' />
                 </div>
+                <!-- Thay thế phần modal-field cũ bằng đoạn này -->
                 <div class="modal-field">
                     <label for="modal-input">Nội dung CK:</label>
                     <div class="copy-group">
@@ -796,7 +834,10 @@
                     <!-- Dòng thông báo mờ -->
                     <p class="modal-note">
                         Bạn vui lòng đợi tầm 5 – 10p để hệ thống kiểm tra
-                    </p>                </div>
+                    </p>
+                </div>
+
+
             </div>
         </div>
 
@@ -805,25 +846,38 @@
 
 
         <script>
+            // 1) Hàm slugify: bỏ dấu và xóa khoảng trắng
             function slugify(str) {
                 return str
                         .normalize('NFD')
                         .replace(/[\u0300-\u036f]/g, '')
                         .replace(/\s+/g, '');
             }
-            // Lấy username & phone từ session
+
+            // 2) Lấy username & phone
             var tenTro = '<%= currentUser != null ? currentUser.getUserName()  : "" %>';
             var tenKhach = '<%= currentUser != null ? currentUser.getUserPhone() : "" %>';
-            // Mở popup và set nội dung CK
-            document.getElementById('open-modal-btn').addEventListener('click', function () {
-                var userSlug = slugify(tenTro);
-                var parts = ['HSLN', userSlug, tenKhach, 'DKCT'];
-//                var content = parts.join('_');
-                var content = parts.join('');
-                document.getElementById('modal-input').value = content;
-                document.getElementById('payment-modal').style.display = 'block';
+
+            // 3) Bắt sự kiện click
+            document.querySelectorAll('button.btn-pay[data-vipcode]').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var price = btn.getAttribute('data-price');
+                    var vipCode = btn.getAttribute('data-vipcode');
+
+                    document.getElementById('modal-price').textContent = price;
+                    document.getElementById('modal-package').textContent = vipCode;
+
+                    var userSlug = slugify(tenTro);
+                    // Nối bằng dấu gạch dưới
+                    var parts = ['HSLN', userSlug, tenKhach, vipCode];
+//                    var content = parts.join('_');
+                    var content = parts.join('');
+                    document.getElementById('modal-input').value = content;
+                    document.getElementById('payment-modal').style.display = 'block';
+                });
             });
-            // Đóng modal
+
+            // 4) Đóng modal
             var modal = document.getElementById('payment-modal');
             document.querySelector('.modal-close').addEventListener('click', function () {
                 modal.style.display = 'none';
@@ -832,11 +886,15 @@
                 if (e.target === modal)
                     modal.style.display = 'none';
             });
-            // Copy nội dung
+
+            // 5) Copy nội dung
+            // bấm vào nút copy
             document.getElementById('modal-copy-btn').addEventListener('click', function () {
                 const input = document.getElementById('modal-input');
                 input.select();
                 document.execCommand('copy');
+
+                // hiệu ứng feedback
                 this.innerHTML = '<i class="fa-solid fa-check" style="color:green"></i>';
                 setTimeout(() => {
                     this.innerHTML = '<i class="fa-regular fa-copy"></i>';

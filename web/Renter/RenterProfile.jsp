@@ -1,241 +1,422 @@
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page import="dao.RoomDAO, dao.RenterDAO, java.util.List,java.util.Vector"%>
+<%@page import="dao.RoomDAO, dao.RenterDAO, java.util.List,java.util.Vector" %>
 <%@page import="model.Room, model.User, model.UserDetail, model.Account" %>
 <%@ page import="java.util.Base64" %>
 <%@ page import="utils.EnvLoader" %>
 
-<% UserDetail userDetail = (UserDetail) request.getAttribute("userDetail"); 
-   String error = (String) request.getAttribute("error");
-%>
+
+<% UserDetail userDetail=(UserDetail) request.getAttribute("userDetail"); String error=(String)
+                            request.getAttribute("error"); %>
 <!DOCTYPE html>
 <html>
+
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" href="images/favicon.png">
-        <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css'>
-        <title>JSP Page</title>
+        <link rel='stylesheet'
+              href='https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css'>
+        <title>Profile | StayNow</title>
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+            rel="stylesheet">
 
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
-        <link rel="stylesheet" href="fonts/icomoon/style.css">
-        <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
-
-        <link rel="stylesheet" href="css/tiny-slider.css">
-        <link rel="stylesheet" href="css/aos.css">
         <link rel="stylesheet" href="css/style.css">
         <style>
-            body{
-                margin-top:20px;
-                color: #1a202c;
-                text-align: left;
-                background-color: #e2e8f0;
+            body {
+                background: #fff;
+                min-height: 100vh;
+                font-family: 'Inter', sans-serif;
             }
+
             .main-body {
-                padding: 15px;
-            }
-            .card {
-                box-shadow: 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06);
+                padding: 32px 0;
             }
 
-            .card {
-                position: relative;
+            .profile-card {
+                background: #fff;
+                border-radius: 24px;
+                box-shadow: 0 8px 32px rgba(80, 80, 160, 0.10);
+                padding: 32px 24px 24px 24px;
+                text-align: center;
+                margin-bottom: 24px;
+            }
+
+            .profile-avatar {
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+                border: 5px solid #fff;
+                box-shadow: 0 4px 16px rgba(80, 80, 160, 0.15);
+                object-fit: cover;
+                margin-bottom: 16px;
+            }
+
+            .profile-name {
+                font-size: 1.4rem;
+                font-weight: 700;
+                margin-bottom: 4px;
+            }
+
+            .profile-role {
+                font-size: 1rem;
+                color: #888;
+                margin-bottom: 16px;
+            }
+
+            .profile-social {
                 display: flex;
-                flex-direction: column;
-                min-width: 0;
-                word-wrap: break-word;
-                background-color: #fff;
-                background-clip: border-box;
-                border: 0 solid rgba(0,0,0,.125);
-                border-radius: .25rem;
+                justify-content: center;
+                gap: 16px;
+                margin-bottom: 0;
             }
 
-            .card-body {
-                flex: 1 1 auto;
-                min-height: 1px;
-                padding: 1rem;
+            .profile-social a {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: #f3f4f6;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #667eea;
+                font-size: 1.2rem;
+                transition: background 0.2s, color 0.2s, transform 0.2s;
             }
 
-            .gutters-sm {
-                margin-right: -8px;
-                margin-left: -8px;
+            .profile-social a:hover {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: #fff;
+                transform: translateY(-2px) scale(1.1);
             }
 
-            .gutters-sm>.col, .gutters-sm>[class*=col-] {
-                padding-right: 8px;
-                padding-left: 8px;
-            }
-            .mb-3, .my-3 {
-                margin-bottom: 1rem!important;
+            .info-card {
+                background: #fff;
+                border-radius: 24px;
+                box-shadow: 0 8px 32px rgba(80, 80, 160, 0.10);
+                padding: 32px 32px 24px 32px;
             }
 
-            .bg-gray-300 {
-                background-color: #e2e8f0;
+            .info-list {
+                margin-bottom: 24px;
             }
-            .h-100 {
-                height: 100%!important;
+
+            .info-row {
+                display: flex;
+                align-items: center;
+                padding: 12px 0;
+                border-bottom: 1px solid #f0f0f0;
             }
-            .shadow-none {
-                box-shadow: none!important;
+
+            .info-row:last-child {
+                border-bottom: none;
+            }
+
+            .info-label {
+                flex: 0 0 140px;
+                color: #888;
+                font-size: 1rem;
+                font-weight: 500;
+            }
+
+            .info-value {
+                font-size: 1.08rem;
+                font-weight: 600;
+                color: #222;
+            }
+
+            .wallet-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 24px;
+            }
+
+            .wallet-label {
+                font-size: 1.1rem;
+                color: #888;
+            }
+
+            .wallet-value {
+                font-size: 1.3rem;
+                font-weight: 700;
+                color: #4f46e5;
+            }
+
+            .btn-gradient {
+                /*                background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);*/
+                background: #4f46e5;
+                color: #fff;
+                border: none;
+                border-radius: 12px;
+                padding: 0.5rem 1.5rem;
+                font-weight: 600;
+                font-size: 1rem;
+                box-shadow: 0 2px 8px rgba(67, 233, 123, 0.10);
+                transition: background 0.2s, transform 0.2s;
+            }
+
+            .btn-gradient:hover {
+                background: linear-gradient(135deg, #38f9d7 0%, #43e97b 100%);
+                color: #fff;
+                transform: translateY(-2px) scale(1.04);
+            }
+
+            .action-btns {
+                display: flex;
+                gap: 16px;
+                margin-top: 24px;
+            }
+
+            .action-btns .btn {
+                border-radius: 12px;
+                font-weight: 600;
+                font-size: 1rem;
+                padding: 0.5rem 1.5rem;
+                border: none;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: #fff;
+                transition: background 0.2s, transform 0.2s;
+            }
+
+            .action-btns .btn:hover {
+                background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+                color: #fff;
+                transform: translateY(-2px) scale(1.04);
+            }
+
+            @media (max-width: 991px) {
+                .info-card {
+                    padding: 24px 12px;
+                }
+            }
+
+            @media (max-width: 767px) {
+                .main-body {
+                    padding: 8px 0;
+                }
+
+                .profile-card,
+                .info-card {
+                    padding: 18px 6px;
+                    border-radius: 12px;
+                }
+
+                .wallet-row {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 8px;
+                }
+
+                .action-btns {
+                    flex-direction: column;
+                    gap: 10px;
+                }
+
+                .site-nav {
+                    border-radius: 0;
+                    margin: 0;
+                    max-width: 100vw;
+                }
+
+                .container.main-body {
+                    margin-top: 140px;
+                }
+            }
+
+            .site-nav {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                z-index: 1000;
+                border-radius: 0;
+                margin: 0;
+            }
+
+            .container.main-body {
+                margin-top: 140px;
             }
         </style>
     </head>
+
     <body>
-        <div class="container">
-            <div class="main-body">
-                <div>
-                    <nav class="site-nav" style="width: 85%">
-                        <div class="container" >
-                            <div class="menu-bg-wrap">
-                                <div class="site-navigation">
-                                    <a href="renterprofile" class="logo m-0 float-start" style="text-decoration: none;">Profile</a>
+        <div>
+            <nav class="site-nav">
+                <div class="container">
+                    <div class="menu-bg-wrap">
+                        <div class="site-navigation">
+                            <a href="renterprofile" class="logo m-0 float-start"
+                               style="text-decoration: none;">Profile</a>
 
-                                    <jsp:include page="navbar.jsp"></jsp:include>
+                            <jsp:include page="navbar.jsp"></jsp:include>
 
-                                        <a href="" class="burger light me-auto float-end mt-1 site-menu-toggle js-menu-toggle d-inline-block d-lg-none" data-toggle="collapse" data-target="#main-navbar">
-                                            <span></span>
-                                        </a>
+                                <a href="#"
+                                   class="burger light me-auto float-end mt-1 site-menu-toggle js-menu-toggle d-inline-block d-lg-none"
+                                   data-toggle="collapse" data-target="#main-navbar">
+                                    <span></span>
+                                </a>
 
-                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="container main-body">
+                <div class="row">
+                    <div class="col-lg-4 col-md-5 mb-4">
+                        <div class="profile-card">
+                        <% String base64Image=userDetail.getUserAvatar(); %>
+                        <img src="data:image/jpg;base64, <%= base64Image %>" alt="Avatar"
+                             class="profile-avatar">
+                        <div class="profile-name">
+                            <%= userDetail.getUserName() %>
+                        </div>
+                        <div class="profile-role">Renter</div>
+                        <div class="profile-social">
+                            <a href="<%= utils.EnvLoader.get(" Origin") %>/HL_Motel/"
+                               title="Website"><i class="fa-solid fa-globe"></i></a>
+                            <a href="https://github.com/Phucnhhe170085/SE1803_SWP391_Group5"
+                               title="GitHub"><i class="fab fa-github"></i></a>
+                            <a href="https://www.youtube.com/" title="Twitter/X"><i
+                                    class="fab fa-twitter"></i></a>
+                            <a href="https://web.telegram.org/" title="Telegram"><i
+                                    class="fab fa-telegram"></i></a>
+                            <a href="https://www.facebook.com/elfadkeachother"
+                               title="Facebook"><i class="fab fa-facebook"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-7 mb-4">
+                    <div class="info-card">
+                        <div class="wallet-row">
+                            <div>
+                                <div class="wallet-label">Wallet</div>
+                                <% java.text.NumberFormat
+                                    nf=java.text.NumberFormat.getInstance(); String
+                                    formattedWallet=userDetail.getWallet()==null ? "0" :
+                                    nf.format(userDetail.getWallet()); %>
+                                <div class="wallet-value">
+                                    <%= formattedWallet %> VND
                                 </div>
                             </div>
-                        </nav>
-                    </div>
-
-                    <div class="row gutters-sm" style="margin-top: 100px;">
-                        <div class="col-md-4 mb-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="d-flex flex-column align-items-center text-center">
-                                    <% String base64Image = userDetail.getUserAvatar(); %>
-                                    <img src="data:image/jpg;base64, <%= base64Image %>" alt="Owner" class="rounded-circle" width="150">
-                                    <div class="mt-3">
-                                        <p class="text-secondary mb-1">Image</p>
-                                    </div>
+                            <a href="#" class="btn-gradient" data-toggle="modal"
+                               data-target="#walletModal">Nạp tiền</a>
+                        </div>
+                        <div class="info-list">
+                            <div class="info-row">
+                                <div class="info-label">Full Name</div>
+                                <div class="info-value">
+                                    <%= userDetail.getUserName() %>
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Gender</div>
+                                <div class="info-value">
+                                    <%= userDetail.getUserGender() %>
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Date of birth</div>
+                                <div class="info-value">
+                                    <%= userDetail.getUserBirth() %>
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Email</div>
+                                <div class="info-value">
+                                    <%= userDetail.getUserMail() %>
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Phone</div>
+                                <div class="info-value">
+                                    <%= userDetail.getUserPhone() %>
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Address</div>
+                                <div class="info-value">
+                                    <%= userDetail.getUserAddress() %>
                                 </div>
                             </div>
                         </div>
-                        <div class="card mt-3">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-globe mr-2 icon-inline"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>Website</h6>
-                                    <span class="text-secondary"><%= utils.EnvLoader.get("Origin") %>/HL_Motel/</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github mr-2 icon-inline"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>Github</h6>
-                                    <span class="text-secondary"><a href="https://github.com/Phucnhhe170085/SE1803_SWP391_Group5">GIT</a></span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-twitter mr-2 icon-inline text-info"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>Twitter</h6>
-                                    <span class="text-secondary"><a href="https://www.youtube.com/">X</a></span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram mr-2 icon-inline text-danger"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>Instagram</h6>
-                                    <span class="text-secondary"><a href="https://web.telegram.org/">Tele</a></span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook mr-2 icon-inline text-primary"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>Facebook</h6>
-                                    <span class="text-secondary"><a href="https://www.facebook.com/elfadkeachother">FaceBook</a></span>
-                                </li>
-                            </ul>
+                        <div class="action-btns">
+                            <a class="btn" href="rentercontroller?service=renterupdate"><i
+                                    class="fa-solid fa-pen-to-square mr-2"></i>Edit</a>
+                            <a class="btn" href="changePassword"><i
+                                    class="fa-solid fa-key mr-2"></i>Change password</a>
                         </div>
                     </div>
-
-
-                    <div class="col-md-8">
-                        <div class="card mb-3">
-                            <div class="card-body">
-
-                                <% if (error != null) { %>
-                                <div class="error-message">
-                                    <div class="row mb-3">
-                                        <div class="col-sm-3">
-                                            <h6 class="mb-0" style="color: red">Error</h6>
-                                        </div>
-                                        <div class="col-sm-9 text-danger">
-                                            <p class="error-text"><%= error%></p>
-                                        </div>
+                </div>
+            </div>
+            <!-- Modal nạp tiền -->
+            <%! public static String removeVietnameseTones(String str) {
+                str=java.text.Normalizer.normalize(str, java.text.Normalizer.Form.NFD);
+                str=str.replaceAll("\\p{InCombiningDiacriticalMarks}+", "" ); return str; } %>
+            <% String
+                fullName=removeVietnameseTones(userDetail.getUserName()).replaceAll("\\p{Punct}", ""
+                ).replaceAll("\\s+", "" ); String phone=userDetail.getUserPhone(); String
+                contentCK="HSLN" + fullName + phone + "WALLET" ; %>
+            <div class="modal fade" id="walletModal" tabindex="-1" role="dialog"
+                 aria-labelledby="walletModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content text-center">
+                        <div class="modal-header">
+                            <h5 class="modal-title w-100">Thanh toán nạp tiền ví</h5>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Đóng">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img src="https://img.vietqr.io/image/970415-113366668888-qr_only.png"
+                                 alt="QR Code" class="img-fluid mb-3"
+                                 style="max-width: 250px;">
+                            <div class="form-group">
+                                <label for="paymentContent">Nội dung CK:</label>
+                                <div class="input-group">
+                                    <input id="paymentContent" type="text"
+                                           class="form-control text-center" readonly
+                                           value="<%= contentCK %>">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary"
+                                                onclick="copyContent()">📋</button>
                                     </div>
                                 </div>
-                                <%}%>
-
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Full Name</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <%= userDetail.getUserName()%>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Gender</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <%= userDetail.getUserGender()%>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Date of birth</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <%= userDetail.getUserBirth()%>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Email</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <%= userDetail.getUserMail()%>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Phone</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <%= userDetail.getUserPhone()%>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Address</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <%= userDetail.getUserAddress()%>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <a class="btn btn-info " href="rentercontroller?service=renterupdate">Edit</a>
-                                        <a class="btn btn-info " href="changePassword">Change password</a>
-                                    </div>
-                                </div>
+                                <small class="form-text text-muted">Sau khi chuyển tiền
+                                    bạn vui
+                                    lòng đợi tầm 5 – 10p để hệ thống kiểm tra</small>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
             </div>
-            <script src='https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js'></script>
-            <script src="js/bootstrap.bundle.min.js"></script>
-            <script src="js/tiny-slider.js"></script>
-            <script src="js/aos.js"></script>
-            <script src="js/navbar.js"></script>
-            <script src="js/counter.js"></script>
-            <script src="js/custom.js"></script>
+            <script
+            src='https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js'></script>
+            <script>
+                                                    function copyContent() {
+                                                        var copyText = document.getElementById("paymentContent");
+                                                        copyText.select();
+                                                        copyText.setSelectionRange(0, 99999);
+                                                        document.execCommand("copy");
+                                                        copyText.style.backgroundColor = "#d4edda";
+                                                        setTimeout(function () {
+                                                            copyText.style.backgroundColor = "";
+                                                        }, 1500);
+                                                    }
+            </script>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+        <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
     </body>
+
 </html>
