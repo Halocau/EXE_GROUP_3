@@ -601,10 +601,8 @@
                                                                     <input type="text" name="searchRoomNumber"
                                                                         class="form-control"
                                                                         placeholder="Search by Room Number"
-                                                                        value="<%= request.getAttribute("
-                                                                        searchRoomNumber") !=null ?
-                                                                        request.getAttribute("searchRoomNumber") : ""
-                                                                        %>">
+value="<%= request.getAttribute("searchRoomNumber") != null ? request.getAttribute("searchRoomNumber") : "" %>"
+
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <select name="status" class="form-select">
@@ -712,8 +710,8 @@
                                                                         maxPrice=(String)
                                                                         request.getAttribute("maxPrice"); for (int i=1;
                                                                         i <=totalPages; i++) { %>
-                                                                        <li class="page-item <%= (i == currentPage) ? "
-                                                                            active" : "" %>">
+                                                                        <li class="page-item <%= (i == currentPage) ? "active" : "" %>">
+
                                                                             <form method="get"
                                                                                 action="ListRenterController"
                                                                                 style="display:inline;">
@@ -725,8 +723,7 @@
                                                                                     name="searchRoomNumber"
                                                                                     value="<%= searchRoomNumber != null ? searchRoomNumber : "" %>" />
                                                                                 <input type="hidden" name="status"
-                                                                                    value="<%= status != null ? status : "
-                                                                                    all" %>"/>
+                                                                                    value="<%= status != null ? status : "all" %>"/>
                                                                                 <input type="hidden" name="minPrice"
                                                                                     value="<%= minPrice != null ? minPrice : "" %>" />
                                                                                 <input type="hidden" name="maxPrice"
