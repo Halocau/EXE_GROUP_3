@@ -935,4 +935,16 @@ public class RoomDAO extends DBContext {
         }
         return count;
     }
+
+    public boolean updateRoomStatusWallet(int roomID, int status) {
+        String query = "Update room set roomStatus = ? where roomID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, status);
+            ps.setInt(2, roomID);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

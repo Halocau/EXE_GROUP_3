@@ -403,7 +403,7 @@
                                                                                         3, Tan Xa, Thach That</span>
                                                                                     <span class="city d-block mb-3">Room
                                                                                         <%= room.getRoomNumber() %>
-                                                                                            </span>
+                                                                                    </span>
                                                                                     <div class="specs d-flex mb-4">
                                                                                         <span
                                                                                             class="d-block d-flex align-items-center me-3">
@@ -483,7 +483,7 @@
                                                                                         3, Tan Xa, Thach That</span>
                                                                                     <span class="city d-block mb-3">Room
                                                                                         <%= room.getRoomNumber() %>
-                                                                                            </span>
+                                                                                    </span>
                                                                                     <div class="specs d-flex mb-4">
                                                                                         <span
                                                                                             class="d-block d-flex align-items-center me-3">
@@ -565,7 +565,7 @@
                                                                                         3, Tan Xa, Thach That</span>
                                                                                     <span class="city d-block mb-3">Room
                                                                                         <%= room.getRoomNumber() %>
-                                                                                            </span>
+                                                                                    </span>
                                                                                     <div class="specs d-flex mb-4">
                                                                                         <span
                                                                                             class="d-block d-flex align-items-center me-3">
@@ -646,7 +646,7 @@
                                                                                         3, Tan Xa, Thach That</span>
                                                                                     <span class="city d-block mb-3">Room
                                                                                         <%= room.getRoomNumber() %>
-                                                                                            </span>
+                                                                                    </span>
                                                                                     <div class="specs d-flex mb-4">
                                                                                         <span
                                                                                             class="d-block d-flex align-items-center me-3">

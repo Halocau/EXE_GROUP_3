@@ -674,4 +674,48 @@ public class RenterDAO extends MyDAO {
         return stats;
     }
 
+    public UserDetail getUserDetailByID(Integer userID) {
+        UserDetail userDetail = null;
+        String sql = "SELECT \n"
+                + "u.userID, \n"
+                + "u.userName, \n"
+                + "u.userGender, \n"
+                + "u.userBirth, \n"
+                + "u.userAddress, \n"
+                + "u.userPhone, \n"
+                + "u.userAvatar, \n"
+                + "a.userMail, \n"
+                + "a.userPassword, \n"
+                + "a.userRole, \n"
+                + "u.wallet \n"
+                + "FROM [user] u \n"
+                + "JOIN account a ON u.userID = a.userID \n"
+                + "WHERE u.userID = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    userDetail = new UserDetail(
+                            rs.getInt("userID"),
+                            rs.getString("userName"),
+                            rs.getString("userGender"),
+                            rs.getString("userBirth"),
+                            rs.getString("userAddress"),
+                            rs.getString("userPhone"),
+                            rs.getString("userAvatar"),
+                            rs.getString("userMail"),
+                            rs.getString("userPassword"),
+                            rs.getInt("userRole")
+                    );
+                    userDetail.setWallet(rs.getBigDecimal("wallet"));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Fail (getUserDetailByID): " + e.getMessage());
+        }
+
+        return userDetail;
+    }
+
 }
