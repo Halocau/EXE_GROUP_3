@@ -53,7 +53,7 @@ public class OwnerController extends HttpServlet {
         String email = (String) session.getAttribute("email");
         String password = (String) session.getAttribute("password");
         int userRole = userDAO.getUserRoleByEmailAndPassword(email, password);
-        if (userRole != 2) {
+        if (userRole != 2 && userRole != 1) {
             request.setAttribute("error", "You have to login first!!!");
             request.getRequestDispatcher("login.jsp").forward(request, response);
             return;
