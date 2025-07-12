@@ -18,6 +18,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.json.JSONObject;
@@ -28,6 +29,10 @@ import org.json.JSONObject;
  */
 @WebServlet(urlPatterns = {"/chatbot"})
 public class ChatServlet extends HttpServlet {
+    // Lưu lịch sử chat tạm thời trong RAM
+    static final java.util.Map<String, java.util.List<String>> chatHistoryMap = new java.util.concurrent.ConcurrentHashMap<>();
+    static final java.util.Map<String, Long> chatHistoryTimeMap = new java.util.concurrent.ConcurrentHashMap<>();
+    private static final long CHAT_HISTORY_TIMEOUT = 10 * 60 * 1000; // 10 phút
     // Import RoomDAO, RoomDetailSe nếu chưa có
     // import dao.RoomDAO;
     // import model.RoomDetailSe;
@@ -38,12 +43,50 @@ public class ChatServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("chat.jsp").forward(request, response);
+        // Nếu là yêu cầu lấy lịch sử chat (AJAX fetch)
+        String action = request.getParameter("action");
+        if ("history".equals(action)) {
+            jakarta.servlet.http.HttpSession session = request.getSession();
+            Object userIdObj = session.getAttribute("userID");
+            String chatKey = (userIdObj != null) ? ("USER_" + userIdObj) : ("SESSION_" + session.getId());
+            java.util.List<String> history = chatHistoryMap.getOrDefault(chatKey, new java.util.ArrayList<>());
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            org.json.JSONArray arr = new org.json.JSONArray(history);
+            response.getWriter().write(arr.toString());
+            return;
+        }
+        // Nếu không có chat.jsp thì trả về 404 hoặc thông báo
+        response.setContentType("text/plain");
+        response.setStatus(404);
+        response.getWriter().write("Không tìm thấy trang chat.jsp. Hãy tích hợp widget chat vào trang web của bạn!");
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String userMessage = request.getParameter("message");
+        jakarta.servlet.http.HttpSession session = request.getSession();
+        Object userIdObj = session.getAttribute("userID");
+        String chatKey;
+        if (userIdObj != null) {
+            chatKey = "USER_" + userIdObj;
+        } else {
+            chatKey = "SESSION_" + session.getId();
+        }
+
+        // Xóa lịch sử chat nếu quá hạn với khách chưa login
+        if (userIdObj == null) {
+            Long lastTime = chatHistoryTimeMap.get(chatKey);
+            if (lastTime != null && System.currentTimeMillis() - lastTime > CHAT_HISTORY_TIMEOUT) {
+                chatHistoryMap.remove(chatKey);
+                chatHistoryTimeMap.remove(chatKey);
+            }
+        }
+
+        // Lấy lịch sử chat hiện tại
+        List<String> history = chatHistoryMap.getOrDefault(chatKey, new java.util.ArrayList<>());
+        // Thêm tin nhắn mới vào lịch sử
+        history.add("Người dùng: " + userMessage);
         // Mặc định lấy từ request (nếu có)
         String roomName = request.getParameter("roomName");
         String roomFee = request.getParameter("roomFee");
@@ -83,7 +126,11 @@ public class ChatServlet extends HttpServlet {
             }
         }
 
-        String botReply = callGeminiAPI(userMessage, roomName, roomFee, roomDescription, address, roomNumber, roomSize, roomFloor, roomImg, roomOccupant, roomStatus, amenities);
+        String botReply = callGeminiAPI(userMessage, roomName, roomFee, roomDescription, address, roomNumber, roomSize, roomFloor, roomImg, roomOccupant, roomStatus, amenities, history);
+        // Lưu cả phản hồi của bot vào lịch sử
+        history.add("Bot: " + botReply);
+        chatHistoryMap.put(chatKey, history);
+        chatHistoryTimeMap.put(chatKey, System.currentTimeMillis());
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -95,7 +142,7 @@ public class ChatServlet extends HttpServlet {
     }
 
     private String callGeminiAPI(String userMessage, String roomName, String roomFee, String roomDescription, String address,
-            String roomNumber, String roomSize, String roomFloor, String roomImg, String roomOccupant, String roomStatus, String amenities) {
+            String roomNumber, String roomSize, String roomFloor, String roomImg, String roomOccupant, String roomStatus, String amenities, java.util.List<String> history) {
         try {
             URL url = new URL(API_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -103,8 +150,16 @@ public class ChatServlet extends HttpServlet {
             conn.setDoOutput(true);
             conn.setRequestProperty("Content-Type", "application/json");
 
-            // Prompt có đầy đủ thông tin phòng
+            // Prompt có đầy đủ thông tin phòng và lịch sử chat
+            StringBuilder historyBuilder = new StringBuilder();
+            if (history != null && !history.isEmpty()) {
+                historyBuilder.append("Lịch sử trò chuyện trước đó:\n");
+                for (String msg : history) {
+                    historyBuilder.append(msg).append("\n");
+                }
+            }
             String systemPrompt = "Bạn là một trợ lý AI thân thiện cho website HoLa StayNow - nền tảng đặt và quản lý phòng trọ tại khu vực Hòa Lạc, Hà Nội.\n"
+                    + historyBuilder.toString()
                     + "Thông tin phòng hiện tại:\n"
                     + "- Tên phòng: " + (roomName != null ? roomName : "Không rõ") + "\n"
                     + "- Số phòng: " + (roomNumber != null ? roomNumber : "Không rõ") + "\n"
