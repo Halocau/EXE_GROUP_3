@@ -18,6 +18,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.json.JSONObject;
 
 /**
@@ -26,6 +28,9 @@ import org.json.JSONObject;
  */
 @WebServlet(urlPatterns = {"/chatbot"})
 public class ChatServlet extends HttpServlet {
+    // Import RoomDAO, RoomDetailSe nếu chưa có
+    // import dao.RoomDAO;
+    // import model.RoomDetailSe;
 
     private static final String API_KEY = "AIzaSyDkzxbTZLJsHq_p2A_VjuFqTRmd7rvSl8E";
     private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + API_KEY;
@@ -39,7 +44,46 @@ public class ChatServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String userMessage = request.getParameter("message");
-        String botReply = callGeminiAPI(userMessage);
+        // Mặc định lấy từ request (nếu có)
+        String roomName = request.getParameter("roomName");
+        String roomFee = request.getParameter("roomFee");
+        String roomDescription = request.getParameter("roomDescription");
+        String address = request.getParameter("address");
+        String roomNumber = request.getParameter("roomNumber");
+        String roomSize = request.getParameter("roomSize");
+        String roomFloor = request.getParameter("roomFloor");
+        String roomImg = request.getParameter("roomImg");
+        String roomOccupant = request.getParameter("roomOccupant");
+        String roomStatus = request.getParameter("roomStatus");
+        String amenities = request.getParameter("amenities");
+
+        // Nếu user hỏi về phòng cụ thể, ví dụ "phòng 403"
+        Pattern p = Pattern.compile("phòng\\s*(\\d+)", Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(userMessage);
+        if (m.find()) {
+            String searchRoomNumber = m.group(1);
+            try {
+                dao.RoomDAO roomDAO = new dao.RoomDAO();
+                model.RoomDetailSe room = roomDAO.getRoomDetailByNumber(searchRoomNumber);
+                if (room != null) {
+                    roomName = room.getRoomName();
+                    roomFee = String.valueOf(room.getRoomFee());
+                    roomDescription = room.getRoomDescription();
+                    address = room.getAddress();
+                    roomNumber = String.valueOf(room.getRoomNumber());
+                    roomSize = String.valueOf(room.getRoomSize());
+                    roomFloor = String.valueOf(room.getRoomFloor());
+                    roomImg = room.getRoomImg();
+                    roomOccupant = String.valueOf(room.getRoomOccupant());
+                    roomStatus = String.valueOf(room.getRoomStatus());
+                    amenities = room.getAmenitiesString(); // phương thức trả về tiện ích dạng chuỗi
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        String botReply = callGeminiAPI(userMessage, roomName, roomFee, roomDescription, address, roomNumber, roomSize, roomFloor, roomImg, roomOccupant, roomStatus, amenities);
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -50,7 +94,8 @@ public class ChatServlet extends HttpServlet {
         response.getWriter().write(jsonResponse.toString());
     }
 
-    private String callGeminiAPI(String userMessage) {
+    private String callGeminiAPI(String userMessage, String roomName, String roomFee, String roomDescription, String address,
+            String roomNumber, String roomSize, String roomFloor, String roomImg, String roomOccupant, String roomStatus, String amenities) {
         try {
             URL url = new URL(API_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -58,18 +103,23 @@ public class ChatServlet extends HttpServlet {
             conn.setDoOutput(true);
             conn.setRequestProperty("Content-Type", "application/json");
 
-            // 🎯 Prompt định hướng
-            String systemPrompt = """
-        Bạn là một trợ lý AI thân thiện cho website HoLa StayNow - nền tảng đặt và quản lý phòng trọ tại khu vực Hòa Lạc, Hà Nội.
-        Website cung cấp thông tin về các loại phòng, giá cả, tiện ích và hỗ trợ người dùng đặt phòng online.
-        Nếu người dùng hỏi về dịch vụ, vị trí, cách đặt phòng, hoặc giá – hãy trả lời ngắn gọn, dễ hiểu và lịch sự.
-        Nếu bạn không chắc chắn về câu hỏi, hãy nói: "Xin lỗi, tôi không chắc chắn về thông tin này. Bạn có thể liên hệ quản lý để biết thêm chi tiết."
-                                   - Có 3 loại phòng: Tiêu chuẩn (800k/tháng), Cao cấp (1.2 triệu/tháng), VIP (1.5 triệu/tháng).
-                                      - Mỗi phòng đều có wifi, vệ sinh riêng và chỗ để xe.
-                                      - Người dùng có thể đặt phòng trên website.
-                                      - Website không hỗ trợ thanh toán online, chỉ đặt giữ chỗ.
-                                      - Nếu người dùng hỏi về vị trí: "Địa chỉ: Thôn 3, Thạch Hòa, Thạch Thất, Hà Nội".
-        """;
+            // Prompt có đầy đủ thông tin phòng
+            String systemPrompt = "Bạn là một trợ lý AI thân thiện cho website HoLa StayNow - nền tảng đặt và quản lý phòng trọ tại khu vực Hòa Lạc, Hà Nội.\n"
+                    + "Thông tin phòng hiện tại:\n"
+                    + "- Tên phòng: " + (roomName != null ? roomName : "Không rõ") + "\n"
+                    + "- Số phòng: " + (roomNumber != null ? roomNumber : "Không rõ") + "\n"
+                    + "- Diện tích: " + (roomSize != null ? roomSize : "Không rõ") + " m2\n"
+                    + "- Tầng: " + (roomFloor != null ? roomFloor : "Không rõ") + "\n"
+                    + "- Giá phòng: " + (roomFee != null ? roomFee : "Không rõ") + " VND/tháng\n"
+                    + "- Số người ở: " + (roomOccupant != null ? roomOccupant : "Không rõ") + "\n"
+                    + "- Trạng thái phòng: " + (roomStatus != null ? roomStatus : "Không rõ") + "\n"
+                    + "- Tiện ích: " + (amenities != null ? amenities : "Không rõ") + "\n"
+                    + "- Mô tả: " + (roomDescription != null ? roomDescription : "Không rõ") + "\n"
+                    + "- Địa chỉ: " + (address != null ? address : "Không rõ") + "\n"
+                    + "- Hình ảnh: " + (roomImg != null ? roomImg : "Không rõ") + "\n"
+                    + "Website cung cấp thông tin về các loại phòng, giá cả, tiện ích và hỗ trợ người dùng đặt phòng online.\n"
+                    + "Nếu người dùng hỏi về dịch vụ, vị trí, cách đặt phòng, hoặc giá – hãy trả lời ngắn gọn, dễ hiểu và lịch sự.\n"
+                    + "Nếu bạn không chắc chắn về câu hỏi, hãy nói: 'Xin lỗi, tôi không chắc chắn về thông tin này. Bạn có thể liên hệ quản lý để biết thêm chi tiết.'";
 
             String fullPrompt = systemPrompt + "\nKhách: " + userMessage;
 

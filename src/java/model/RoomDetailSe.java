@@ -1,6 +1,22 @@
 package model;
 
 public class RoomDetailSe {
+    // Trả về tiện ích dạng chuỗi cho chatbot
+    public String getAmenitiesString() {
+        StringBuilder sb = new StringBuilder();
+        if (itemName != null && quantity != null) {
+            for (int i = 0; i < itemName.length; i++) {
+                sb.append(quantity[i]).append(" ").append(itemName[i]);
+                if (i < itemName.length - 1) sb.append(", ");
+            }
+        }
+        if (getSingleBed() > 0) sb.append(", ").append(getSingleBed()).append(" Single Bed");
+        if (getBunk() > 0) sb.append(", ").append(getBunk()).append(" Bunk Bed");
+        if (getChair() > 0) sb.append(", ").append(getChair()).append(" Chair");
+        if (isCeilingFans()) sb.append(", Ceiling Fan");
+        if (isAirConditional()) sb.append(", Air Conditioner");
+        return sb.toString().replaceFirst(", ", "");
+    }
 
     private int roomID;
     private int roomNumber;
