@@ -895,7 +895,7 @@
                 <p>© 2025 Hola StayNow. All Rights Reserved.</p>
             </div>
         </footer>
-
+<script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
     </body>
 
 </html>

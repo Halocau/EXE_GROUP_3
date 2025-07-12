@@ -343,5 +343,6 @@
         <script src="js/counter.js"></script>
         <script src="js/custom.js"></script>
     </body>
+     <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
 
 </html>

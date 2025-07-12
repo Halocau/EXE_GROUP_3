@@ -418,5 +418,6 @@
         <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
     </body>
+     <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
 
 </html>

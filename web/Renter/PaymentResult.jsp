@@ -50,5 +50,7 @@
             <a href="rentercontroller?service=renterhome">Back To Home</a>
         </div>
     </body>
+         <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
+
 </html>
 
