@@ -168,6 +168,9 @@
         <button class="send-btn" onclick="sendMessage()">Gửi</button>
     </div>
 </div>
+<script>
+    const contextPath = "<%= request.getContextPath() %>";
+</script>
 
 <script>
     function toggleChat() {
@@ -204,9 +207,9 @@
         input.value = "";
 
         // Gửi đến server
-        const contextPath = window.location.pathname.split("/")[1];
+        
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", `/${contextPath}/chatbot`, true);
+        xhr.open("POST", contextPath + "/chatbot", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
         xhr.onreadystatechange = function () {
