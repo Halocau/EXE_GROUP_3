@@ -24,17 +24,17 @@ import model.UserDetail;
  *
  * @author quocp
  */
-@WebServlet(name = "GuestController", urlPatterns = {"/GuestController"})
+@WebServlet(name = "GuestController", urlPatterns = { "/GuestController" })
 public class GuestController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -47,7 +47,7 @@ public class GuestController extends HttpServlet {
             if (service == null) {
                 service = "GuestHome";
             }
-            
+
             if (service.equals("GuestHome")) {
                 GuestHome(request, response);
             } else if (service.equals("ListRoom")) {
@@ -61,7 +61,8 @@ public class GuestController extends HttpServlet {
         }
     }
 
-    private void GuestHome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void GuestHome(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         RoomDAO dao = new RoomDAO();
         SliderDAO daol = new SliderDAO();
         List<Rooms> listRoomVip1 = dao.pagingRoomVip(1, 0, 1);
@@ -75,7 +76,8 @@ public class GuestController extends HttpServlet {
         request.getRequestDispatcher("Guest/GuestHome.jsp").forward(request, response);
     }
 
-    private void listRoom(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void listRoom(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         RoomDAO roomDAO = new RoomDAO();
 
         int index = Integer.parseInt(request.getParameter("index"));
@@ -98,7 +100,8 @@ public class GuestController extends HttpServlet {
         request.getRequestDispatcher("Guest/ListRoom.jsp").forward(request, response);
     }
 
-    private void roomDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void roomDetail(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         RoomDAO dao = new RoomDAO();
 
         int roomID = Integer.parseInt(request.getParameter("roomID"));
@@ -107,14 +110,15 @@ public class GuestController extends HttpServlet {
         request.getRequestDispatcher("Guest/RoomDetail.jsp").forward(request, response);
     }
 
-// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+    // + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -125,10 +129,10 @@ public class GuestController extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
