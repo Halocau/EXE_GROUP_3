@@ -151,7 +151,7 @@
                 <div class="menu-bg-wrap">
                     <div class="site-navigation">
                         <a href="GuestController?service=GuestHome"
-                           class="logo m-0 float-start">HL-Apartment</a>
+                           class="logo m-0 float-start">StayNow</a>
 
                         <jsp:include page="Guest/navbar.jsp"></jsp:include>
 

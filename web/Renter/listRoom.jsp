@@ -301,7 +301,7 @@
                 <div class="menu-bg-wrap">
                     <div class="site-navigation">
                         <a href="rentercontroller?service=renterhome"
-                           class="logo m-0 float-start">Room</a>
+                           class="logo m-0 float-start">StayNow</a>
 
                         <jsp:include page="navbar.jsp"></jsp:include>
 
