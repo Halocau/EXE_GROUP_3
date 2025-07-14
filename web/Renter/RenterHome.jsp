@@ -163,7 +163,7 @@
                 <h3 class="mb-4 vip-1-title">Danh sách phòng VIP loại 1</h3>
                 <div class="row">
                     <% for (int i = 0; i < listRoomVip1.size(); i++) { %>
-                    <div class="col-md-6 col-lg-6 mb-4">
+                    <div class="col-md-4 col-lg-4 mb-4">
                         <div class="property-card vip-1 h-100 shadow-sm rounded-3 p-3 border">
                             <a href="RenterRoomController?service=roomDetail&roomID=<%= listRoomVip1.get(i).getRoomID() %>">
                                 <% String base64Image = listRoomVip1.get(i).getRoomImg(); %>
@@ -198,7 +198,7 @@
                 <div class="row">
                     <% List<Rooms> listRoomVip2 = (List<Rooms>) request.getAttribute("listRoomVip2");
      for (int i = 0; i < listRoomVip2.size(); i++) { %>
-                    <div class="col-md-4 col-lg-4 mb-4">
+                    <div class="col-md-3 col-lg-3 mb-4">
                         <div class="property-card vip-2 h-100 shadow-sm rounded-3 p-3 border">
                             <a href="RenterRoomController?service=roomDetail&roomID=<%= listRoomVip2.get(i).getRoomID() %>">
                                 <% String base64Image = listRoomVip2.get(i).getRoomImg(); %>
@@ -225,7 +225,7 @@
                 <div class="row">
                     <% List<Rooms> listRoomVip3 = (List<Rooms>) request.getAttribute("listRoomVip3");
      for (int i = 0; i < listRoomVip3.size(); i++) { %>
-                    <div class="col-md-3 col-lg-3 mb-4">
+                    <div class="col-md-2 col-lg-2 mb-4">
                         <div class="property-card vip-3 h-100 shadow-sm rounded-3 p-3 border">
                             <a href="RenterRoomController?service=roomDetail&roomID=<%= listRoomVip3.get(i).getRoomID() %>">
                                 <% String base64Image = listRoomVip3.get(i).getRoomImg(); %>
