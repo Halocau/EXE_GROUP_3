@@ -31,10 +31,7 @@ public class RenterDAO_new extends MyDAO {
         Statistics stats = new Statistics();
         
         // Kiểm tra và tạo kết nối mới nếu cần
-        try {
-            if (con == null || con.isClosed()) {
-                con = new DBContext().connection;
-            }
+        try (Connection conn = new DBContext().connection) {
             
             // Tính tổng doanh thu
             String revenueSql = "SELECT SUM(r.roomFee) as totalRevenue FROM room r " +
