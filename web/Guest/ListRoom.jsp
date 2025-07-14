@@ -575,8 +575,11 @@
                             <script src="js/main_owner.js"></script>
 
                             <script>
-                                <!-- Filter UI is now static, no JS functionality -->
-                                <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
+                                    window.contextPath = "<%= request.getContextPath() %>";
+            </script>
+
+            <!-- Nhúng file JS bot -->
+            <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
                         </body>
 
                         </html>

@@ -417,7 +417,12 @@
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
         <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+                                    window.contextPath = "<%= request.getContextPath() %>";
+            </script>
+
+            <!-- Nhúng file JS bot -->
+            <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
     </body>
-     <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
 
 </html>

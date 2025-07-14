@@ -201,7 +201,12 @@
         <script src="RenterCSS/js/salvattore.min.js"></script>
         <!-- Main JS -->
         <script src="RenterCSS/js/main.js"></script>
+        <script>
+                                    window.contextPath = "<%= request.getContextPath() %>";
+            </script>
+
+            <!-- Nhúng file JS bot -->
+            <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
     </body>
-    <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
 
 </html>

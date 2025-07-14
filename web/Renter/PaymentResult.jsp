@@ -49,8 +49,13 @@
             <p><%= message %></p>
             <a href="rentercontroller?service=renterhome">Back To Home</a>
         </div>
+            <script>
+                                    window.contextPath = "<%= request.getContextPath() %>";
+            </script>
+
+            <!-- Nhúng file JS bot -->
+            <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
     </body>
-         <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
 
 </html>
 
