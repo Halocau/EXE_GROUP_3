@@ -416,4 +416,34 @@ public class BillDAO extends MyDAO {
             System.out.println("Failed to delete bill with ID " + billIDToDelete + ". It might not exist.");
         }
     }
+
+    public double getTotalRevenue() {
+        double total = 0;
+        String sql = "SELECT SUM(amount) FROM Bill WHERE status = 1"; // status = 1: đã thanh toán
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                total = rs.getDouble(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+    // Lấy tổng doanh thu của 1 chủ trọ (ownerId)
+    public double getRevenueByOwner(int ownerId) {
+        double total = 0;
+        String sql = "SELECT SUM(b.amount) FROM Bill b JOIN Room r ON b.roomID = r.roomID WHERE r.ownerID = ? AND b.status = 1";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, ownerId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                total = rs.getDouble(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
 }

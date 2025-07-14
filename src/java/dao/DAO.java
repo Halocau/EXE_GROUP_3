@@ -159,7 +159,20 @@ public class DAO extends DBContext {
         return false;
     }
     
-  
+    public int countAccountByRole(String role) {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM Account WHERE role = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, role);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
 
     public static void main(String args[]) {
        

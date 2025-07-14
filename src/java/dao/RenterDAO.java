@@ -85,9 +85,8 @@ public class RenterDAO extends MyDAO {
         }
         return list;
     }
-    
+
     // ve sua lai
-    
     public List<Renter> getRenterDetail(String accountInput, String passwordInput) {
         List<Renter> list = new ArrayList<>();
         String sql = "SELECT DISTINCT "
@@ -299,14 +298,20 @@ public class RenterDAO extends MyDAO {
     public UserDetail RenterBasicDetail(String accountInput, String passwordInput) {
         UserDetail userDetail = null;
         String sql = "SELECT \n"
-                + "a.userID, u.userName, u.userGender, u.userBirth, u.userAddress, u.userPhone, u.userAvatar, \n"
-                + "a.userMail, a.userPassword, a.userRole\n"
-                + "FROM \n"
-                + "[user] u \n"
-                + "JOIN \n"
-                + "account a ON u.userID = a.userID \n"
-                + "WHERE \n"
-                + "a.userMail = ?  AND a.userPassword = ?";
+                + "a.userID, \n"
+                + "u.userName, \n"
+                + "u.userGender, \n"
+                + "u.userBirth, \n"
+                + "u.userAddress, \n"
+                + "u.userPhone, \n"
+                + "u.userAvatar, \n"
+                + "a.userMail, \n"
+                + "a.userPassword, \n"
+                + "a.userRole, \n"
+                + "u.wallet \n"
+                + "FROM [user] u \n"
+                + "JOIN account a ON u.userID = a.userID \n"
+                + "WHERE a.userMail = ? AND a.userPassword = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, accountInput);
@@ -323,9 +328,11 @@ public class RenterDAO extends MyDAO {
                     String userMail = rs.getString(8);
                     String userPassword = rs.getString(9);
                     int userRole = rs.getInt(10);
+                    BigDecimal wallet = rs.getBigDecimal(11); // ✅ lấy wallet
 
                     userDetail = new UserDetail(userID, userName, userGender, userBirth,
                             userAddress, userPhone, userAvatar, userMail, userPassword, userRole);
+                    userDetail.setWallet(wallet); // ✅ set vào object
                 }
             }
         } catch (SQLException e) {
@@ -333,9 +340,44 @@ public class RenterDAO extends MyDAO {
         }
         return userDetail;
     }
-    
-    
 
+//    public UserDetail RenterBasicDetail(String accountInput, String passwordInput) {
+//        UserDetail userDetail = null;
+//        String sql = "SELECT \n"
+//                + "a.userID, u.userName, u.userGender, u.userBirth, u.userAddress, u.userPhone, u.userAvatar, \n"
+//                + "a.userMail, a.userPassword, a.userRole\n"
+//                + "FROM \n"
+//                + "[user] u \n"
+//                + "JOIN \n"
+//                + "account a ON u.userID = a.userID \n"
+//                + "WHERE \n"
+//                + "a.userMail = ?  AND a.userPassword = ?";
+//
+//        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+//            ps.setString(1, accountInput);
+//            ps.setString(2, passwordInput);
+//            try (ResultSet rs = ps.executeQuery()) {
+//                if (rs.next()) {
+//                    int userID = rs.getInt(1);
+//                    String userName = rs.getString(2);
+//                    String userGender = rs.getString(3);
+//                    String userBirth = rs.getString(4);
+//                    String userAddress = rs.getString(5);
+//                    String userPhone = rs.getString(6);
+//                    String userAvatar = rs.getString(7);
+//                    String userMail = rs.getString(8);
+//                    String userPassword = rs.getString(9);
+//                    int userRole = rs.getInt(10);
+//
+//                    userDetail = new UserDetail(userID, userName, userGender, userBirth,
+//                            userAddress, userPhone, userAvatar, userMail, userPassword, userRole);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            System.out.println("Fail: " + e.getMessage());
+//        }
+//        return userDetail;
+//    }
     //ThienAnh RenterDAO
     public List<RenterList> getRenters() {
         List<RenterList> renters = new ArrayList<>();
@@ -384,8 +426,8 @@ public class RenterDAO extends MyDAO {
                 int roomFloor = rs.getInt("roomFloor");
                 double balance = rs.getDouble("balance");
                 int userID = rs.getInt("userID");
-                
-                RenterList renterList = new RenterList(roomID, userName, balance, 
+
+                RenterList renterList = new RenterList(roomID, userName, balance,
                         roomNumber, roomFloor, userID);
                 renters.add(renterList);
             }
@@ -487,7 +529,7 @@ public class RenterDAO extends MyDAO {
         }
         return n;
     }
-    
+
     public List<RentDetail> rentDetail(int renterID) {
         List<RentDetail> rentDetails = new ArrayList<>();
         String sql = "SELECT "
@@ -526,111 +568,154 @@ public class RenterDAO extends MyDAO {
         }
         return rentDetails;
     }
+
     public List<RenterList> getAllRentersExcel() {
-    List<RenterList> renters = new ArrayList<>();
-    String sql = "SELECT u.userName, r.roomNumber, r.roomFloor, r.roomDepartment\n" +
-                 "FROM renter rt\n" +
-                 "JOIN room r ON rt.roomID = r.roomID\n" +
-                 "JOIN [user] u ON rt.userID = u.userID";
+        List<RenterList> renters = new ArrayList<>();
+        String sql = "SELECT u.userName, r.roomNumber, r.roomFloor, r.roomDepartment\n"
+                + "FROM renter rt\n"
+                + "JOIN room r ON rt.roomID = r.roomID\n"
+                + "JOIN [user] u ON rt.userID = u.userID";
 
-    try (Connection conn = connection; 
-         PreparedStatement ps = conn.prepareStatement(sql); 
-         ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = connection; PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
-        while (rs.next()) {
-            String userName = rs.getString("userName");
-            int roomNumber = rs.getInt("roomNumber");
-            int roomFloor = rs.getInt("roomFloor");
-            String department = rs.getString("roomDepartment");
+            while (rs.next()) {
+                String userName = rs.getString("userName");
+                int roomNumber = rs.getInt("roomNumber");
+                int roomFloor = rs.getInt("roomFloor");
+                String department = rs.getString("roomDepartment");
 
-            // Adjust the constructor call to match the data selected
-            RenterList renterList = new RenterList(userName, roomNumber, roomFloor, department);
-            renters.add(renterList);
+                // Adjust the constructor call to match the data selected
+                RenterList renterList = new RenterList(userName, roomNumber, roomFloor, department);
+                renters.add(renterList);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+
+        return renters;
     }
 
-    return renters;
-}
+    public static void main(String[] args) {
+        // Create an instance of RenterDAO
+        RenterDAO dao = new RenterDAO();
 
-     public static void main(String[] args) {
-    // Create an instance of RenterDAO
-    RenterDAO dao = new RenterDAO();
-    
-    // Fetch the list of renters
-    List<RenterList> renterLists = dao.getAllRentersExcel();
-    
-    // Print the details of each RenterList object
-    for (RenterList renterList : renterLists) {
-        System.out.println("Renter Name: " + renterList.getUserName());
-        System.out.println("Room Number: " + renterList.getRoomNumber());
-        System.out.println("Room Floor: " + renterList.getRoomFloor());
-        System.out.println("Room Department" +renterList.getDepartment());
-        System.out.println("----------"); // Separator for readability
+        // Fetch the list of renters
+        List<RenterList> renterLists = dao.getAllRentersExcel();
+
+        // Print the details of each RenterList object
+        for (RenterList renterList : renterLists) {
+            System.out.println("Renter Name: " + renterList.getUserName());
+            System.out.println("Room Number: " + renterList.getRoomNumber());
+            System.out.println("Room Floor: " + renterList.getRoomFloor());
+            System.out.println("Room Department" + renterList.getDepartment());
+            System.out.println("----------"); // Separator for readability
+        }
     }
-}
 
     public Statistics getStatistics() {
         Statistics stats = new Statistics();
-        
+
         // Kiểm tra và tạo kết nối mới nếu cần
         try {
             if (conn == null || conn.isClosed()) {
                 conn = connection;
             }
-            
+
             // Tính tổng doanh thu
-            String revenueSql = "SELECT SUM(r.roomFee) as totalRevenue FROM room r " +
-                              "JOIN renter rt ON r.roomID = rt.roomID " +
-                              "WHERE rt.renterStatus = 1";
-            
+            String revenueSql = "SELECT SUM(r.roomFee) as totalRevenue FROM room r "
+                    + "JOIN renter rt ON r.roomID = rt.roomID "
+                    + "WHERE rt.renterStatus = 1";
+
             // Tính tổng số người ở
-            String occupantsSql = "SELECT COUNT(*) as totalOccupants FROM renter " +
-                                "WHERE renterStatus = 1";
-            
+            String occupantsSql = "SELECT COUNT(*) as totalOccupants FROM renter "
+                    + "WHERE renterStatus = 1";
+
             // Tính số phòng đang được cho thuê
-            String occupiedRoomsSql = "SELECT COUNT(DISTINCT roomID) as occupiedRooms FROM renter " +
-                                    "WHERE renterStatus = 1";
-            
+            String occupiedRoomsSql = "SELECT COUNT(DISTINCT roomID) as occupiedRooms FROM renter "
+                    + "WHERE renterStatus = 1";
+
             // Tính số phòng trống
-            String emptyRoomsSql = "SELECT COUNT(*) as emptyRooms FROM room r " +
-                                 "LEFT JOIN renter rt ON r.roomID = rt.roomID " +
-                                 "WHERE rt.roomID IS NULL OR rt.renterStatus = 0";
-            
+            String emptyRoomsSql = "SELECT COUNT(*) as emptyRooms FROM room r "
+                    + "LEFT JOIN renter rt ON r.roomID = rt.roomID "
+                    + "WHERE rt.roomID IS NULL OR rt.renterStatus = 0";
+
             // Lấy tổng doanh thu
             ps = conn.prepareStatement(revenueSql);
             rs = ps.executeQuery();
             if (rs.next()) {
                 stats.setTotalRevenue(rs.getDouble("totalRevenue"));
             }
-            
+
             // Lấy tổng số người ở
             ps = conn.prepareStatement(occupantsSql);
             rs = ps.executeQuery();
             if (rs.next()) {
                 stats.setTotalOccupants(rs.getInt("totalOccupants"));
             }
-            
+
             // Lấy số phòng đang được cho thuê
             ps = conn.prepareStatement(occupiedRoomsSql);
             rs = ps.executeQuery();
             if (rs.next()) {
                 stats.setOccupiedRooms(rs.getInt("occupiedRooms"));
             }
-            
+
             // Lấy số phòng trống
             ps = conn.prepareStatement(emptyRoomsSql);
             rs = ps.executeQuery();
             if (rs.next()) {
                 stats.setEmptyRooms(rs.getInt("emptyRooms"));
             }
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         return stats;
+    }
+
+    public UserDetail getUserDetailByID(Integer userID) {
+        UserDetail userDetail = null;
+        String sql = "SELECT \n"
+                + "u.userID, \n"
+                + "u.userName, \n"
+                + "u.userGender, \n"
+                + "u.userBirth, \n"
+                + "u.userAddress, \n"
+                + "u.userPhone, \n"
+                + "u.userAvatar, \n"
+                + "a.userMail, \n"
+                + "a.userPassword, \n"
+                + "a.userRole, \n"
+                + "u.wallet \n"
+                + "FROM [user] u \n"
+                + "JOIN account a ON u.userID = a.userID \n"
+                + "WHERE u.userID = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    userDetail = new UserDetail(
+                            rs.getInt("userID"),
+                            rs.getString("userName"),
+                            rs.getString("userGender"),
+                            rs.getString("userBirth"),
+                            rs.getString("userAddress"),
+                            rs.getString("userPhone"),
+                            rs.getString("userAvatar"),
+                            rs.getString("userMail"),
+                            rs.getString("userPassword"),
+                            rs.getInt("userRole")
+                    );
+                    userDetail.setWallet(rs.getBigDecimal("wallet"));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Fail (getUserDetailByID): " + e.getMessage());
+        }
+
+        return userDetail;
     }
 
 }

@@ -73,6 +73,10 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 VIP Approval
                             </a>
+                            <a class="nav-link" href="owner-statics">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Owner Statics
+                            </a>
 
                         </div>
                     </div>
@@ -91,76 +95,95 @@
                             <li class="breadcrumb-item active">Account</li>
                         </ol>
 
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                Manage Account
+                        <ul class="nav nav-tabs mb-3" id="adminTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="room-tab" data-bs-toggle="tab" data-bs-target="#room" type="button" role="tab" aria-controls="room" aria-selected="true">Room List</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab" aria-controls="login" aria-selected="false">User Login Stats</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="adminTabContent">
+                            <div class="tab-pane fade show active" id="room" role="tabpanel" aria-labelledby="room-tab">
+                                <!-- Toàn bộ phần bảng cũ để ở đây -->
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-table me-1"></i>
+                                        Manage Account
+                                    </div>
+                                    <div class="card-body">
+                                        <br>
+                                        <table id="datatablesSimple" class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Room ID</th>
+                                                    <th>Floor</th>
+                                                    <th>Room Number</th>
+                                                    <th>Size (m²)</th>
+                                                    <th>Price</th>
+                                                    <th>Image</th>
+                                                    <th>Status</th>
+                                                    <th>Occupants</th>
+                                                    <th>Department</th>
+                                                    <th>Active</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach var="room" items="${rooms}">
+                                                    <tr>
+                                                        <td>${room.roomID}</td>
+                                                        <td>${room.roomFloor}</td>
+                                                        <td>${room.roomNumber}</td>
+                                                        <td>${room.roomSize}</td>
+                                                        <td>${room.roomFee}</td>
+                                                        <td>
+                                                            <img src="${pageContext.request.contextPath}/Image/Room/${room.roomImg}"
+                                                                 alt="Room Image" width="100">
+                                                        </td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${room.roomStatus == 0}">Chưa thuê</c:when>
+                                                                <c:when test="${room.roomStatus == 1}">Đã thuê</c:when>
+                                                                <c:when test="${room.roomStatus == 2}">Chờ duyệt</c:when>
+                                                                <c:when test="${room.roomStatus == 3}">Lên VIP</c:when>
+                                                                <c:otherwise>Vacant</c:otherwise>
+                                                            </c:choose>
+                                                        </td>
+                                                        <td>${room.roomOccupant}</td>
+                                                        <td>${room.roomDepartment}</td>
+                                                        <td>
+                                                            <form method="post" action="${pageContext.request.contextPath}/approvalVip" style="display:inline;">
+                                                                <input type="hidden" name="roomID" value="${room.roomID}" />
+                                                                <input type="hidden" name="roomStatus" value="3" />
+                                                                <button type="submit" class="btn btn-sm btn-success">
+                                                                    Approve
+                                                                </button>
+                                                            </form>
+                                                            <form method="post" action="${pageContext.request.contextPath}/approvalVip" style="display:inline; margin-left:5px;">
+                                                                <input type="hidden" name="roomID" value="${room.roomID}" />
+                                                                <input type="hidden" name="roomStatus" value="1" />
+                                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                                    Reject
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-body">
-
-
-                                <br>
-                                <table id="datatablesSimple" class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Room ID</th>
-                                            <th>Floor</th>
-                                            <th>Room Number</th>
-                                            <th>Size (m²)</th>
-                                            <th>Price</th>
-                                            <th>Image</th>
-                                            <th>Status</th>
-                                            <th>Occupants</th>
-                                            <th>Department</th>
-                                            <th>Active</th> <!-- Cột mới -->
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <c:forEach var="room" items="${rooms}">
-                                            <tr>
-                                                <td>${room.roomID}</td>
-                                                <td>${room.roomFloor}</td>
-                                                <td>${room.roomNumber}</td>
-                                                <td>${room.roomSize}</td>
-                                                <td>${room.roomFee}</td>
-                                                <td>
-                                                    <img src="${pageContext.request.contextPath}/Image/Room/${room.roomImg}"
-                                                         alt="Room Image" width="100">
-                                                </td>
-                                                <td>
-                                                    <c:choose>
-                                                        <c:when test="${room.roomStatus == 0}">Chưa thuê</c:when>
-                                                        <c:when test="${room.roomStatus == 1}">Đã thuê</c:when>
-                                                        <c:when test="${room.roomStatus == 2}">Chờ duyệt</c:when>
-                                                        <c:when test="${room.roomStatus == 3}">Lên VIP</c:when>
-                                                        <c:otherwise>Vacant</c:otherwise>
-                                                    </c:choose>
-                                                </td>
-                                                <td>${room.roomOccupant}</td>
-                                                <td>${room.roomDepartment}</td>
-
-                                                <td>
-                                                    <form method="post" action="${pageContext.request.contextPath}/approvalVip" style="display:inline;">
-                                                        <input type="hidden" name="roomID" value="${room.roomID}" />
-                                                        <input type="hidden" name="roomStatus" value="3" />
-                                                        <button type="submit" class="btn btn-sm btn-success">
-                                                            Approve
-                                                        </button>
-                                                    </form>
-
-                                                    <form method="post" action="${pageContext.request.contextPath}/approvalVip" style="display:inline; margin-left:5px;">
-                                                        <input type="hidden" name="roomID" value="${room.roomID}" />
-                                                        <input type="hidden" name="roomStatus" value="1" />
-                                                        <button type="submit" class="btn btn-sm btn-danger">
-                                                            Reject
-                                                        </button>
-                                                    </form>
-                                                </td>
-
-                                            </tr>
-                                        </c:forEach>
-                                    </tbody>
-                                </table>
+                            <div class="tab-pane fade" id="login" role="tabpanel" aria-labelledby="login-tab">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-bar me-1"></i>
+                                        User Login Statistics (Fake Data)
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="loginChart" height="100"></canvas>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -280,14 +303,64 @@
                 </footer>
             </div>
         </div>
-
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
     crossorigin="anonymous"></script>
     <script src="AdminCSS/js/scripts.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
     crossorigin="anonymous"></script>
     <script src="AdminCSS/js/datatables-simple-demo.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Fake data cho 30 ngày
+        const days = Array.from({length: 30}, (_, i) => 'Day ' + (i + 1));
+        const loginCounts = [12, 15, 18, 20, 17, 14, 19, 22, 25, 21, 18, 16, 20, 23, 19, 17, 21, 24, 22, 20, 18, 19, 21, 23, 25, 22, 20, 18, 17, 19];
+
+        const ctx = document.getElementById('loginChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: days,
+                datasets: [{
+                    label: 'Number of user logins',
+                    data: loginCounts,
+                    borderColor: 'rgb(54, 162, 235)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'User Login Per Day (Fake Data)'
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of logins'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Day'
+                        }
+                    }
+                }
+            }
+        });
+    });
+    </script>
 
 </body>
 

@@ -168,14 +168,36 @@
         <button class="send-btn" onclick="sendMessage()">Gửi</button>
     </div>
 </div>
+<script>
+    const contextPath = "<%= request.getContextPath() %>";
+</script>
 
 <script>
     function toggleChat() {
         const chatPopup = document.getElementById("chat-popup");
         const input = document.getElementById("userInput");
+        const chatBox = document.getElementById("chatBox");
         const isHidden = chatPopup.style.display === "none" || chatPopup.style.display === "";
         chatPopup.style.display = isHidden ? "flex" : "none";
         if (isHidden) {
+            // Lấy lại lịch sử chat khi mở popup
+            fetch(contextPath + "/chatbot?action=history")
+                .then(res => res.json())
+                .then(historyArr => {
+                    // Xóa các tin nhắn cũ (trừ tin nhắn chào đầu tiên)
+                    while (chatBox.children.length > 1) chatBox.removeChild(chatBox.lastChild);
+                    // Render lại lịch sử
+                    historyArr.forEach(msg => {
+                        const isUser = msg.startsWith("Người dùng:");
+                        const div = document.createElement("div");
+                        div.className = "msg " + (isUser ? "user" : "bot");
+                        let content = msg.replace("Người dùng: ", "").replace("Bot: ", "");
+                        content = content.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+                        div.innerHTML = content;
+                        chatBox.appendChild(div);
+                    });
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                });
             setTimeout(() => input.focus(), 200);
         }
     }
@@ -204,9 +226,9 @@
         input.value = "";
 
         // Gửi đến server
-        const contextPath = window.location.pathname.split("/")[1];
+        
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", `/${contextPath}/chatbot`, true);
+        xhr.open("POST", contextPath + "/chatbot", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
         xhr.onreadystatechange = function () {
