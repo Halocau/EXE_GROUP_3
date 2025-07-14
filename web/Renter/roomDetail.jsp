@@ -129,7 +129,7 @@
             <div class="container">
                 <div class="menu-bg-wrap">
                     <div class="site-navigation">
-                        <a href="#" class="logo m-0 float-start">Room Detail</a>
+                        <a href="#" class="logo m-0 float-start">StayNow</a>
 
                         <jsp:include page = "navbar.jsp"></jsp:include>
 
@@ -182,7 +182,7 @@
                                                 </div>
                                                 <div class="info-item">
                                                     <i class="icon-expand"></i>
-                                                    <span class="textDetail">Area: 22m²</span>
+                                                    <span class="textDetail">Area: 22mï¿½</span>
                                                 </div>
                                                 <div class="info-item">
                                                     <i class="icon-building"></i>

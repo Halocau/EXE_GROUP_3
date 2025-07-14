@@ -243,7 +243,7 @@
                                               enctype="multipart/form-data" id="imageForm"
                                               method="post">
                                         <% String base64Image=userDetail.getUserAvatar(); %>
-                                        <img src="data:image/jpg;base64, <%= base64Image %>"
+                                        <img src="${pageContext.request.contextPath}/${userDetail.getUserAvatar()}
                                              alt="Owner" class="rounded-circle" width="150">
                                         <div class="file-input-wrapper"
                                              style="text-align: center;">

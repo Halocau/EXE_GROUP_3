@@ -1,4 +1,3 @@
-<!-- Google Fonts & Material Icons -->
 <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
@@ -147,32 +146,23 @@
     }
 </style>
 
-<!-- Nút mở chat -->
 <button id="chat-toggle-btn" onclick="toggleChat()">
     <span class="material-icons">chat</span>
 </button>
 
-<!-- Popup chat -->
 <div id="chat-popup">
     <div id="chatBox">
         <div class="msg bot">👋 Xin chào! Bạn muốn tìm phòng ở khu vực nào ạ?</div>
     </div>
     <div id="chat-footer">
-        <input
-            type="text"
-            id="userInput"
-            placeholder="Nhập câu hỏi về phòng trọ..."
-            onkeydown="if (event.key === 'Enter')
-                  sendMessage();"
-            />
+        <input type="text" id="userInput" placeholder="Nhập câu hỏi về phòng trọ..." onkeydown="if (event.key === 'Enter') sendMessage();" />
         <button class="send-btn" onclick="sendMessage()">Gửi</button>
     </div>
 </div>
-<script>
-    const contextPath = "<%= request.getContextPath() %>";
-</script>
 
 <script>
+    const contextPath = "__CONTEXT_PATH__";
+
     function toggleChat() {
         const chatPopup = document.getElementById("chat-popup");
         const input = document.getElementById("userInput");
@@ -180,13 +170,10 @@
         const isHidden = chatPopup.style.display === "none" || chatPopup.style.display === "";
         chatPopup.style.display = isHidden ? "flex" : "none";
         if (isHidden) {
-            // Lấy lại lịch sử chat khi mở popup
             fetch(contextPath + "/chatbot?action=history")
                 .then(res => res.json())
                 .then(historyArr => {
-                    // Xóa các tin nhắn cũ (trừ tin nhắn chào đầu tiên)
                     while (chatBox.children.length > 1) chatBox.removeChild(chatBox.lastChild);
-                    // Render lại lịch sử
                     historyArr.forEach(msg => {
                         const isUser = msg.startsWith("Người dùng:");
                         const div = document.createElement("div");
@@ -206,16 +193,13 @@
         const input = document.getElementById("userInput");
         const chatBox = document.getElementById("chatBox");
         const userMsg = input.value.trim();
-        if (!userMsg)
-            return;
+        if (!userMsg) return;
 
-        // Hiển thị tin nhắn người dùng
         const userDiv = document.createElement("div");
         userDiv.className = "msg user";
         userDiv.textContent = userMsg;
         chatBox.appendChild(userDiv);
 
-        // Hiển thị trạng thái "Bot đang trả lời..."
         const typing = document.createElement("div");
         typing.className = "msg typing";
         typing.id = "typing";
@@ -225,8 +209,6 @@
 
         input.value = "";
 
-        // Gửi đến server
-        
         const xhr = new XMLHttpRequest();
         xhr.open("POST", contextPath + "/chatbot", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -235,11 +217,9 @@
             if (xhr.readyState === 4 && xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
                 const reply = response.reply?.trim() || "(Không có phản hồi)";
-
                 const botDiv = document.createElement("div");
                 botDiv.className = "msg bot";
                 botDiv.innerHTML = reply.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
-
                 document.getElementById("typing")?.remove();
                 chatBox.appendChild(botDiv);
                 chatBox.scrollTop = chatBox.scrollHeight;
