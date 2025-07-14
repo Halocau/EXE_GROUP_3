@@ -274,7 +274,7 @@
                     <div class="col-lg-4 col-md-5 mb-4">
                         <div class="profile-card">
                         <% String base64Image=userDetail.getUserAvatar(); %>
-                        <img src="data:image/jpg;base64, <%= base64Image %>" alt="Avatar"
+                        <img src="${pageContext.request.contextPath}/${imgAvata}"  alt="Avatar"
                              class="profile-avatar">
                         <div class="profile-name">
                             <%= userDetail.getUserName() %>
