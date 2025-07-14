@@ -257,7 +257,13 @@
             <script src="js/navbar.js"></script>
             <script src="js/counter.js"></script>
             <script src="js/custom.js"></script>
+            <script>
+                                    window.contextPath = "<%= request.getContextPath() %>";
+            </script>
+
+            <!-- Nhúng file JS bot -->
+            <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
     </body>
-     <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
+    
 
 </html>

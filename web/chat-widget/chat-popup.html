@@ -155,13 +155,14 @@
         <div class="msg bot">👋 Xin chào! Bạn muốn tìm phòng ở khu vực nào ạ?</div>
     </div>
     <div id="chat-footer">
-        <input type="text" id="userInput" placeholder="Nhập câu hỏi về phòng trọ..." onkeydown="if (event.key === 'Enter') sendMessage();" />
+        <input type="text" id="userInput" placeholder="Nhập câu hỏi về phòng trọ..." onkeydown="if (event.key === 'Enter')
+                    sendMessage();" />
         <button class="send-btn" onclick="sendMessage()">Gửi</button>
     </div>
 </div>
 
 <script>
-    const contextPath = "__CONTEXT_PATH__";
+    let injectedContextPath = "__CONTEXT_PATH__";
 
     function toggleChat() {
         const chatPopup = document.getElementById("chat-popup");
@@ -170,21 +171,22 @@
         const isHidden = chatPopup.style.display === "none" || chatPopup.style.display === "";
         chatPopup.style.display = isHidden ? "flex" : "none";
         if (isHidden) {
-            fetch(contextPath + "/chatbot?action=history")
-                .then(res => res.json())
-                .then(historyArr => {
-                    while (chatBox.children.length > 1) chatBox.removeChild(chatBox.lastChild);
-                    historyArr.forEach(msg => {
-                        const isUser = msg.startsWith("Người dùng:");
-                        const div = document.createElement("div");
-                        div.className = "msg " + (isUser ? "user" : "bot");
-                        let content = msg.replace("Người dùng: ", "").replace("Bot: ", "");
-                        content = content.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
-                        div.innerHTML = content;
-                        chatBox.appendChild(div);
+            fetch(injectedContextPath + "/chatbot?action=history")
+                    .then(res => res.json())
+                    .then(historyArr => {
+                        while (chatBox.children.length > 1)
+                            chatBox.removeChild(chatBox.lastChild);
+                        historyArr.forEach(msg => {
+                            const isUser = msg.startsWith("Người dùng:");
+                            const div = document.createElement("div");
+                            div.className = "msg " + (isUser ? "user" : "bot");
+                            let content = msg.replace("Người dùng: ", "").replace("Bot: ", "");
+                            content = content.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+                            div.innerHTML = content;
+                            chatBox.appendChild(div);
+                        });
+                        chatBox.scrollTop = chatBox.scrollHeight;
                     });
-                    chatBox.scrollTop = chatBox.scrollHeight;
-                });
             setTimeout(() => input.focus(), 200);
         }
     }
@@ -193,7 +195,8 @@
         const input = document.getElementById("userInput");
         const chatBox = document.getElementById("chatBox");
         const userMsg = input.value.trim();
-        if (!userMsg) return;
+        if (!userMsg)
+            return;
 
         const userDiv = document.createElement("div");
         userDiv.className = "msg user";

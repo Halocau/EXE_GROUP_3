@@ -168,7 +168,12 @@
                 document.getElementById('vipPopup').style.display = 'none';
             }
         </script>
-    </body>
-     <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
+        <script>
+                                    window.contextPath = "<%= request.getContextPath() %>";
+            </script>
 
+            <!-- Nhúng file JS bot -->
+            <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
+    </body>
+     
 </html>

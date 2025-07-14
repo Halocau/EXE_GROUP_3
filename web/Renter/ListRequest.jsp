@@ -196,8 +196,13 @@
                 return false;
             }
         }
+        <script>
+                                    window.contextPath = "<%= request.getContextPath() %>";
+            </script>
+
+            <!-- Nhúng file JS bot -->
+            <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
     </script>
-     <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
 
 
 </html>

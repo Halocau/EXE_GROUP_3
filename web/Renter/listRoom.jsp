@@ -1002,10 +1002,13 @@
                                 document.getElementById("departmentA").addEventListener("change", filterRoomsByDepartment);
                                 document.getElementById("departmentB").addEventListener("change", filterRoomsByDepartment);
                             </script>
-                            <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
+<script>
+                                    window.contextPath = "<%= request.getContextPath() %>";
+            </script>
 
+            <!-- Nhúng file JS bot -->
+            <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
 
                         </body>
-                        <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
 
                         </html>

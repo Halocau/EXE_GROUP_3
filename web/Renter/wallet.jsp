@@ -895,6 +895,11 @@
                 <p>© 2025 Hola StayNow. All Rights Reserved.</p>
             </div>
         </footer>
+        <script>
+            window.contextPath = "<%= request.getContextPath() %>";
+        </script>
+
+        <!-- Nhúng file JS bot -->
         <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
     </body>
 
