@@ -24,79 +24,12 @@
 
         <link rel="stylesheet" href="fonts/icomoon/style.css">
         <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
         <link rel="stylesheet" href="css/tiny-slider.css">
         <link rel="stylesheet" href="css/aos.css">
         <link rel="stylesheet" href="css/style.css">
 
         <title>HoLa Motel</title>
-        <style>
-            /* Tiêu đề danh sách */
-            .vip-1-title::after,
-            .vip-2-title::after,
-            .vip-3-title::after {
-                content: "";
-                display: block;
-                width: 60px;
-                height: 3px;
-                margin-top: 6px;
-                border-radius: 2px;
-            }
-            .vip-1-title::after {
-                background-color: #d35400;
-            }
-            .vip-2-title::after {
-                background-color: #3498db;
-            }
-            .vip-3-title::after {
-                background-color: #27ae60;
-            }
-
-            /* Cấu trúc card */
-            .property-card {
-                transition: box-shadow 0.3s ease;
-            }
-            .property-card:hover {
-                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-            }
-            .property-card img {
-                transition: transform 0.3s ease;
-            }
-            .property-card:hover img {
-                transform: scale(1.02);
-            }
-
-            /* Màu sắc theo từng VIP */
-            .property-card.vip-1 {
-                background: #fffdf8;
-                border-color: #f5c06b;
-            }
-            .property-card.vip-2 {
-                background: #f7f9fb;
-                border-color: #b0d4f1;
-            }
-            .property-card.vip-3 {
-                background: #f8f8f8;
-                border-color: #d1e7dd;
-            }
-
-            /* Nút xem chi tiết */
-            .property-card .btn {
-                font-weight: 500;
-                transition: all 0.2s ease;
-            }
-            .property-card .btn:hover {
-                transform: translateY(-2px);
-            }
-            .room-img {
-                height: 260px;
-                width: 100%;
-                object-fit: cover;
-                border-radius: 12px;
-                display: block;
-            }
-        </style>
-
     </head>
 
     <body>
@@ -159,180 +92,393 @@
                     </div>
                 </div>
                 <!-- VIP loại 1 -->
-                <h3 class="mb-4 vip-1-title">Danh sách phòng VIP loại 1</h3>
+                <h3 class="mb-4">Danh sách phòng VIP loại 1</h3>
                 <div class="row">
-                    <% for (int i = 0; i < listRoomVip1.size(); i++) { %>
-                    <div class="col-md-6 col-lg-6 mb-4">
-                        <div class="property-card vip-1 h-100 shadow-sm rounded-3 p-3 border">
-                            <a href="GuestController?service=roomDetail&roomID=<%= listRoomVip1.get(i).getRoomID() %>">
-                                <% String base64Image = listRoomVip1.get(i).getRoomImg(); %>
+                    <div class="col-12">
+                        <% for (int i=0; i < listRoomVip1.size(); i++) { %>
+                        <div class="property-item mb-5 border rounded p-3">
+                            <a href="OwnerController?service=roomDetail&roomID=<%= listRoomVip1.get(i).getRoomID() %>"
+                               class="img d-block mb-3">
+                                <% String base64Image=listRoomVip1.get(i).getRoomImg(); %>
                                 <img src="data:image/jpg;base64,<%= base64Image %>"
-                                     class="room-img img-fluid d-block mx-auto rounded-2"
-                                     alt="Room image">
+                                     class="img-fluid"
+                                     style="height: 350px; width: 100%; object-fit: cover;">
                             </a>
+
                             <div class="property-content">
-                                <div class="price fw-bold text-danger mb-1"><%= listRoomVip1.get(i).getRoomFee().longValue() %>k VND – <%= listRoomVip1.get(i).getVip().getVipName() %></div>
-                                <div class="text-muted small mb-1"><%= listRoomVip1.get(i).getUserAddress() %></div>
-                                <div class="fw-semibold">Room <%= listRoomVip1.get(i).getRoomNumber() %></div>
-                                <div class="specs d-flex my-3 text-secondary">
-                                    <span class="me-2"><i class="bi bi-bed me-1"></i><%= listRoomVip1.get(i).getRoomSize() %> beds</span>
-                                    <span class="me-2"><i class="bi bi-building me-1"></i><%= listRoomVip1.get(i).getRoomFloor() %> Floor</span>
-                                    <a href="https://zalo.me/<%= listRoomVip1.get(i).getUserPhone() %>" target="_blank" class="text-decoration-none">
-                                        <img src="${pageContext.request.contextPath}/image_new/zalo-icon.jpg" alt="Zalo" style="width: 18px; height: 18px; margin-right: 6px;">
-                                    </a>
-                                    <a href="<%= listRoomVip1.get(i).getFacebook() %>" target="_blank" class="text-decoration-none">
-                                        <img src="${pageContext.request.contextPath}/image_new/facebook-icon.png" alt="Zalo" style="width: 18px; height: 18px; margin-right: 6px;">
-                                    </a>
+                                <div class="price mb-2">
+                                    <span>
+                                        <%= listRoomVip1.get(i).getRoomFee().longValue() %>k VND
+                                    </span>
+                                    <span>– <%= listRoomVip1.get(i).getVip().getVipName() %></span>
                                 </div>
-                                <a href="GuestController?service=roomDetail&roomID=<%= listRoomVip1.get(i).getRoomID() %>" class="btn btn-outline-primary w-100 rounded-pill">See details</a>
+                                <div>
+                                    <span class="d-block mb-2 text-black-50">Thôn 3, Tân Xã, Thạch
+                                        Thất</span>
+                                    <span class="city d-block mb-3">Room <%=
+                                                                listRoomVip1.get(i).getRoomNumber() %></span>
+                                    <div class="specs d-flex mb-4">
+                                        <span class="d-block d-flex align-items-center me-3">
+                                            <span class="icon-bed me-2"></span>
+                                            <span class="caption">
+                                                <%= listRoomVip1.get(i).getRoomSize() %> beds
+                                            </span>
+                                        </span>
+                                        <span class="d-block d-flex align-items-center">
+                                            <span class="icon-bath me-2"></span>
+                                            <span class="caption">
+                                                <%= listRoomVip1.get(i).getRoomFloor() %> Floor
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <a href="GuestController?service=roomDetail&roomID=<%= listRoomVip1.get(i).getRoomID() %>"
+                                       class="btn btn-primary py-2 px-3">See details</a>
+                                </div>
                             </div>
                         </div>
+                        <% } %>
                     </div>
-                    <% } %>
                 </div>
-
 
                 <!-- VIP loại 2 -->
-                <h3 class="mb-4 vip-2-title mt-5">Danh sách phòng VIP loại 2</h3>
+                <h3 class="mb-4 mt-5">Danh sách phòng VIP loại 2</h3>
                 <div class="row">
-                    <% List<Rooms> listRoomVip2 = (List<Rooms>) request.getAttribute("listRoomVip2");
-     for (int i = 0; i < listRoomVip2.size(); i++) { %>
-                    <div class="col-md-4 col-lg-4 mb-4">
-                        <div class="property-card vip-2 h-100 shadow-sm rounded-3 p-3 border">
-                            <a href="GuestController?service=roomDetail&roomID=<%= listRoomVip2.get(i).getRoomID() %>">
-                                <% String base64Image = listRoomVip2.get(i).getRoomImg(); %>
+                    <div class="col-12">
+                        <% List<Rooms> listRoomVip2 = (List<Rooms>)
+                                request.getAttribute("listRoomVip2");
+                                for (int i = 0; i < listRoomVip2.size(); i++) { %>
+                        <div class="property-item mb-5 border rounded p-3">
+                            <a href="OwnerController?service=roomDetail&roomID=<%= listRoomVip2.get(i).getRoomID() %>"
+                               class="img d-block mb-3">
+                                <% String base64Image=listRoomVip2.get(i).getRoomImg(); %>
                                 <img src="data:image/jpg;base64,<%= base64Image %>"
-                                     class="room-img img-fluid d-block mx-auto rounded-2"
-                                     alt="Room image">
+                                     class="img-fluid"
+                                     style="height: 350px; width: 100%; object-fit: cover;">
                             </a>
                             <div class="property-content">
-                                <div class="price fw-bold text-primary mb-1"><%= listRoomVip2.get(i).getRoomFee().longValue() %>k VND – <%= listRoomVip2.get(i).getVip().getVipName() %></div>
-                                <div class="text-muted small mb-1">Thôn 3, Tân Xã, Thạch Thất</div>
-                                <div class="fw-semibold">Room <%= listRoomVip2.get(i).getRoomNumber() %></div>
-                                <div class="specs d-flex my-3 text-secondary">
-                                    <span class="me-4"><i class="bi bi-bed me-1"></i><%= listRoomVip2.get(i).getRoomSize() %> beds</span>
-                                    <span><i class="bi bi-building me-1"></i><%= listRoomVip2.get(i).getRoomFloor() %> Floor</span>
+                                <div class="price mb-2">
+                                    <span>
+                                        <%= listRoomVip2.get(i).getRoomFee().longValue() %>k
+                                        VND
+                                    </span>
+                                    <span>– <%= listRoomVip2.get(i).getVip().getVipName() %>
+                                    </span>
                                 </div>
-                                <a href="GuestController?service=roomDetail&roomID=<%= listRoomVip2.get(i).getRoomID() %>" class="btn btn-outline-primary w-100 rounded-pill">See details</a>
+                                <div>
+                                    <span class="d-block mb-2 text-black-50">Thôn 3, Tân Xã,
+                                        Thạch Thất</span>
+                                    <span class="city d-block mb-3">Room <%=
+                                                                        listRoomVip2.get(i).getRoomNumber() %></span>
+                                    <div class="specs d-flex mb-4">
+                                        <span
+                                            class="d-block d-flex align-items-center me-3">
+                                            <span class="icon-bed me-2"></span>
+                                            <span class="caption">
+                                                <%= listRoomVip2.get(i).getRoomSize() %>
+                                                beds
+                                            </span>
+                                        </span>
+                                        <span class="d-block d-flex align-items-center">
+                                            <span class="icon-bath me-2"></span>
+                                            <span class="caption">
+                                                <%= listRoomVip2.get(i).getRoomFloor() %>
+                                                Floor
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <a href="GuestController?service=roomDetail&roomID=<%= listRoomVip2.get(i).getRoomID() %>"
+                                       class="btn btn-primary py-2 px-3">See details</a>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+
+                <!-- VIP loại 3 -->
+                <h3 class="mb-4 mt-5">Danh sách phòng VIP loại 3</h3>
+                <div class="row">
+                    <div class="col-12">
+                        <% List<Rooms> listRoomVip3 = (List<Rooms>)
+                                request.getAttribute("listRoomVip3");
+                                for (int i = 0; i < listRoomVip3.size(); i++) { %>
+                        <div class="property-item mb-5 border rounded p-3">
+                            <a href="OwnerController?service=roomDetail&roomID=<%= listRoomVip3.get(i).getRoomID() %>"
+                               class="img d-block mb-3">
+                                <% String base64Image=listRoomVip3.get(i).getRoomImg(); %>
+                                <img src="data:image/jpg;base64,<%= base64Image %>"
+                                     class="img-fluid"
+                                     style="height: 350px; width: 100%; object-fit: cover;">
+
+                            </a>
+                            <div class="property-content">
+                                <div class="price mb-2">
+                                    <span>
+                                        <%= listRoomVip3.get(i).getRoomFee().longValue() %>k
+                                        VND
+                                    </span>
+                                    <span>– <%= listRoomVip3.get(i).getVip().getVipName() %>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="d-block mb-2 text-black-50">Thôn 3, Tân Xã,
+                                        Thạch Thất</span>
+                                    <span class="city d-block mb-3">Room <%=
+                                                                        listRoomVip3.get(i).getRoomNumber() %></span>
+                                    <div class="specs d-flex mb-4">
+                                        <span
+                                            class="d-block d-flex align-items-center me-3">
+                                            <span class="icon-bed me-2"></span>
+                                            <span class="caption">
+                                                <%= listRoomVip3.get(i).getRoomSize() %>
+                                                beds
+                                            </span>
+                                        </span>
+                                        <span class="d-block d-flex align-items-center">
+                                            <span class="icon-bath me-2"></span>
+                                            <span class="caption">
+                                                <%= listRoomVip3.get(i).getRoomFloor() %>
+                                                Floor
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <a href="GuestController?service=roomDetail&roomID=<%= listRoomVip3.get(i).getRoomID() %>"
+                                       class="btn btn-primary py-2 px-3">See details</a>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="features-1">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+                        <div class="box-feature">
+                            <span class="flaticon-house"></span>
+                            <h3 class="mb-3">Our Properties</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates,
+                                accusamus.</p>
+                            <p><a href="#" class="learn-more">Learn More</a></p>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="500">
+                        <div class="box-feature">
+                            <span class="flaticon-building"></span>
+                            <h3 class="mb-3">Property for Sale</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates,
+                                accusamus.</p>
+                            <p><a href="#" class="learn-more">Learn More</a></p>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
+                        <div class="box-feature">
+                            <span class="flaticon-house-3"></span>
+                            <h3 class="mb-3">Real Estate Agent</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates,
+                                accusamus.</p>
+                            <p><a href="#" class="learn-more">Learn More</a></p>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="600">
+                        <div class="box-feature">
+                            <span class="flaticon-house-1"></span>
+                            <h3 class="mb-3">House for Sale</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates,
+                                accusamus.</p>
+                            <p><a href="#" class="learn-more">Learn More</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="section section-4 bg-light">
+            <div class="container">
+                <div class="row justify-content-center  text-center mb-5">
+                    <div class="col-lg-5">
+                        <h2 class="font-weight-bold heading text-primary mb-4">Let's find the room
+                            that's perfect for you</h2>
+                        <p class="text-black-50">Motel Page can help you find your room that you want.
+                        </p>
+                    </div>
+                </div>
+                <div class="row justify-content-between mb-5">
+                    <div class="col-lg-7 mb-5 mb-lg-0 order-lg-2">
+                        <div class="img-about dots">
+                            <img src="images/hero_bg_3.jpg" alt="Image" class="img-fluid">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="d-flex feature-h">
+                            <span class="wrap-icon me-3">
+                                <span class="icon-home2"></span>
+                            </span>
+                            <div class="feature-text">
+                                <h3 class="heading">Cheap Price</h3>
+                                <p class="text-black-50">Price will be 800kVND to 1mVND.</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex feature-h">
+                            <span class="wrap-icon me-3">
+                                <span class="icon-person"></span>
+                            </span>
+                            <div class="feature-text">
+                                <h3 class="heading">Top 100 in HOA LAC</h3>
+                                <p class="text-black-50">With the best service and smart paymemnt</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex feature-h">
+                            <span class="wrap-icon me-3">
+                                <span class="icon-security"></span>
+                            </span>
+                            <div class="feature-text">
+                                <h3 class="heading">Best security</h3>
+                                <p class="text-black-50">We have best security and camera.</p>
                             </div>
                         </div>
                     </div>
-                    <% } %>
                 </div>
+                <div class="row section-counter mt-5">
+                    <div class="col-6 col-sm-6 col-md-6 col-lg-3" data-aos="fade-up"
+                         data-aos-delay="300">
+                        <div class="counter-wrap mb-5 mb-lg-0">
+                            <span class="number"><span class="countup text-primary">32</span>+</span>
+                            <span class="caption text-black-50">Room that available</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-6 col-md-6 col-lg-3" data-aos="fade-up"
+                         data-aos-delay="400">
+                        <div class="counter-wrap mb-5 mb-lg-0">
+                            <span class="number"><span class="countup text-primary">150</span>+</span>
+                            <span class="caption text-black-50">Rented</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-6 col-md-6 col-lg-3" data-aos="fade-up"
+                         data-aos-delay="500">
+                        <div class="counter-wrap mb-5 mb-lg-0">
+                            <span class="number"><span class="countup text-primary">2</span>Km</span>
+                            <span class="caption text-black-50">Near FPT University</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-6 col-md-6 col-lg-3" data-aos="fade-up"
+                         data-aos-delay="600">
+                        <div class="counter-wrap mb-5 mb-lg-0">
+                            <span class="number"><span class="countup text-primary">80</span>%</span>
+                            <span class="caption text-black-50">Sound proof</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="row justify-content-center footer-cta" data-aos="fade-up">
+                <div class="col-lg-7 mx-auto text-center">
+                    <h2 class="mb-4 ">Join Zalo Group to get help better</h2>
+                    <p><a href="https://zalo.me/g/pimjmz442" target="_blank"
+                          class="btn btn-primary text-white py-3 px-4">Click here to Join</a></p>
+                </div> <!-- /.col-lg-7 -->
+            </div> <!-- /.row -->
+        </div>
 
-                <h3 class="mb-4 vip-3-title mt-5">Danh sách phòng VIP loại 3</h3>
+        <div class="site-footer">
+            <div class="container">
+
                 <div class="row">
-                    <% List<Rooms> listRoomVip3 = (List<Rooms>) request.getAttribute("listRoomVip3");
-     for (int i = 0; i < listRoomVip3.size(); i++) { %>
-                    <div class="col-md-3 col-lg-3 mb-4">
-                        <div class="property-card vip-3 h-100 shadow-sm rounded-3 p-3 border">
-                            <a href="GuestController?service=roomDetail&roomID=<%= listRoomVip3.get(i).getRoomID() %>">
-                                <% String base64Image = listRoomVip3.get(i).getRoomImg(); %>
-                                <img src="data:image/jpg;base64,<%= base64Image %>"
-                                     class="room-img img-fluid d-block mx-auto rounded-2"
-                                     alt="Room image">
-                            </a>
-                            <div class="property-content">
-                                <div class="price fw-bold text-success mb-1"><%= listRoomVip3.get(i).getRoomFee().longValue() %>k VND – <%= listRoomVip3.get(i).getVip().getVipName() %></div>
-                                <div class="text-muted small mb-1">Thôn 3, Tân Xã, Thạch Thất</div>
-                                <div class="fw-semibold">Room <%= listRoomVip3.get(i).getRoomNumber() %></div>
-                                <div class="specs d-flex my-3 text-secondary">
-                                    <span class="me-4"><i class="bi bi-bed me-1"></i><%= listRoomVip3.get(i).getRoomSize() %> beds</span>
-                                    <span><i class="bi bi-building me-1"></i><%= listRoomVip3.get(i).getRoomFloor() %> Floor</span>
-                                </div>
-                                <a href="GuestController?service=roomDetail&roomID=<%= listRoomVip3.get(i).getRoomID() %>" class="btn btn-outline-success w-100 rounded-pill">See details</a>
-                            </div>
-                        </div>
-                    </div>
-                    <% } %>
-                </div>
+                    <div class="col-lg-4">
+                        <div class="widget">
+                            <h3>Contact</h3>
+                            <address>Thon 3 Thach Hoa Thach That Ha Noi</address>
+                            <ul class="list-unstyled links">
+                                <li><a href="tel://11234567890">+1(123)-456-7890</a></li>
+                                <li><a href="tel://11234567890">+1(123)-456-7890</a></li>
+                                <li><a href="mailto:info@mydomain.com">info@mydomain.com</a></li>
+                            </ul>
+                        </div> <!-- /.widget -->
+                    </div> <!-- /.col-lg-4 -->
+                    <div class="col-lg-4">
+                        <div class="widget">
+                            <h3>Sources</h3>
+                            <ul class="list-unstyled float-start links">
+                                <li><a href="#">About us</a></li>
+                                <li><a href="#">Services</a></li>
+                                <li><a href="#">Vision</a></li>
+                                <li><a href="#">Mission</a></li>
+                                <li><a href="#">Terms</a></li>
+                                <li><a href="#">Privacy</a></li>
+                            </ul>
+                            <ul class="list-unstyled float-start links">
+                                <li><a href="#">Partners</a></li>
+                                <li><a href="#">Business</a></li>
+                                <li><a href="#">Careers</a></li>
+                                <li><a href="#">Blog</a></li>
+                                <li><a href="#">FAQ</a></li>
+                                <li><a href="#">Creative</a></li>
+                            </ul>
+                        </div> <!-- /.widget -->
+                    </div> <!-- /.col-lg-4 -->
+                    <div class="col-lg-4">
+                        <div class="widget">
+                            <h3>Links</h3>
+                            <ul class="list-unstyled links">
+                                <li><a href="#">Our Vision</a></li>
+                                <li><a href="#">About us</a></li>
+                                <li><a href="#">Contact us</a></li>
+                            </ul>
 
-            </div>
+                            <ul class="list-unstyled social">
+                                <li><a href="#"><span class="icon-instagram"></span></a></li>
+                                <li><a href="#"><span class="icon-twitter"></span></a></li>
+                                <li><a href="#"><span class="icon-facebook"></span></a></li>
+                                <li><a href="#"><span class="icon-linkedin"></span></a></li>
+                                <li><a href="#"><span class="icon-pinterest"></span></a></li>
+                                <li><a href="#"><span class="icon-dribbble"></span></a></li>
+                            </ul>
+                        </div> <!-- /.widget -->
+                    </div> <!-- /.col-lg-4 -->
+                </div> <!-- /.row -->
 
-            <div class="site-footer">
-                <div class="container">
+                <div class="row mt-5">
+                    <div class="col-12 text-center">
+                        <!-- 
+**==========
+NOTE: 
+Please don't remove this copyright link unless you buy the license here https://untree.co/license/  
+**==========
+                        -->
 
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <div class="widget">
-                                <h3>Contact</h3>
-                                <address>Thon 3 Thach Hoa Thach That Ha Noi</address>
-                                <ul class="list-unstyled links">
-                                    <li><a href="tel://11234567890">+1(123)-456-7890</a></li>
-                                    <li><a href="tel://11234567890">+1(123)-456-7890</a></li>
-                                    <li><a href="mailto:info@mydomain.com">info@mydomain.com</a></li>
-                                </ul>
-                            </div> <!-- /.widget -->
-                        </div> <!-- /.col-lg-4 -->
-                        <div class="col-lg-4">
-                            <div class="widget">
-                                <h3>Sources</h3>
-                                <ul class="list-unstyled float-start links">
-                                    <li><a href="#">About us</a></li>
-                                    <li><a href="#">Services</a></li>
-                                    <li><a href="#">Vision</a></li>
-                                    <li><a href="#">Mission</a></li>
-                                    <li><a href="#">Terms</a></li>
-                                    <li><a href="#">Privacy</a></li>
-                                </ul>
-                                <ul class="list-unstyled float-start links">
-                                    <li><a href="#">Partners</a></li>
-                                    <li><a href="#">Business</a></li>
-                                    <li><a href="#">Careers</a></li>
-                                    <li><a href="#">Blog</a></li>
-                                    <li><a href="#">FAQ</a></li>
-                                    <li><a href="#">Creative</a></li>
-                                </ul>
-                            </div> <!-- /.widget -->
-                        </div> <!-- /.col-lg-4 -->
-                        <div class="col-lg-4">
-                            <div class="widget">
-                                <h3>Links</h3>
-                                <ul class="list-unstyled links">
-                                    <li><a href="#">Our Vision</a></li>
-                                    <li><a href="#">About us</a></li>
-                                    <li><a href="#">Contact us</a></li>
-                                </ul>
-                                <ul class="list-unstyled social">
-                                    <li><a href="#"><span class="icon-instagram"></span></a></li>
-                                    <li><a href="#"><span class="icon-twitter"></span></a></li>
-                                    <li><a href="#"><span class="icon-facebook"></span></a></li>
-                                    <li><a href="#"><span class="icon-linkedin"></span></a></li>
-                                    <li><a href="#"><span class="icon-pinterest"></span></a></li>
-                                    <li><a href="#"><span class="icon-dribbble"></span></a></li>
-                                </ul>
-                            </div> <!-- /.widget -->
-                        </div> <!-- /.col-lg-4 -->
-                    </div> <!-- /.row -->
+                        <p>Copyright &copy;
+                            <script>document.write(new Date().getFullYear());</script>. All Rights
+                            Reserved. &mdash; Designed with love by <a
+                                href="https://untree.co">Untree.co</a>
+                            <!-- License information: https://untree.co/license/ -->
+                        </p>
 
-                    <div class="row mt-5">
-                        <div class="col-12 text-center">
-
-                            <p>Copyright &copy;
-                                <script>document.write(new Date().getFullYear());</script>. All Rights
-                                Reserved. &mdash; Designed with love by <a
-                                    href="https://untree.co">Untree.co</a>
-                                <!-- License information: https://untree.co/license/ -->
-                            </p>
-
-                        </div>
                     </div>
                 </div>
-            </div>
+            </div> <!-- /.container -->
+        </div> <!-- /.site-footer -->
 
-            <div id="overlayer"></div>
-            <div class="loader">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
 
-            <script src="js/bootstrap.bundle.min.js"></script>
-            <script src="js/tiny-slider.js"></script>
-            <script src="js/aos.js"></script>
-            <script src="js/navbar.js"></script>
-            <script src="js/counter.js"></script>
-            <script src="js/custom.js"></script>
-            <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
+        <!-- Preloader -->
+        <div id="overlayer"></div>
+        <div class="loader">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <script src="js/tiny-slider.js"></script>
+        <script src="js/aos.js"></script>
+        <script src="js/navbar.js"></script>
+        <script src="js/counter.js"></script>
+        <script src="js/custom.js"></script>
     </body>
+
 </html>

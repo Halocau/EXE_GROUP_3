@@ -4,7 +4,7 @@
  */
 package dao;
 
-import model.*;
+import model.Account;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.PreparedStatement;
@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.User;
 
 /**
  *
@@ -45,68 +44,6 @@ public class AccountDAO extends MyDAO {
             System.out.println("Fail: " + e.getMessage());
         }
         return account;
-    }
-
-    public List<Account> getAccountsWithUser() {
-        List<Account> list = new ArrayList<>();
-        String sql = ""
-                + "SELECT a.userID, a.userMail, a.userPassword, a.userRole, "
-                + "       u.userName, u.userPhone, u.vipId, u.wallet " // Thêm vipId từ bảng User
-                + "  FROM Account a "
-                + "  JOIN [User] u ON a.userID = u.userID";
-        try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                // 1) Tạo Account từ cột trả về
-                Account acc = new Account(
-                        rs.getInt("userID"),
-                        rs.getString("userMail"),
-                        rs.getString("userPassword"),
-                        rs.getInt("userRole")
-                );
-                // 2) Tạo User và set thông tin từ bảng User
-                User u = new User();
-                u.setUserName(rs.getString("userName"));
-                u.setUserPhone(rs.getString("userPhone"));
-                u.setVipId(rs.getInt("vipId")); // Gán vipId từ bảng User cho User
-                u.setWallet(rs.getBigDecimal("wallet"));  // ✅ gán wallet
-                // 3) Gắn User vào Account
-                acc.setUser(u);
-
-                // 4) Thêm vào list
-                list.add(acc);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    public void updateUserVip(String email, int newVip) {
-        String sql = "UPDATE [User] "
-                + "SET vipId = ? "
-                + "WHERE userID = (SELECT userID FROM [Account] WHERE userMail = ?)";
-
-        try (PreparedStatement pst = connection.prepareStatement(sql)) {
-            pst.setInt(1, newVip); // Gán giá trị vipId mới
-            pst.setString(2, email); // Gán email từ bảng Account
-            pst.executeUpdate(); // Thực thi câu lệnh UPDATE
-        } catch (SQLException e) {
-            e.printStackTrace(); // Xử lý lỗi nếu có
-        }
-    }
-
-    //update role
-    public boolean updateUserRole(String email, int newRole) {
-        String sql = "UPDATE [Account] SET userRole = ? WHERE userMail = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, newRole);
-            ps.setString(2, email);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException ex) {
-            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
     }
 
     //List Account by userRole (Renter)
@@ -164,61 +101,21 @@ public class AccountDAO extends MyDAO {
     }
 
     /////////////////////Hung dog code
-//    public Account LoginAccount(String email, String password) {
-//        try {
-//            PreparedStatement ps;
-//            ResultSet rs;
-//            String sql = "SELECT * FROM [HL_Motel].[dbo].[Account] where userMail = ? and userPassword = ?";
-//            ps = connection.prepareStatement(sql);
-//            ps.setString(1, email);
-//            ps.setString(2, password);
-//            rs = ps.executeQuery();
-//            while (rs.next()) {
-//                Account a = new Account();
-//                a.setUserID(rs.getInt(1));
-//                a.setUserMail(rs.getString(2));
-//                a.setUserPassword(rs.getString(4));
-//                a.setUserRole(rs.getInt(4));
-//                return a;
-//            }
-//
-//        } catch (SQLException ex) {
-//            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return null;
-//    }
     public Account LoginAccount(String email, String password) {
         try {
-            String sql = "SELECT a.*, u.* "
-                    + "FROM [HL_Motel].[dbo].[Account] a "
-                    + "JOIN [HL_Motel].[dbo].[User] u ON a.userID = u.userID "
-                    + "WHERE a.userMail = ? AND a.userPassword = ?";
-
-            PreparedStatement ps = connection.prepareStatement(sql);
+            PreparedStatement ps;
+            ResultSet rs;
+            String sql = "SELECT * FROM [HL_Motel].[dbo].[Account] where userMail = ? and userPassword = ?";
+            ps = connection.prepareStatement(sql);
             ps.setString(1, email);
             ps.setString(2, password);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 Account a = new Account();
-                a.setUserID(rs.getInt("userID"));
-                a.setUserMail(rs.getString("userMail"));
-                a.setUserPassword(rs.getString("userPassword"));
-                a.setUserRole(rs.getInt("userRole"));
-
-                User u = new User();
-                u.setUserID(rs.getInt("userID"));
-                u.setUserName(rs.getString("userName"));
-                u.setUserGender(rs.getString("userGender"));
-                u.setUserBirth(rs.getString("userBirth"));
-                u.setUserAddress(rs.getString("userAddress"));
-                u.setUserPhone(rs.getString("userPhone"));
-                u.setUserAvatar(rs.getString("userAvatar"));
-                u.setVipId(rs.getInt("vipID"));  // 🟢 required
-                u.setEmail(rs.getString("userMail"));
-                u.setAccount(a); // Optional: back-reference
-
-                a.setUser(u); // ✅ this is what fixes your issue
+                a.setUserID(rs.getInt(1));
+                a.setUserMail(rs.getString(2));
+                a.setUserPassword(rs.getString(4));
+                a.setUserRole(rs.getInt(4));
                 return a;
             }
 
@@ -289,7 +186,7 @@ public class AccountDAO extends MyDAO {
         }
         return null;
     }
-
+    
     public int getUserIdByEmail(String email) {
         int userID = 0;
         try {
@@ -300,7 +197,7 @@ public class AccountDAO extends MyDAO {
             ps.setString(1, email);
             rs = ps.executeQuery();
             if (rs.next()) {
-                userID = rs.getInt("userID");
+              userID = rs.getInt("userID");
             }
 
         } catch (SQLException ex) {
@@ -357,7 +254,7 @@ public class AccountDAO extends MyDAO {
         }
         return null;
     }
-
+   
     public void updatePassword(Account a) {
         String sql = "UPDATE Account SET [userPassword] = ? WHERE userID = ?";
         try {
@@ -371,10 +268,9 @@ public class AccountDAO extends MyDAO {
             e.printStackTrace();
         }
     }
-
-    public static void main(String[] args) {
+        public static void main(String[] args) {
         AccountDAO dao = new AccountDAO();
-        dao.updateUserVip("1@1", 1);
-
+        int userID = dao.getUserIdByEmail("maingoctu@gmail.com");
+            System.out.println(userID);
     }
 }

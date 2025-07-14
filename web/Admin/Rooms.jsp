@@ -73,10 +73,6 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 VIP Approval
                             </a>
-                            <a class="nav-link" href="owner-statics">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Owner Statics
-                            </a>
 
                         </div>
                     </div>

@@ -273,18 +273,19 @@
                             if (room.getRoomStatus() == 1) { %>
                                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" data-room-name="<%= room.getRoomNumber() %>" data-room-price="<%= room.getRoomFee().longValue() %>">
                                     <div class="property-item mb-30">
-                                        <a href="GuestController?service=roomDetail&roomID=<%= room.getRoomID() %>" class="img">
+                                        <a href="OwnerController?service=roomDetail&roomID=<%= room.getRoomID() %>" class="img">
                                             <% String base64Image = room.getRoomImg(); %>
                                             <img src="data:image/jpg;base64,<%= base64Image %>" class="img-fluid" style="height: 350px; width: 100%;">
                                         </a>
                                         <div class="property-content">
                                             <div class="price mb-2"><span><%= room.getRoomFee().longValue() %>k VND</span></div>
                                             <div>
+                                                <span class="d-block mb-2 text-black-50">Thon 3, Tan Xa, Thach That</span>
                                                 <span class="city d-block mb-3">Room <%= room.getRoomNumber() %></span>
                                                 <div class="specs d-flex mb-4">
                                                     <span class="d-block d-flex align-items-center me-3">
                                                         <span class="icon-bed me-2"></span>
-                                                        <span class="caption"><%= room.getRoomSize() %> m2</span>
+                                                        <span class="caption"><%= room.getRoomSize() %> beds</span>
                                                     </span>
                                                     <span class="d-block d-flex align-items-center">
                                                         <span class="icon-building me-2"></span>
@@ -316,11 +317,12 @@
                                         <div class="property-content">
                                             <div class="price mb-2"><span><%= room.getRoomFee().longValue() %>k VND</span></div>
                                             <div>
+                                                <span class="d-block mb-2 text-black-50">Thon 3, Tan Xa, Thach That</span>
                                                 <span class="city d-block mb-3">Room <%= room.getRoomNumber() %></span>
                                                 <div class="specs d-flex mb-4">
                                                     <span class="d-block d-flex align-items-center me-3">
                                                         <span class="icon-bed me-2"></span>
-                                                        <span class="caption"><%= room.getRoomSize() %> m2</span>
+                                                        <span class="caption"><%= room.getRoomSize() %> beds</span>
                                                     </span>
                                                     <span class="d-block d-flex align-items-center">
                                                         <span class="icon-building me-2"></span>
@@ -490,6 +492,5 @@
                 });
             }
         </script>
-        <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
     </body>
 </html>

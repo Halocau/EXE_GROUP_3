@@ -202,6 +202,4 @@
         <!-- Main JS -->
         <script src="RenterCSS/js/main.js"></script>
     </body>
-    <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
-
 </html>

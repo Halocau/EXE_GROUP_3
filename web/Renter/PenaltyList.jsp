@@ -257,7 +257,6 @@
 
 
 
-     <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
 
     </body>
 </html>

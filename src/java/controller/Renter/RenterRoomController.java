@@ -17,7 +17,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import java.util.UUID;
-import model.Account;
 import model.RoomDetailSe;
 import model.Rooms;
 import model.UserDetail;
@@ -58,26 +57,11 @@ public class RenterRoomController extends HttpServlet {
         UserDAO userDAO = new UserDAO();
         RenterDAO renterDAO = new RenterDAO();
         HttpSession session = request.getSession();
-
+        
         String email = (String) session.getAttribute("email");
         String password = (String) session.getAttribute("password");
-
-// ⚠️ Kiểm tra session null
-        if (email == null || password == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
         UserDetail userDetail = renterDAO.RenterBasicDetail(email, password);
-
-// ⚠️ Kiểm tra userDetail null
-        if (userDetail == null) {
-            response.sendRedirect("login.jsp"); // hoặc show thông báo lỗi đăng nhập
-            return;
-        }
-
-        int userID = userDetail.getUserID(); // chỉ gọi nếu userDetail != null
-
+        int userID = userDetail.getUserID();
         int isRenter = userDAO.isRenter(userID);
         int index = Integer.parseInt(request.getParameter("index"));
         if (index == 0) {
@@ -90,7 +74,7 @@ public class RenterRoomController extends HttpServlet {
         if (totalRoom % 6 != 0) {
             totalPage++;
         }
-
+        
         request.setAttribute("isRenter", isRenter);
         request.setAttribute("totalPage", totalPage);
         request.setAttribute("index", index);
@@ -119,20 +103,19 @@ public class RenterRoomController extends HttpServlet {
         String password = (String) session.getAttribute("password");
 
         if (flag == 0) {
-//            boolean lockRoom = daoRenter.lockRoom(roomID);
-//            RoomDetailSe roomDetail = daoRoom.getRoomDetail(roomID);
-//            UserDetail basicUserDetail = daoRenter.RenterBasicDetail(email, password);
-//            int userID = basicUserDetail.getUserID();
-//            request.setAttribute("userID", userID);
-//            request.setAttribute("roomDetail", roomDetail);
-//
-//            // random chuỗi ck
-//            String paymentCode = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8).toUpperCase();
-//            request.setAttribute("paymentCode", paymentCode);
-//
-//            request.getRequestDispatcher("Renter/confirmRentRoom.jsp").forward(request, response);
-            confirmRentRoom(request, response); 
-            return;
+            boolean lockRoom = daoRenter.lockRoom(roomID);
+            RoomDetailSe roomDetail = daoRoom.getRoomDetail(roomID);
+            UserDetail basicUserDetail = daoRenter.RenterBasicDetail(email, password);
+            int userID = basicUserDetail.getUserID();
+            request.setAttribute("userID", userID);
+            request.setAttribute("roomDetail", roomDetail);
+            
+            // random chuỗi ck
+            String paymentCode = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8).toUpperCase();
+            request.setAttribute("paymentCode", paymentCode);
+            
+            
+            request.getRequestDispatcher("Renter/confirmRentRoom.jsp").forward(request, response);
         } else if (flag == 1) {
             boolean unlockRoom = daoRenter.unlockRoom(roomID);
             request.getRequestDispatcher("RenterRoomController?service=listRoom&index=1").forward(request, response);
@@ -141,31 +124,11 @@ public class RenterRoomController extends HttpServlet {
 
     private void confirmRentRoom(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RoomDAO dao = new RoomDAO();
-        RenterDAO renterDAO = new RenterDAO();
         HttpSession session = request.getSession();
-
         int roomID = Integer.parseInt(request.getParameter("roomID"));
         RoomDetailSe roomDetail = dao.getRoomDetail(roomID);
         request.setAttribute("roomDetail", roomDetail);
         session.setAttribute("roomID", roomID);
-        Integer userID = (Integer) session.getAttribute("userID");
-        Account account = (Account) session.getAttribute("user");
-
-        if (account == null || account.getUser() == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
-        Integer ownerId = account.getUser().getUserID();
-        if (ownerId != null) {
-            UserDetail userDetail = renterDAO.getUserDetailByID(ownerId); // ❗Viết thêm hàm này
-            if (userDetail != null) {
-                request.setAttribute("wallet", userDetail.getWallet());
-                request.setAttribute("userID", userDetail.getUserID());
-                System.out.println("WALLET = " + userDetail.getWallet()); // ✅ DEBUG OK?
-            }
-        }
-
         request.getRequestDispatcher("Renter/confirmRentRoom.jsp").forward(request, response);
     }
 

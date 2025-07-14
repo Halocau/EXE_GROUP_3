@@ -2,11 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
+
 package controller.Admin;
 
-import dao.AccountDAO;
 import dao.DAO;
-import dao.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,7 +13,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Account;
 
@@ -22,72 +20,73 @@ import model.Account;
  *
  * @author pc
  */
-@WebServlet(name = "Manage", urlPatterns = {"/manage"})
+@WebServlet(name="Manage", urlPatterns={"/manage"})
 public class Manage extends HttpServlet {
-
-    // Helper method để kiểm tra quyền admin
-    private boolean isAdmin(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return false;
+   
+    /** 
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet Manage</title>");  
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet Manage at " + request.getContextPath () + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
-        Account user = (Account) session.getAttribute("user");
-        return user != null && user.getUserRole() == 4;
-    }
+    } 
 
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /** 
+     * Handles the HTTP <code>GET</code> method.
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        //check admin
-        // Nếu không phải admin, redirect về trang login
-        if (!isAdmin(request)) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-//        DAO dao = new DAO();
-//        List<Account> accounts = dao.getAccounts();
-        AccountDAO accountDAO = new AccountDAO();
-        List<Account> accounts = accountDAO.getAccountsWithUser();
+    throws ServletException, IOException {
+        DAO dao = new DAO(); 
+        List<Account> accounts = dao.getAccounts(); 
+
         request.setAttribute("account", accounts);
 
+        
         request.getRequestDispatcher("Admin/Tables.jsp").forward(request, response);
-    }
+    } 
 
+    /** 
+     * Handles the HTTP <code>POST</code> method.
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        // Cũng check admin trước khi thực thi
-        if (!isAdmin(request)) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-        // Lấy email và role mới từ form
-        String email = request.getParameter("email");
-    // 1) update role if present
-        String roleStr = request.getParameter("role");
-        if (roleStr != null) {
-            int newRole = Integer.parseInt(roleStr);
-            new AccountDAO().updateUserRole(email, newRole);
-        }
-        // 2) Cập nhật vip nếu có
-        String vipStr = request.getParameter("vipId");
-        if (vipStr != null) {
-            int newVip = Integer.parseInt(vipStr);
-            new AccountDAO().updateUserVip(email, newVip);
-        }
-
-        // Quay lại trang quản lý
-        response.sendRedirect("manage");
+    throws ServletException, IOException {
+       
     }
 
-    /**
+    /** 
      * Returns a short description of the servlet.
-     *
      * @return a String containing servlet description
      */
     @Override
     public String getServletInfo() {
-        return "Manage accounts servlet";
+        return "Short description";
     }// </editor-fold>
 
 }

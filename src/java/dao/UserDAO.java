@@ -14,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.UserDetail;
 
 /**
  *
@@ -47,31 +46,6 @@ public class UserDAO extends MyDAO {
             System.out.println("Fail: " + e.getMessage());
         }
         return list;
-    }
-
-    // trong dao/UserDAO.java
-    public User getUserById(int id) {
-        String sql = "SELECT userID,userName,userGender,userBirth,userAddress,userPhone,userAvatar "
-                + "FROM [User] WHERE userID = ?";
-        try {
-            ps = con.prepareStatement(sql);
-            ps.setInt(1, id);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                return new User(
-                        rs.getInt("userID"),
-                        rs.getString("userName"),
-                        rs.getString("userGender"),
-                        rs.getString("userBirth"),
-                        rs.getString("userAddress"),
-                        rs.getString("userPhone"),
-                        rs.getString("userAvatar")
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public List<User> getUserAvailable() {
@@ -237,126 +211,14 @@ public class UserDAO extends MyDAO {
     }
 
     public static void main(String[] args) {
-        UserDAO userDAO = new UserDAO();
+        UserDAO dao = new UserDAO();
 
-        // Thay đổi thông tin email và số tiền nạp phù hợp với DB của bạn
-        String testEmail = "1@1"; // Email phải tồn tại trong bảng Account
-        BigDecimal amountToAdd = new BigDecimal("100000");
+        List<User> getUserAvailable = dao.getUserAvailable();
 
-        userDAO.addMoneyToWallet(testEmail, amountToAdd);
-
-        System.out.println("✅ Đã nạp " + amountToAdd + " VND vào tài khoản " + testEmail);
-    }
-
-    public void addMoneyToWallet(String email, BigDecimal amountToAdd) {
-        String sql = "UPDATE [User] SET wallet = ISNULL(wallet, 0) + ? WHERE userID = (SELECT userID FROM Account WHERE userMail = ?)";
-        try {
-            ps = con.prepareStatement(sql);
-            ps.setBigDecimal(1, amountToAdd);
-            ps.setString(2, email);
-            ps.executeUpdate();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public BigDecimal getWalletByUserId(int userId) {
-        String sql = "SELECT wallet FROM [User] WHERE userID = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getBigDecimal("wallet");
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return BigDecimal.ZERO;
-    }
-
-    public UserDetail getUserDetailByEmail(String userEmail) {
-        String sql = "SELECT u.userID, u.userName, u.userGender, u.userBirth, u.userAddress, u.userPhone, u.userAvatar, u.wallet, a.userMail "
-                + "FROM [User] u JOIN Account a ON u.userID = a.userID "
-                + "WHERE a.userMail = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, userEmail);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    UserDetail userDetail = new UserDetail();
-                    userDetail.setUserID(rs.getInt("userID"));
-                    userDetail.setUserName(rs.getString("userName"));
-                    userDetail.setUserGender(rs.getString("userGender"));
-                    userDetail.setUserBirth(rs.getString("userBirth"));
-                    userDetail.setUserAddress(rs.getString("userAddress"));
-                    userDetail.setUserPhone(rs.getString("userPhone"));
-                    userDetail.setUserAvatar(rs.getString("userAvatar"));
-                    userDetail.setWallet(rs.getBigDecimal("wallet"));
-                    userDetail.setUserMail(rs.getString("userMail"));
-                    return userDetail;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public UserDetail getUserDetailByID(int userID) {
-        UserDetail userDetail = null;
-        String sql = "SELECT \n"
-                + "u.userID, \n"
-                + "u.userName, \n"
-                + "u.userGender, \n"
-                + "u.userBirth, \n"
-                + "u.userAddress, \n"
-                + "u.userPhone, \n"
-                + "u.userAvatar, \n"
-                + "a.userMail, \n"
-                + "a.userPassword, \n"
-                + "a.userRole, \n"
-                + "u.wallet \n"
-                + "FROM [User] u \n"
-                + "JOIN Account a ON u.userID = a.userID \n"
-                + "WHERE u.userID = ?";
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, userID);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    userDetail = new UserDetail(
-                            rs.getInt("userID"),
-                            rs.getString("userName"),
-                            rs.getString("userGender"),
-                            rs.getString("userBirth"),
-                            rs.getString("userAddress"),
-                            rs.getString("userPhone"),
-                            rs.getString("userAvatar"),
-                            rs.getString("userMail"),
-                            rs.getString("userPassword"),
-                            rs.getInt("userRole")
-                    );
-                    userDetail.setWallet(rs.getBigDecimal("wallet"));
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("Fail (getUserDetailByID): " + e.getMessage());
+        for (User user : getUserAvailable) {
+            System.out.println(user.getUserID());
         }
 
-        return userDetail;
-    }
-
-    public boolean updateWallet(int userID, BigDecimal newBalance) {
-        String sql = "UPDATE [User] SET wallet = ? WHERE userID = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setBigDecimal(1, newBalance);
-            ps.setInt(2, userID);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 
 }
