@@ -192,43 +192,43 @@
     }
 
     function sendMessage() {
-        const input = document.getElementById("userInput");
-        const chatBox = document.getElementById("chatBox");
-        const userMsg = input.value.trim();
-        if (!userMsg)
-            return;
+    const input = document.getElementById("userInput");
+    const chatBox = document.getElementById("chatBox");
+    const userMsg = input.value.trim();
+    if (!userMsg) return;
 
-        const userDiv = document.createElement("div");
-        userDiv.className = "msg user";
-        userDiv.textContent = userMsg;
-        chatBox.appendChild(userDiv);
+    const userDiv = document.createElement("div");
+    userDiv.className = "msg user";
+    userDiv.textContent = userMsg;
+    chatBox.appendChild(userDiv);
 
-        const typing = document.createElement("div");
-        typing.className = "msg typing";
-        typing.id = "typing";
-        typing.innerText = "🤖 Đang trả lời...";
-        chatBox.appendChild(typing);
-        chatBox.scrollTop = chatBox.scrollHeight;
+    const typing = document.createElement("div");
+    typing.className = "msg typing";
+    typing.id = "typing";
+    typing.innerText = "🤖 Đang trả lời...";
+    chatBox.appendChild(typing);
+    chatBox.scrollTop = chatBox.scrollHeight;
 
-        input.value = "";
+    input.value = "";
 
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", contextPath + "/chatbot", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", injectedContextPath + "/chatbot", true); // ✅ Sửa ở đây
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                const response = JSON.parse(xhr.responseText);
-                const reply = response.reply?.trim() || "(Không có phản hồi)";
-                const botDiv = document.createElement("div");
-                botDiv.className = "msg bot";
-                botDiv.innerHTML = reply.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
-                document.getElementById("typing")?.remove();
-                chatBox.appendChild(botDiv);
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }
-        };
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            const reply = response.reply?.trim() || "(Không có phản hồi)";
+            const botDiv = document.createElement("div");
+            botDiv.className = "msg bot";
+            botDiv.innerHTML = reply.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+            document.getElementById("typing")?.remove();
+            chatBox.appendChild(botDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    };
 
-        xhr.send("message=" + encodeURIComponent(userMsg));
-    }
+    xhr.send("message=" + encodeURIComponent(userMsg));
+}
+
 </script>
