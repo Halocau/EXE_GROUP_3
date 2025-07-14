@@ -341,6 +341,13 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="chart-container" style="height: 300px;">
+                                        <canvas id="rentedRoomsChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row mt-4">
                                 <div class="col-md-12">
                                     <div class="chart-container" style="height: 300px;">
@@ -527,6 +534,59 @@
                             callback: function (value) {
                                 return (value / 1000000).toFixed(1) + 'M VND';
                             }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Chart for number of rooms rented in a month (fake data)
+        const rentedRoomsCtx = document.getElementById('rentedRoomsChart').getContext('2d');
+        // Fake data for 30 days
+        const daysInMonth = Array.from({length: 30}, (_, i) => i + 1);
+        const rentedRoomsData = [2, 3, 4, 5, 3, 2, 4, 5, 6, 7, 5, 4, 3, 2, 4, 5, 6, 7, 8, 6, 5, 4, 3, 2, 4, 5, 6, 7, 8, 9];
+
+        new Chart(rentedRoomsCtx, {
+            type: 'line',
+            data: {
+                labels: daysInMonth.map(day => 'Day ' + day),
+                datasets: [{
+                    label: 'Number of rooms rented',
+                    data: rentedRoomsData,
+                    borderColor: 'rgb(255, 159, 64)',
+                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Number of rooms rented in the month ',
+                        font: {
+                            size: 16
+                        }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of rooms'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Day'
                         }
                     }
                 }
