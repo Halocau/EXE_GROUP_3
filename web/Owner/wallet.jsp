@@ -744,7 +744,7 @@
                 <li><a href="logout">Logout</a></li>
                 <li class="navbar-avatar">
                     <a href="OwnerController?service=ownerProfile">
-                        <img src="data:image/jpg;base64,${imgAvata}" alt="Profile" />
+                        <img src="${pageContext.request.contextPath}/${imgAvata}" alt="Profile" />
                     </a>
                 </li>
             </ul>
