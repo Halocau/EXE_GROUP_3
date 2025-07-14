@@ -273,7 +273,7 @@
         </style>
     </head>
     <body>
-        <div class="container">
+       
             <!-- Phần hiển thị danh sách người thuê -->
             <div class="site-mobile-menu site-navbar-target">
                 <div class="site-mobile-menu-header">
@@ -289,7 +289,7 @@
                 <div class="container">
                     <div class="menu-bg-wrap">
                         <div class="site-navigation">
-                            <a href="#" class="logo m-0 float-start">StayNow</a>
+                            <a href="OwnerController?service=OwnerHome" class="logo m-0 float-start">StayNow</a>
 
                             <jsp:include page = "navbar.jsp"></jsp:include>
 
@@ -701,7 +701,7 @@
                 </div>
             </div>
         </div>
-    </div>
+ 
 </body>
 <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
 </html>
