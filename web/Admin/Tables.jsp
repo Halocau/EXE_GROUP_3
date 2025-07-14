@@ -54,9 +54,7 @@
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Quản lý</div>
                             <a class="nav-link active" href="manage"><div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>Accounts</a>
-                            <a class="nav-link" href="selist"><div class="sb-nav-link-icon"><i class="fas fa-shield-alt"></i></div>Security List</a>
-                            <a class="nav-link" href="rooms"><div class="sb-nav-link-icon"><i class="fas fa-door-open"></i></div>Room List</a>
-                            <a class="nav-link" href="approvalVip"><div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>VIP Approval</a>
+                            <a class="nav-link" href="approvalVip"><div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>Daily access</a>
                             <a class="nav-link" href="owner-statics"><div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>Ownerstatics</a>
 
                         </div>

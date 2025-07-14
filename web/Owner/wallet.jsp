@@ -722,7 +722,7 @@
     <body>
         <!-- NAVBAR HTML -->
         <nav class="navbar-custom">
-            <a href="#" class="navbar-brand">Owner</a>
+            <a href="OwnerController?service=OwnerHome" class="navbar-brand">StayNow</a>
             <button class="navbar-toggle" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
             <ul class="navbar-nav">
                 <li class="<%= (service == null || service.equals("OwnerHome")) ? "active" : "" %>"><a href="OwnerController?service=OwnerHome">Home</a></li>            
@@ -744,7 +744,7 @@
                 <li><a href="logout">Logout</a></li>
                 <li class="navbar-avatar">
                     <a href="OwnerController?service=ownerProfile">
-                        <img src="data:image/jpg;base64,${imgAvata}" alt="Profile" />
+                        <img src="${pageContext.request.contextPath}/${imgAvata}" alt="Profile" />
                     </a>
                 </li>
             </ul>
@@ -767,9 +767,8 @@
                         <div class="ribbon">FEATURED</div>
                     </div>
                     <ul class="features-list">
-                        <li><i class="fa-solid fa-check"></i> Sở hữu màu username đặc biệt</li>
-                        <li><i class="fa-solid fa-check"></i> Không cần chờ duyệt khi đăng bài</li>
-                        <li><i class="fa-solid fa-check"></i> Nhận FUO Point khi comment đáp án</li>
+                        <li><i class="fa-solid fa-check"></i> Sở hữu màu đỏ đặc biệt khi đăng tin</li>
+                        <li><i class="fa-solid fa-check"></i> Tăng tỉ lệ chốt phòng, hiển thị thường xuyên</li>
                         <li><i class="fa-solid fa-check"></i> Được hỗ trợ ưu tiên giải đáp thắc mắc</li>
                     </ul>
                     <button class="btn-pay" data-vipcode="VIP1" data-price="300,000₫">
@@ -784,9 +783,8 @@
                         <div class="ribbon">FEATURED</div>
                     </div>
                     <ul class="features-list">
-                        <li><i class="fa-solid fa-check"></i> Sở hữu màu username đặc biệt</li>
-                        <li><i class="fa-solid fa-check"></i> Không cần chờ duyệt khi đăng bài</li>
-                        <li><i class="fa-solid fa-check"></i> Nhận FUO Point khi comment đáp án</li>
+                        <li><i class="fa-solid fa-check"></i> Sở hữu màu xanh đặc biệt khi đăng tin</li>
+                        <li><i class="fa-solid fa-check"></i> Tăng tỉ lệ chốt phòng</li>
                         <li><i class="fa-solid fa-check"></i> Được hỗ trợ ưu tiên giải đáp thắc mắc</li>
                     </ul>
                     <button class="btn-pay" data-vipcode="VIP2" data-price="220,000₫">
@@ -801,9 +799,8 @@
                         <div class="ribbon">FEATURED</div>
                     </div>
                     <ul class="features-list">
-                        <li><i class="fa-solid fa-check"></i> Sở hữu màu username đặc biệt</li>
-                        <li><i class="fa-solid fa-check"></i> Không cần chờ duyệt khi đăng bài</li>
-                        <li><i class="fa-solid fa-check"></i> Nhận FUO Point khi comment đáp án</li>
+                        <li><i class="fa-solid fa-check"></i> Sở hữu màu đỏ đặc biệt khi đăng tin</li>
+                        <li><i class="fa-solid fa-check"></i> Tăng tỉ lệ chốt phòng</li>
                         <li><i class="fa-solid fa-check"></i> Được hỗ trợ ưu tiên giải đáp thắc mắc</li>
                     </ul>
                     <button class="btn-pay" data-vipcode="VIP3" data-price="170,000₫">
@@ -955,5 +952,6 @@
         </footer>
 
     </body>
+    <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
 
 </html>

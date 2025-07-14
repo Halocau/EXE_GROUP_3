@@ -22,6 +22,89 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RoomDAO extends DBContext {
+    // Trả về toàn bộ RoomDetailSe cho AI
+    public java.util.List<model.RoomDetailSe> getAllRoomDetails() {
+        java.util.List<model.RoomDetailSe> list = new java.util.ArrayList<>();
+        String query = "select r.roomID, r.roomFloor, r.roomNumber, r.roomSize, r.roomFee, r.roomImg, r.roomOccupant, r.roomStatus, r.description, r.roomName, u.userAddress "
+                + "from room r left join [user] u on r.ownerId = u.userID";
+        try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                int roomID = rs.getInt("roomID");
+                int roomNumber = rs.getInt("roomNumber");
+                int roomFloor = rs.getInt("roomFloor");
+                int roomSize = rs.getInt("roomSize");
+                double roomFee = rs.getDouble("roomFee");
+                String roomImg = rs.getString("roomImg");
+                int roomOccupant = rs.getInt("roomOccupant");
+                int roomStatus = rs.getInt("roomStatus");
+                String description = rs.getString("description");
+                String address = rs.getString("userAddress");
+                String roomName = rs.getString("roomName");
+                model.RoomDetailSe room = new model.RoomDetailSe(roomID, roomNumber, roomSize, roomFloor, roomImg, null, null, null, roomFee, null, roomOccupant, roomStatus, description, address, null, roomName);
+                list.add(room);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    // Trả về RoomDetailSe theo roomNumber (dùng cho chatbot)
+    public RoomDetailSe getRoomDetailByNumber(String roomNumber) {
+        String query = "select r.roomID, r.roomFloor, r.roomNumber, r.roomSize, r.roomFee, r.roomImg, " +
+                "i.itemName, i.itemImg, ri.quantity, ri.itemID, " +
+                "r.roomOccupant, r.roomStatus, r.description, u.userAddress, u.userPhone, r.roomName " +
+                "from room r " +
+                "left join roomItem ri on r.roomID = ri.roomID " +
+                "left join item i on ri.itemID = i.itemID " +
+                "left join [user] u on r.ownerId = u.userID " +
+                "where r.roomNumber = ?";
+        RoomDetailSe roomDetail = null;
+        java.util.List<String> itemNames = new java.util.ArrayList<>();
+        java.util.List<Integer> quantities = new java.util.ArrayList<>();
+        java.util.List<Integer> itemIDs = new java.util.ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, roomNumber);
+            try (ResultSet rs = ps.executeQuery()) {
+                boolean roomDetailSet = false;
+                while (rs.next()) {
+                    if (!roomDetailSet) {
+                        int roomID = rs.getInt("roomID");
+                        int roomNum = rs.getInt("roomNumber");
+                        int roomFloor = rs.getInt("roomFloor");
+                        int roomSize = rs.getInt("roomSize");
+                        double roomFee = rs.getDouble("roomFee");
+                        String roomImg = rs.getString("roomImg");
+                        int roomOccupant = rs.getInt("roomOccupant");
+                        int roomStatus = rs.getInt("roomStatus");
+                        String description = rs.getString("description");
+                        String address = rs.getString("userAddress");
+                        String userPhone = rs.getString("userPhone");
+                        String roomName = rs.getString("roomName");
+                        roomDetail = new model.RoomDetailSe(roomID, roomNum, roomSize, roomFloor,
+                                roomImg, null, null, null, roomFee, null,
+                                roomOccupant, roomStatus, description, address, userPhone, roomName);
+                        roomDetailSet = true;
+                    }
+                    int itemID = rs.getInt("itemID");
+                    if (!rs.wasNull()) {
+                        String itemName = rs.getString("itemName");
+                        itemNames.add(itemName);
+                        int quantity = rs.getInt("quantity");
+                        quantities.add(quantity);
+                        itemIDs.add(itemID);
+                    }
+                }
+                if (roomDetail != null) {
+                    roomDetail.setItemName(itemNames.toArray(new String[0]));
+                    roomDetail.setQuantity(quantities.stream().mapToInt(i -> i).toArray());
+                    roomDetail.setItemID(itemIDs.stream().mapToInt(i -> i).toArray());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return roomDetail;
+    }
 
     protected PreparedStatement statement;// thực thi các câu lệnh SQL trước khi thực sự thực thi
     protected ResultSet resultSet;// giống như 1 cái bảng , như sql manager
@@ -667,7 +750,9 @@ public class RoomDAO extends DBContext {
         List<Room> rooms = new ArrayList<>();
         String sql = "SELECT * FROM Room";
 
-        try (Connection conn = connection; PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = connection;
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Room room = new Room();
@@ -901,9 +986,9 @@ public class RoomDAO extends DBContext {
     public static void main(String[] args) {
         RoomDAO roomDAO = new RoomDAO(); // Ensure your RoomDAO sets up DB connection
 
-        int ownerId = 15;   // 🔍 Replace with a real ownerId in your database
-        int pageIndex = 1;  // 🧭 Test with other indexes like 2, 3...
-        int flag = 1;       // Use 0 for only active rooms, 1 for all rooms of owner
+        int ownerId = 15; // 🔍 Replace with a real ownerId in your database
+        int pageIndex = 1; // 🧭 Test with other indexes like 2, 3...
+        int flag = 1; // Use 0 for only active rooms, 1 for all rooms of owner
 
         List<Rooms> rooms = roomDAO.pagingMyRoom(pageIndex, flag, ownerId);
 

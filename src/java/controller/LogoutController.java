@@ -29,8 +29,13 @@ public class LogoutController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-         HttpSession session = request.getSession(false); // Fetch session if exists
+        HttpSession session = request.getSession(false); // Fetch session if exists
         if (session != null) {
+            // Xóa lịch sử chat khỏi RAM nếu có
+            Object userIdObj = session.getAttribute("userID");
+            String chatKey = (userIdObj != null) ? ("USER_" + userIdObj) : ("SESSION_" + session.getId());
+            controller.ChatServlet.chatHistoryMap.remove(chatKey);
+            controller.ChatServlet.chatHistoryTimeMap.remove(chatKey);
             session.invalidate(); // Invalidate the session
         }
         response.sendRedirect("login.jsp");

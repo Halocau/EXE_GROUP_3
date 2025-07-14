@@ -38,7 +38,7 @@
             <div class="container">
                 <div class="menu-bg-wrap">
                     <div class="site-navigation">
-                        <a href="RenterHome.jsp" class="logo m-0 float-start">HL-Apartment</a>
+                        <a href="RenterHome.jsp" class="logo m-0 float-start">StayNow</a>
 
                         <jsp:include page = "navbar.jsp"></jsp:include>
 
@@ -229,4 +229,6 @@
             }
         }
     </script>
+         <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
+
 </html>

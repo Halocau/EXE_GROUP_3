@@ -170,7 +170,7 @@
             <div class="container">
                 <div class="menu-bg-wrap">
                     <div class="site-navigation">
-                        <a href="renterguideline" class="logo m-0 float-start">GuideLine</a>
+                        <a href="renterguideline" class="logo m-0 float-start">StayNow</a>
                         <jsp:include page = "navbar.jsp"></jsp:include>
 
                             <a href="#" class="burger light me-auto float-end mt-1 site-menu-toggle js-menu-toggle d-inline-block d-lg-none" data-toggle="collapse" data-target="#main-navbar">
@@ -220,6 +220,7 @@
         <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
         <script type="text/javascript"></script>
+        <script src="<%= request.getContextPath() %>/js/chatbot.js"></script>
     </body>
 
 </html>
