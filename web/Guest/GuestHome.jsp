@@ -115,7 +115,7 @@
                 <div class="menu-bg-wrap">
                     <div class="site-navigation">
                         <a href="GuestController?service=GuestHome"
-                           class="logo m-0 float-start">HL-Apartment</a>
+                           class="logo m-0 float-start">StayNow</a>
 
                         <jsp:include page="navbar.jsp"></jsp:include>
 
@@ -140,7 +140,7 @@
             <div class="container">
                 <div class="row justify-content-center align-items-center">
                     <div class="col-lg-9 text-center">
-                        <h1 class="heading" data-aos="fade-up">Hoa Lac Apartment - The Apartment For
+                        <h1 class="heading" data-aos="fade-up">StayNow - The Apartment For
                             college student</h1>
 
                         </form>

@@ -143,7 +143,7 @@
             <div class="container">
                 <div class="menu-bg-wrap">
                     <div class="site-navigation">
-                        <a href="#" class="logo m-0 float-start">Confirm Rent</a>
+                        <a href="#" class="logo m-0 float-start">StayNow</a>
 
                         <jsp:include page = "navbar.jsp"></jsp:include>
 

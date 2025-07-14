@@ -722,7 +722,7 @@
     <body>
         <!-- NAVBAR HTML -->
         <nav class="navbar-custom">
-            <a href="#" class="navbar-brand">Owner</a>
+            <a href="#" class="navbar-brand">StayNow</a>
             <button class="navbar-toggle" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
             <ul class="navbar-nav">
                 <li class="<%= (service == null || service.equals("OwnerHome")) ? "active" : "" %>"><a href="OwnerController?service=OwnerHome">Home</a></li>            
