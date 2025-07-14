@@ -51,32 +51,9 @@
 
 
                             <div class="sb-sidenav-menu-heading">Addons</div>
-                            <a class="nav-link" href="manage">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Account
-                            </a>
-
-                            </a>
-                            <a class="nav-link" href="selist">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Security List
-                            </a>
-                            <a class="nav-link" href="rooms">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Room List
-                            </a>
-                            <a class="nav-link" href="sendemail">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Send Email
-                            </a>
-                            <a class="nav-link" href="approvalVip">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                VIP Approval
-                            </a>
-                            <a class="nav-link" href="owner-statics">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Owner Statics
-                            </a>
+                            <a class="nav-link active" href="manage"><div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>Accounts</a>
+                            <a class="nav-link" href="approvalVip"><div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>Daily access</a>
+                            <a class="nav-link" href="owner-statics"><div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>Ownerstatics</a>
 
                         </div>
                     </div>
@@ -96,16 +73,15 @@
                         </ol>
 
                         <ul class="nav nav-tabs mb-3" id="adminTab" role="tablist">
+<!--                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="room-tab" data-bs-toggle="tab" data-bs-target="#room" type="button" role="tab" aria-controls="room" aria-selected="false">Room List</button>
+                            </li>-->
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="room-tab" data-bs-toggle="tab" data-bs-target="#room" type="button" role="tab" aria-controls="room" aria-selected="true">Room List</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab" aria-controls="login" aria-selected="false">User Login Stats</button>
+                                <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab" aria-controls="login" aria-selected="true">User Login Stats</button>
                             </li>
                         </ul>
                         <div class="tab-content" id="adminTabContent">
-                            <div class="tab-pane fade show active" id="room" role="tabpanel" aria-labelledby="room-tab">
-                                <!-- Toàn bộ phần bảng cũ để ở đây -->
+                            <div class="tab-pane fade" id="room" role="tabpanel" aria-labelledby="room-tab">                                <!-- Toàn bộ phần bảng cũ để ở đây -->
                                 <div class="card mb-4">
                                     <div class="card-header">
                                         <i class="fas fa-table me-1"></i>
@@ -174,11 +150,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="login" role="tabpanel" aria-labelledby="login-tab">
-                                <div class="card mb-4">
+                            <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">                                <div class="card mb-4">
                                     <div class="card-header">
                                         <i class="fas fa-chart-bar me-1"></i>
-                                        User Login Statistics (Fake Data)
+                                        User Login Statistics 
                                     </div>
                                     <div class="card-body">
                                         <canvas id="loginChart" height="100"></canvas>
@@ -303,65 +278,65 @@
                 </footer>
             </div>
         </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-    crossorigin="anonymous"></script>
-    <script src="AdminCSS/js/scripts.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
-    crossorigin="anonymous"></script>
-    <script src="AdminCSS/js/datatables-simple-demo.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Fake data cho 30 ngày
-        const days = Array.from({length: 30}, (_, i) => 'Day ' + (i + 1));
-        const loginCounts = [12, 15, 18, 20, 17, 14, 19, 22, 25, 21, 18, 16, 20, 23, 19, 17, 21, 24, 22, 20, 18, 19, 21, 23, 25, 22, 20, 18, 17, 19];
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+        <script src="AdminCSS/js/scripts.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
+        crossorigin="anonymous"></script>
+        <script src="AdminCSS/js/datatables-simple-demo.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            // Fake data cho 30 ngày
+                            const days = Array.from({length: 30}, (_, i) => 'Day ' + (i + 1));
+                            const loginCounts = [12, 15, 18, 20, 17, 14, 19, 22, 25, 21, 18, 16, 20, 23, 19, 17, 21, 24, 22, 20, 18, 19, 21, 23, 25, 22, 20, 18, 17, 19];
 
-        const ctx = document.getElementById('loginChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: days,
-                datasets: [{
-                    label: 'Number of user logins',
-                    data: loginCounts,
-                    borderColor: 'rgb(54, 162, 235)',
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    tension: 0.3,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'User Login Per Day (Fake Data)'
-                    },
-                    legend: {
-                        display: true,
-                        position: 'top'
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Number of logins'
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Day'
-                        }
-                    }
-                }
-            }
-        });
-    });
-    </script>
+                            const ctx = document.getElementById('loginChart').getContext('2d');
+                            new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: days,
+                                    datasets: [{
+                                            label: 'Number of user logins',
+                                            data: loginCounts,
+                                            borderColor: 'rgb(54, 162, 235)',
+                                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                            tension: 0.3,
+                                            fill: true
+                                        }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    plugins: {
+                                        title: {
+                                            display: true,
+                                            text: 'User Login Per Day '
+                                        },
+                                        legend: {
+                                            display: true,
+                                            position: 'top'
+                                        }
+                                    },
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            title: {
+                                                display: true,
+                                                text: 'Number of logins'
+                                            }
+                                        },
+                                        x: {
+                                            title: {
+                                                display: true,
+                                                text: 'Day'
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        });
+        </script>
 
-</body>
+    </body>
 
 </html>

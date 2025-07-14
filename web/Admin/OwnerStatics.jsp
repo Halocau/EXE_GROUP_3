@@ -38,30 +38,9 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Addons</div>
-                        <a class="nav-link" href="manage">
-                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                            Account
-                        </a>
-                        <a class="nav-link" href="selist">
-                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                            Security List
-                        </a>
-                        <a class="nav-link" href="rooms">
-                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                            Room List
-                        </a>
-                        <a class="nav-link" href="sendemail">
-                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                            Send Email
-                        </a>
-                        <a class="nav-link" href="approvalVip">
-                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                            VIP Approval
-                        </a>
-                        <a class="nav-link" href="owner-statics">
-                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                            Owner Statics
-                        </a>
+                       <a class="nav-link active" href="manage"><div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>Accounts</a>
+                            <a class="nav-link" href="approvalVip"><div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>Daily access</a>
+                            <a class="nav-link" href="owner-statics"><div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>Ownerstatics</a>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
